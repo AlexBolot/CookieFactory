@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public class CookieFirm {
 
-    Collection<Customer> customers;
+    Collection<Guest> guests;
     Collection<Store> stores;
     Collection<Manager> managers;
     Collection<Recipe> globalRecipes;

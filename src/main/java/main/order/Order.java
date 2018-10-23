@@ -1,5 +1,6 @@
-package main;
+package main.order;
 
+import main.Store;
 import main.recipe.Recipe;
 
 import java.util.Collection;
@@ -10,7 +11,7 @@ public class Order {
     Collection<OrderLine> orderLine;
 
     public void getPrice() {
-        // TODO - implement main.Order.getPrice
+        // TODO - implement main.order.Order.getPrice
         throw new UnsupportedOperationException();
     }
 
@@ -19,7 +20,7 @@ public class Order {
      * @param amount
      */
     public void addCookie(Recipe recipe, int amount) {
-        // TODO - implement main.Order.addCookie
+        // TODO - implement main.order.Order.addCookie
         throw new UnsupportedOperationException();
     }
 
@@ -28,7 +29,7 @@ public class Order {
      * @param amount
      */
     public void removeCookie(Recipe recipe, int amount) {
-        // TODO - implement main.Order.removeCookie
+        // TODO - implement main.order.Order.removeCookie
         throw new UnsupportedOperationException();
     }
 

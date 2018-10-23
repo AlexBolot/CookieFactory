@@ -1,4 +1,4 @@
-package main;
+package main.order;
 
 import main.recipe.Recipe;
 

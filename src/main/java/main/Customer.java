@@ -1,30 +1,22 @@
 package main;
 
-import java.util.Date;
+import main.order.Order;
 
-public class Customer {
+import java.util.Collection;
 
-    Order temporaryOrder;
+public class Customer extends Guest {
 
-    public Order createOrder() {
-        // TODO - implement main.Customer.createOrder
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @param order
-     * @param pickUpTime
-     */
-    public void orderCookies(Order order, Date pickUpTime) {
-        // TODO - implement main.Customer.orderCookies
-        throw new UnsupportedOperationException();
-    }
+    Collection<Order> orderHistory;
+    private int firstName;
+    private int lastName;
+    private int phoneNumber;
+    private int email;
 
     /**
      * @param order
      */
-    private void addTemporaryOrder(Order order) {
-        // TODO - implement main.Customer.addTemporaryOrder
+    private void addToOrderHistory(Order order) {
+        // TODO - implement main.Customer.addToOrderHistory
         throw new UnsupportedOperationException();
     }
 

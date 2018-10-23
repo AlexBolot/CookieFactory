@@ -1,6 +1,6 @@
-package main.order;
+package order;
 
-import main.recipe.Recipe;
+import recipe.Recipe;
 
 public class OrderLine {
 

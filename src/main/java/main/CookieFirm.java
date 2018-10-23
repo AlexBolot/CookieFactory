@@ -1,15 +1,15 @@
 package main;
 
-import main.recipe.*;
+import recipe.*;
 
 import java.util.Collection;
 
 public class CookieFirm {
 
-    Collection<Guest> guests;
-    Collection<Store> stores;
+    Collection<Guest>   guests;
+    Collection<Store>   stores;
     Collection<Manager> managers;
-    Collection<Recipe> globalRecipes;
+    Collection<Recipe>  globalRecipes;
 
     public Store[] getStores() {
         // TODO - implement main.CookieFirm.getStores
@@ -23,7 +23,7 @@ public class CookieFirm {
      * @param flavor
      * @param topping
      */
-    public Recipe chooseMonthlyRecipe(Cooking cooking, Mix mix, Dough dough, Flavor flavor, Topping topping) {
+    public Recipe chooseMonthlyRecipe (Cooking cooking, Mix mix, Dough dough, Flavor flavor, Topping topping) {
         // TODO - implement main.CookieFirm.chooseMonthlyRecipe
         throw new UnsupportedOperationException();
     }

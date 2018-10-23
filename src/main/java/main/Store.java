@@ -1,7 +1,7 @@
 package main;
 
-import main.order.Order;
-import main.recipe.Recipe;
+import order.Order;
+import recipe.Recipe;
 
 import java.time.LocalTime;
 import java.util.Collection;

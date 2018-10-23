@@ -6,6 +6,7 @@ import recipe.Recipe;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class Store {
 
@@ -13,6 +14,8 @@ public class Store {
     Manager manager;
     Collection<Recipe> globalRecipes;
     Collection<Order> orders;
+    Map<Day, LocalTime> openingTimes;
+    Map<Day, LocalTime> closingTimes;
 
     public Recipe[] getRecipes() {
         // TODO - implement main.Store.getRecipes

@@ -1,5 +1,7 @@
 package main;
 
+import main.recipe.*;
+
 import java.util.Collection;
 
 public class CookieFirm {

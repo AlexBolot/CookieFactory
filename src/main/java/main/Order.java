@@ -1,5 +1,7 @@
 package main;
 
+import main.recipe.Recipe;
+
 import java.util.Collection;
 
 public class Order {

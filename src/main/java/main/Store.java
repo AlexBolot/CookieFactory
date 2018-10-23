@@ -1,5 +1,7 @@
 package main;
 
+import main.recipe.Recipe;
+
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;

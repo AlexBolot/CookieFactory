@@ -1,4 +1,4 @@
-package recipe;
+package ingredient;
 
 public abstract class Ingredient {
 

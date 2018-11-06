@@ -1,8 +1,8 @@
-package recipe;
+package ingredient;
 
 public class Flavor extends Ingredient {
 
-    public Flavor(String name) {
+    Flavor(String name) {
         super(name);
     }
 }

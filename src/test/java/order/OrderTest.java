@@ -1,10 +1,11 @@
 package order;
 
 import main.Day;
+import main.Recipe;
 import main.Store;
 import org.junit.Before;
 import org.junit.Test;
-import recipe.*;
+import ingredient.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

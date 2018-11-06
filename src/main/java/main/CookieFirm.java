@@ -1,6 +1,6 @@
 package main;
 
-import recipe.*;
+import ingredient.*;
 
 import java.util.List;
 

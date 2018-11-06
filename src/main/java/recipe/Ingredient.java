@@ -1,11 +1,11 @@
 package recipe;
 
-public abstract class Ingredient  {
+public abstract class Ingredient {
 
     private String name;
 
-    Ingredient(String name){
-        this.name=name;
+    Ingredient(String name) {
+        this.name = name;
     }
 
     public String getName() {

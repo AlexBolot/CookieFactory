@@ -2,7 +2,7 @@ package recipe;
 
 public class Dough extends Ingredient {
 
-    public Dough(String name){
+    public Dough(String name) {
         super(name);
     }
 }

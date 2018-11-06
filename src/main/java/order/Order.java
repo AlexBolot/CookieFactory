@@ -1,5 +1,6 @@
 package order;
 
+import main.Day;
 import main.Store;
 import recipe.Recipe;
 
@@ -13,10 +14,12 @@ public class Order {
     Store store;
     Collection<OrderLine> orderLines = new ArrayList<>();
     LocalDateTime pickUpTime;
+    Day pickupDay;
 
-    public Order(Store store, LocalDateTime pickUpTime) {
+    public Order(Store store, LocalDateTime pickUpTime, Day pickupDay) {
         this.store = store;
         this.pickUpTime = pickUpTime;
+        this.pickupDay = pickupDay;
     }
 
     public Order() {
@@ -64,4 +67,15 @@ public class Order {
 
     }
 
+    public Collection<OrderLine> getOrderLines() {
+        return orderLines;
+    }
+
+    public LocalDateTime getPickUpTime() {
+        return pickUpTime;
+    }
+
+    public Day getPickupDay() {
+        return pickupDay;
+    }
 }

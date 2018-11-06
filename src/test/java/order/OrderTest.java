@@ -1,5 +1,6 @@
 package order;
 
+import main.Day;
 import main.Store;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,11 +21,11 @@ public class OrderTest {
     @Before
     public void setUp() throws Exception {
         Store store = new Store(1);
-        recipe1 = new Recipe("real", new Dough("John"), new ArrayList<Flavor>(), new ArrayList<Topping>(), Mix.MIXED, Cooking.CHEWY, 1.2f);
+        recipe1 = new Recipe("real", new Dough("John"), new ArrayList<>(), new ArrayList<>(), Mix.MIXED, Cooking.CHEWY, 1.2f);
 
-        unavailableRecep = new Recipe("unreal", new Dough("Mc"), new ArrayList<Flavor>(), new ArrayList<Topping>(), Mix.TOPPED, Cooking.CHEWY, 3.14f);
+        unavailableRecep = new Recipe("unreal", new Dough("Mc"), new ArrayList<>(), new ArrayList<>(), Mix.TOPPED, Cooking.CHEWY, 3.14f);
         LocalDateTime pickUpTime = LocalDateTime.now();
-        order = new Order(store, pickUpTime);
+        order = new Order(store, pickUpTime, Day.TUESDAY);
     }
 
     @Test

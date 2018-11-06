@@ -16,6 +16,11 @@ public class Store {
     Collection<Order> orders;
     Map<Day, LocalTime> openingTimes;
     Map<Day, LocalTime> closingTimes;
+    private double tax;
+
+    public Store(double tax) {
+        this.tax = tax;
+    }
 
     public Recipe[] getRecipes() {
         // TODO - implement main.Store.getRecipes
@@ -50,4 +55,7 @@ public class Store {
         throw new UnsupportedOperationException();
     }
 
+    public double getTax() {
+        return this.tax;
+    }
 }

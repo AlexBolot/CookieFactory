@@ -10,14 +10,16 @@ public class Recipe {
     private List<Topping> toppings;
     private Mix mix;
     private Cooking cooking;
+    float price;
 
-    public Recipe(String name, Dough dough, List<Flavor> flavors, List<Topping> toppings, Mix mix, Cooking cooking){
+    public Recipe(String name, Dough dough, List<Flavor> flavors, List<Topping> toppings, Mix mix, Cooking cooking,int price){
         this.name = name;
         this.dough = dough;
         this.mix = mix;
         this.cooking = cooking;
         setFlavors(flavors);
         setToppings(toppings);
+        this.price = price;
     }
 
     private void setFlavors(List<Flavor> flavors) {
@@ -52,5 +54,8 @@ public class Recipe {
 
     public Cooking getCooking() {
         return cooking;
+    }
+    public float getPrice() {
+        return price;
     }
 }

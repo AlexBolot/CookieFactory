@@ -12,7 +12,7 @@ public class Recipe {
     private Cooking cooking;
     float price;
 
-    public Recipe(String name, Dough dough, List<Flavor> flavors, List<Topping> toppings, Mix mix, Cooking cooking,int price){
+    public Recipe(String name, Dough dough, List<Flavor> flavors, List<Topping> toppings, Mix mix, Cooking cooking, float price) {
         this.name = name;
         this.dough = dough;
         this.mix = mix;

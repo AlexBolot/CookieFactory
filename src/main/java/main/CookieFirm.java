@@ -19,11 +19,11 @@ public class CookieFirm {
      * @param cooking
      * @param mix
      * @param dough
-     * @param flavor
-     * @param topping
+     * @param flavors
+     * @param toppings
      */
-    public Recipe chooseMonthlyRecipe(Cooking cooking, Mix mix, Dough dough, Flavor flavor, Topping topping, Store store) {
-        Recipe newMonthlyRecipe = new Recipe(cooking, mix, dough, flavor, topping);
+    public Recipe chooseMonthlyRecipe(String name, Cooking cooking, Mix mix, Dough dough, List<Flavor> flavors, List<Topping> toppings, float price, Store store) {
+        Recipe newMonthlyRecipe = new Recipe(name, dough, flavors, toppings, mix, cooking, price);
         store.setMonthlyRecipe(newMonthlyRecipe);
         return newMonthlyRecipe;
     }

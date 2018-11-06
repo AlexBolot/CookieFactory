@@ -20,9 +20,9 @@ public class OrderTest {
     @Before
     public void setUp() throws Exception {
         Store store = new Store(1);
-        recipe1 = new Recipe(new Dough(), new ArrayList<Flavor>(), new ArrayList<Topping>(), new Mix(), new Cooking(), 1.2f);
+        recipe1 = new Recipe("real", new Dough("John"), new ArrayList<Flavor>(), new ArrayList<Topping>(), Mix.MIXED, Cooking.CHEWY, 1.2f);
 
-        unavailableRecep = new Recipe(new Dough(), new ArrayList<Flavor>(), new ArrayList<Topping>(), new Mix(), new Cooking(), 3.14f);
+        unavailableRecep = new Recipe("unreal", new Dough("Mc"), new ArrayList<Flavor>(), new ArrayList<Topping>(), Mix.TOPPED, Cooking.CHEWY, 3.14f);
         LocalDateTime pickUpTime = LocalDateTime.now();
         order = new Order(store, pickUpTime);
     }

@@ -1,6 +1,6 @@
 package main;
 
-import main.recipe.*;
+import recipe.*;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class Kitchen {
     private List<Mix> mixList;
     private List<Cooking> cookingList;
 
-    public Kitchen(List<Dough> doughs, List<Flavor> flavors, List<Topping> toppings, List<Mix> mixes, List<Cooking> cookings){
+    public Kitchen(List<Dough> doughs, List<Flavor> flavors, List<Topping> toppings, List<Mix> mixes, List<Cooking> cookings) {
         this.doughList = doughs;
         this.flavorList = flavors;
         this.toppingList = toppings;

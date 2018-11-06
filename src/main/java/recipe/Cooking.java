@@ -2,15 +2,15 @@ package recipe;
 
 public enum Cooking {
     CRUNCHY("Crunchy"),
-    CHEWY ("Chewy");
+    CHEWY("Chewy");
 
     private final String name;
 
-    Cooking(String name){
+    Cooking(String name) {
         this.name = name;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 }

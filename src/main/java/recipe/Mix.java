@@ -6,11 +6,11 @@ public enum Mix {
 
     private final String name;
 
-    Mix(String name){
+    Mix(String name) {
         this.name = name;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 }

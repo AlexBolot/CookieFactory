@@ -12,7 +12,7 @@ public class Recipe {
     private Cooking cooking;
     float price;
 
-    public Recipe(String name, Dough dough, List<Flavor> flavors, List<Topping> toppings, Mix mix, Cooking cooking,int price){
+    public Recipe(String name, Dough dough, List<Flavor> flavors, List<Topping> toppings, Mix mix, Cooking cooking, float price) {
         this.name = name;
         this.dough = dough;
         this.mix = mix;
@@ -23,14 +23,14 @@ public class Recipe {
     }
 
     private void setFlavors(List<Flavor> flavors) {
-        if(flavors.size()>3)
+        if (flavors.size() > 3)
             System.out.println("To much flavors!!!");
         else
             this.flavors = flavors;
     }
 
     private void setToppings(List<Topping> toppings) {
-        if(flavors.size()>3)
+        if (flavors.size() > 3)
             System.out.println("To much toppings!!!");
         else
             this.toppings = toppings;

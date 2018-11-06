@@ -1,25 +1,25 @@
-package main;
+package StepDefinitions;
 
 import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class AddCookieOrderStepDefs {
-    @Given("^The \"([^\"]*)\" see the list of cookies$")
-    public void theSeeTheListOfCookies(String arg0) throws Throwable {
+public class RemoveCookieStepDefs {
+    @Given("^The \"([^\"]*)\" checks his order$")
+    public void theChecksHisOrder(String arg0) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
 
-    @When("^The \"([^\"]*)\" select \"([^\"]*)\" cookie$")
-    public void theSelectCookie(String arg0, String arg1) throws Throwable {
+    @When("^The \"([^\"]*)\" select (\\d+) cookie to remove$")
+    public void theSelectCookieToRemove(String arg0, int arg1) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }
 
-    @Then("^The order contain \"([^\"]*)\" cookie$")
-    public void theOrderContainCookie(String arg0) throws Throwable {
+    @Then("^the order contains (\\d+) cookies less$")
+    public void theOrderContainsCookiesLess(int arg0) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         throw new PendingException();
     }

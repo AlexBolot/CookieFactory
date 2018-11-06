@@ -19,9 +19,18 @@ public class Order {
         this.pickUpTime = pickUpTime;
     }
 
+    public Order() {
+        this.store=null;
+        this.pickUpTime=null;
+    }
+
     public double getPrice() {
         double storeTax = store.getTax();
         return orderLines.stream().mapToDouble(line -> line.amount * line.recipe.getPrice()).sum() * storeTax;
+    }
+
+    public Store getStore() {
+        return this.store;
     }
 
     /**

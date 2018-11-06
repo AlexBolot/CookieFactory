@@ -22,14 +22,14 @@ public class Recipe {
 
     private void setFlavors(List<Flavor> flavors) {
         if(flavors.size()>3)
-            System.out.println("To much flavors!!!");
+            throw new IllegalArgumentException("To much flavors!!!");
         else
             this.flavors = flavors;
     }
 
     private void setToppings(List<Topping> toppings) {
         if(flavors.size()>3)
-            System.out.println("To much toppings!!!");
+            throw new IllegalArgumentException("To much toppings!!!");
         else
             this.toppings = toppings;
     }

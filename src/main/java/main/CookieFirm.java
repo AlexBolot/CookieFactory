@@ -1,19 +1,18 @@
 package main;
 
-import main.recipe.*;
+import recipe.*;
 
-import java.util.Collection;
+import java.util.List;
 
 public class CookieFirm {
 
-    Collection<Guest> guests;
-    Collection<Store> stores;
-    Collection<Manager> managers;
-    Collection<Recipe> globalRecipes;
+    List<Guest> guests;
+    List<Store> stores;
+    List<Manager> managers;
+    List<Recipe> globalRecipes;
 
-    public Store[] getStores() {
-        // TODO - implement main.CookieFirm.getStores
-        throw new UnsupportedOperationException();
+    public List<Store> getStores() {
+        return stores;
     }
 
     /**
@@ -23,17 +22,17 @@ public class CookieFirm {
      * @param flavor
      * @param topping
      */
-    public Recipe chooseMonthlyRecipe(Cooking cooking, Mix mix, Dough dough, Flavor flavor, Topping topping) {
-        // TODO - implement main.CookieFirm.chooseMonthlyRecipe
-        throw new UnsupportedOperationException();
+    public Recipe chooseMonthlyRecipe(Cooking cooking, Mix mix, Dough dough, Flavor flavor, Topping topping, Store store) {
+        Recipe newMonthlyRecipe = new Recipe(cooking, mix, dough, flavor, topping);
+        store.setMonthlyRecipe(newMonthlyRecipe);
+        return newMonthlyRecipe;
     }
 
     /**
      * @param recipe
      */
-    private void checkRecipeExists(Recipe recipe) {
-        // TODO - implement main.CookieFirm.checkRecipeExists
-        throw new UnsupportedOperationException();
+    private boolean checkRecipeExists(Recipe recipe) {
+        return globalRecipes.contains(recipe);
     }
 
 }

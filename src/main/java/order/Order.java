@@ -1,17 +1,19 @@
-package main.order;
+package order;
 
 import main.Store;
-import main.recipe.Recipe;
+import recipe.Recipe;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 public class Order {
 
     Store store;
     Collection<OrderLine> orderLine;
+    LocalDateTime pickUpTime;
 
     public void getPrice() {
-        // TODO - implement main.order.Order.getPrice
+        // TODO - implement order.Order.getPrice
         throw new UnsupportedOperationException();
     }
 
@@ -20,7 +22,7 @@ public class Order {
      * @param amount
      */
     public void addCookie(Recipe recipe, int amount) {
-        // TODO - implement main.order.Order.addCookie
+        // TODO - implement order.Order.addCookie
         throw new UnsupportedOperationException();
     }
 
@@ -29,7 +31,7 @@ public class Order {
      * @param amount
      */
     public void removeCookie(Recipe recipe, int amount) {
-        // TODO - implement main.order.Order.removeCookie
+        // TODO - implement order.Order.removeCookie
         throw new UnsupportedOperationException();
     }
 

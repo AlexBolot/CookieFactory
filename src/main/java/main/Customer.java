@@ -1,6 +1,6 @@
 package main;
 
-import main.order.Order;
+import order.Order;
 
 import java.util.Collection;
 

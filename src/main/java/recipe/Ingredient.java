@@ -1,4 +1,4 @@
-package main.recipe;
+package recipe;
 
 public abstract class Ingredient  {
 

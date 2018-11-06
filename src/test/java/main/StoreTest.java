@@ -53,7 +53,7 @@ public class StoreTest {
             startDay++;
         }
 
-        store = new Store(oldRecipe, new Manager(), globalRecipes, new ArrayList<>(), openingTimes, closingTimes, 15.5);
+        store = new Store(oldRecipe, globalRecipes, new ArrayList<>(), openingTimes, closingTimes, 15.5);
     }
 
     @Test

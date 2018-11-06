@@ -11,7 +11,6 @@ import java.util.Map;
 public class Store {
 
     private Recipe monthlyRecipe;
-    private Manager manager;
     private Collection<Recipe> globalRecipes;
     private Collection<Order> orders;
     private Map<Day, LocalDateTime> openingTimes;
@@ -28,9 +27,8 @@ public class Store {
         closingTimes = new HashMap<>();
     }
 
-    public Store(Recipe monthlyRecipe, Manager manager, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<Day, LocalDateTime> openingTimes, Map<Day, LocalDateTime> closingTimes, double tax) {
+    public Store(Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<Day, LocalDateTime> openingTimes, Map<Day, LocalDateTime> closingTimes, double tax) {
         this.monthlyRecipe = monthlyRecipe;
-        this.manager = manager;
         this.globalRecipes = globalRecipes;
         this.orders = orders;
         this.openingTimes = openingTimes;
@@ -71,6 +69,14 @@ public class Store {
 
     public Recipe getMonthlyRecipe() {
         return monthlyRecipe;
+    }
+
+    public void setOpeningTime(Day day, LocalDateTime localDateTime) {
+        this.openingTimes.remove(day, localDateTime);
+    }
+
+    public void setClosingTimes(Day day, LocalDateTime localDateTime) {
+        this.closingTimes.remove(day, localDateTime);
     }
 
     public Collection<Order> getOrders() {

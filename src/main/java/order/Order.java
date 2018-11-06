@@ -2,7 +2,7 @@ package order;
 
 import main.Day;
 import main.Store;
-import recipe.Recipe;
+import main.Recipe;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

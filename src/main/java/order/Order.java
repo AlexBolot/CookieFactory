@@ -15,6 +15,7 @@ public class Order {
     Collection<OrderLine> orderLines = new ArrayList<>();
     LocalDateTime pickUpTime;
     Day pickupDay;
+    OrderState orderState = OrderState.DRAFT;
 
     public Order(Store store, LocalDateTime pickUpTime, Day pickupDay) {
         this.store = store;

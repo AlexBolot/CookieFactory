@@ -1,6 +1,5 @@
 package main;
 
-import ingredient.Catalogue;
 import order.Order;
 
 import java.time.LocalDateTime;

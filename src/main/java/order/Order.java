@@ -17,10 +17,13 @@ public class Order {
     Day pickupDay;
     OrderState orderState = OrderState.DRAFT;
 
+
+    boolean payed = false;
     public Order(Store store, LocalDateTime pickUpTime, Day pickupDay) {
         this.store = store;
         this.pickUpTime = pickUpTime;
         this.pickupDay = pickupDay;
+
     }
 
     public Order() {

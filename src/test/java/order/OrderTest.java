@@ -21,6 +21,8 @@ public class OrderTest {
 
     @Before
     public void setUp() throws Exception {
+
+
         Store store = new Store(1);
         recipe1 = new Recipe("real", new Dough("John"), new ArrayList<>(), new ArrayList<>(), Mix.MIXED, Cooking.CHEWY, 1.2f);
 

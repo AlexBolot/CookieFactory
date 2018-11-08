@@ -11,6 +11,7 @@ public class CookieFirm {
     List<Manager> managers;
     List<Recipe> globalRecipes;
 
+
     public List<Store> getStores() {
         return stores;
     }

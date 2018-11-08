@@ -8,4 +8,4 @@ Feature: Anonymous order
     When A "Guest" show his purchase order in the store
     Then The purchase order is "scan"
     And A "Guest" "pay" is cookies
-    And The order is "validated"s
+    And The order is "validated"

@@ -2,7 +2,7 @@ package order;
 
 import main.Day;
 import main.Store;
-import recipe.Recipe;
+import main.Recipe;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,9 +22,18 @@ public class Order {
         this.pickupDay = pickupDay;
     }
 
+    public Order() {
+        this.store=null;
+        this.pickUpTime=null;
+    }
+
     public double getPrice() {
         double storeTax = store.getTax();
         return orderLines.stream().mapToDouble(line -> line.amount * line.recipe.getPrice()).sum() * storeTax;
+    }
+
+    public Store getStore() {
+        return this.store;
     }
 
     /**

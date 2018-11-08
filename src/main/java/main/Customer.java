@@ -6,18 +6,26 @@ import java.util.Collection;
 
 public class Customer extends Guest {
 
-    Collection<Order> orderHistory;
+    private Collection<Order> orderHistory;
     private int firstName;
     private int lastName;
     private int phoneNumber;
     private int email;
 
+    public Customer(Collection<Order> orderHistory, int firstName, int lastName, int phoneNumber, int email) {
+        super();
+        this.orderHistory = orderHistory;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+
     /**
      * @param order
      */
     private void addToOrderHistory(Order order) {
-        // TODO - implement main.Customer.addToOrderHistory
-        throw new UnsupportedOperationException();
+        orderHistory.add(order);
     }
 
 }

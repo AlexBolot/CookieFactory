@@ -3,7 +3,6 @@ package main;
 import order.Order;
 import org.junit.Before;
 import org.junit.Test;
-import recipe.Recipe;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,7 +53,7 @@ public class StoreTest {
             startDay++;
         }
 
-        store = new Store(oldRecipe, new Manager(), globalRecipes, new ArrayList<>(), openingTimes, closingTimes, 15.5);
+        store = new Store(oldRecipe, globalRecipes, new ArrayList<>(), openingTimes, closingTimes, 15.5);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package recipe;
+package ingredient;
 
 public enum Cooking {
     CRUNCHY("Crunchy"),

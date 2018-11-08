@@ -1,10 +1,10 @@
-package main;
+package ingredient;
 
-import recipe.*;
+import ingredient.*;
 
 import java.util.List;
 
-public class Kitchen {
+public class Catalogue {
 
     private List<Dough> doughList;
     private List<Flavor> flavorList;
@@ -12,7 +12,7 @@ public class Kitchen {
     private List<Mix> mixList;
     private List<Cooking> cookingList;
 
-    public Kitchen(List<Dough> doughs, List<Flavor> flavors, List<Topping> toppings, List<Mix> mixes, List<Cooking> cookings) {
+    public Catalogue(List<Dough> doughs, List<Flavor> flavors, List<Topping> toppings, List<Mix> mixes, List<Cooking> cookings) {
         this.doughList = doughs;
         this.flavorList = flavors;
         this.toppingList = toppings;

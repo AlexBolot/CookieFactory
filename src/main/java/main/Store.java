@@ -1,7 +1,6 @@
 package main;
 
 import order.Order;
-import recipe.Recipe;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.Map;
 public class Store {
 
     private Recipe monthlyRecipe;
-    private Manager manager;
     private Collection<Recipe> globalRecipes;
     private Collection<Order> orders;
     private Map<Day, LocalDateTime> openingTimes;
@@ -29,9 +27,8 @@ public class Store {
         closingTimes = new HashMap<>();
     }
 
-    public Store(Recipe monthlyRecipe, Manager manager, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<Day, LocalDateTime> openingTimes, Map<Day, LocalDateTime> closingTimes, double tax) {
+    public Store(Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<Day, LocalDateTime> openingTimes, Map<Day, LocalDateTime> closingTimes, double tax) {
         this.monthlyRecipe = monthlyRecipe;
-        this.manager = manager;
         this.globalRecipes = globalRecipes;
         this.orders = orders;
         this.openingTimes = openingTimes;
@@ -74,6 +71,14 @@ public class Store {
         return monthlyRecipe;
     }
 
+    public void setOpeningTime(Day day, LocalDateTime localDateTime) {
+        this.openingTimes.remove(day, localDateTime);
+    }
+
+    public void setClosingTimes(Day day, LocalDateTime localDateTime) {
+        this.closingTimes.remove(day, localDateTime);
+    }
+
     public Collection<Order> getOrders() {
         return orders;
     }
@@ -89,9 +94,9 @@ public class Store {
 
     /**
      * Sets the new Monthly Recipe of the store
-     * Raise an exception if new recipe is the same as the previous one
+     * Raise an exception if new ingredient is the same as the previous one
      *
-     * @param newRecipe new monthly recipe of the store
+     * @param newRecipe new monthly ingredient of the store
      */
     public void setMonthlyRecipe(Recipe newRecipe) {
         if (this.monthlyRecipe != null && this.monthlyRecipe == newRecipe) {

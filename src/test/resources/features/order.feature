@@ -6,5 +6,6 @@ Feature: Order placing
     And a pickupdate has been selected
     And the "customer" pays online
     And the "customer" chose if the order contributed to his loyalty programme
+    When the "customer" pays online
     Then the "customer" prints his orderticket
     And the order has been added to his history

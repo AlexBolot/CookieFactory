@@ -6,28 +6,23 @@ import java.util.Date;
 
 public class Guest {
 
-    Order temporaryOrder;
+    private Order temporaryOrder;
+
+    public Guest() {
+        this.temporaryOrder = createOrder();
+    }
 
     public Order createOrder() {
-        // TODO - implement main.Guest.createOrder
-        throw new UnsupportedOperationException();
+        Order voidOrder = new Order();
+        this.temporaryOrder = voidOrder;
+        return voidOrder;
     }
 
-    /**
-     * @param order
-     * @param pickUpTime
-     */
-    public void orderCookies(Order order, Date pickUpTime) {
-        // TODO - implement main.Guest.orderCookies
-        throw new UnsupportedOperationException();
+    public void placeOrder() {
+        temporaryOrder.getStore().placeOrder(temporaryOrder);
     }
 
-    /**
-     * @param order
-     */
-    private void addTemporaryOrder(Order order) {
-        // TODO - implement main.Guest.addTemporaryOrder
-        throw new UnsupportedOperationException();
+    public void setTemporaryOrder(Order order) {
+        this.temporaryOrder=order;
     }
-
 }

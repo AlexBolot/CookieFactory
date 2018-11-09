@@ -1,7 +1,5 @@
 package main;
 
-import recipe.Recipe;
-
 import java.time.LocalDateTime;
 
 public class Manager {

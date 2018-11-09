@@ -9,6 +9,7 @@ import ingredient.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -21,10 +22,14 @@ public class OrderTest {
 
     @Before
     public void setUp() throws Exception {
-        Store store = new Store(1);
-        recipe1 = new Recipe("real", new Dough("John"), new ArrayList<>(), new ArrayList<>(), Mix.MIXED, Cooking.CHEWY, 1.2f);
 
-        unavailableRecep = new Recipe("unreal", new Dough("Mc"), new ArrayList<>(), new ArrayList<>(), Mix.TOPPED, Cooking.CHEWY, 3.14f);
+        Catalog catalog = new Catalog();
+
+        Store store = new Store(1);
+        recipe1 = new Recipe("real",catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), Mix.MIXED,
+                Cooking.CHEWY, 1.2f);
+
+        unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), Mix.TOPPED, Cooking.CHEWY, 3.14f);
         LocalDateTime pickUpTime = LocalDateTime.now();
         order = new Order(store, pickUpTime, Day.TUESDAY);
     }

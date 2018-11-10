@@ -1,8 +1,9 @@
 package order;
 
 import main.Day;
-import main.Store;
+import main.Guest;
 import main.Recipe;
+import main.Store;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class Order {
 
 
     boolean payed = false;
+    private Guest guest;
+
     public Order(Store store, LocalDateTime pickUpTime, Day pickupDay) {
         this.store = store;
         this.pickUpTime = pickUpTime;
@@ -71,6 +74,13 @@ public class Order {
 
     }
 
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
     public Collection<OrderLine> getOrderLines() {
         return orderLines;
     }

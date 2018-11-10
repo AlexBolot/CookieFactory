@@ -11,6 +11,7 @@ public class Customer extends Guest {
     private int lastName;
     private int phoneNumber;
     private int email;
+    private boolean loyaltyProgram = false;
 
     public Customer(Collection<Order> orderHistory, int firstName, int lastName, int phoneNumber, int email) {
         super();
@@ -26,6 +27,10 @@ public class Customer extends Guest {
      */
     private void addToOrderHistory(Order order) {
         orderHistory.add(order);
+    }
+
+    public void addToLoyaltyP(){
+        loyaltyProgram = true;
     }
 
 }

@@ -20,7 +20,6 @@ public class Order {
 
 
     boolean payed = false;
-
     private Guest guest;
 
     public Order(Store store, LocalDateTime pickUpTime, Day pickupDay) {
@@ -82,18 +81,16 @@ public class Order {
 
         Order order = (Order) o;
 
-        if (!store.equals(order.store)) return false;
-        if (!pickUpTime.equals(order.pickUpTime)) return false;
+        if (pickUpTime != null ? !pickUpTime.equals(order.pickUpTime) : order.pickUpTime != null) return false;
         if (pickupDay != order.pickupDay) return false;
-        return email.equals(order.email);
+        return guest != null ? guest.equals(order.guest) : order.guest == null;
     }
 
     @Override
     public int hashCode() {
-        int result = store.hashCode();
-        result = 31 * result + pickUpTime.hashCode();
-        result = 31 * result + pickupDay.hashCode();
-        result = 31 * result + email.hashCode();
+        int result = pickUpTime != null ? pickUpTime.hashCode() : 0;
+        result = 31 * result + (pickupDay != null ? pickupDay.hashCode() : 0);
+        result = 31 * result + (guest != null ? guest.hashCode() : 0);
         return result;
     }
 
@@ -120,10 +117,6 @@ public class Order {
     //TODO:maybe should dispear, as the state is an order progression, we could use different method "pay","withdraw" etc
     public void setOrderState(OrderState orderState) {
         this.orderState = orderState;
-    }
-
-    public void pay() {
-
     }
 
     public OrderState getState() {

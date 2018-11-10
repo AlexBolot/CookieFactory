@@ -160,9 +160,9 @@ public class Store {
      *
      * @param day to pick up the order
      * @param pickUpTime time to pick up the order
-     * @param email of the customer
+     * @param guest the current customer
      */
-    void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, String email){
+    void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, Guest guest){
         Order findOrder = new Order(this, pickUpTime, day);
 
         orders.forEach(order->{

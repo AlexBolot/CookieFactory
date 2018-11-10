@@ -17,7 +17,7 @@ public class GuestTest {
     @Before
     public void before() {
         order = new Order(new Store(14), LocalDateTime.now().plusHours(3), Day.MONDAY);
-        guest = new Guest();
+        guest = new Guest("");
         guest.setTemporaryOrder(order);
     }
 

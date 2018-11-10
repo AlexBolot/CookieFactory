@@ -1,6 +1,7 @@
 package order;
 
 import main.Day;
+import main.Guest;
 import main.Store;
 import main.Recipe;
 
@@ -16,8 +17,11 @@ public class Order {
     LocalDateTime pickUpTime;
     Day pickupDay;
     OrderState orderState = OrderState.DRAFT;
-    String email = "test";
+
+
     boolean payed = false;
+
+    private Guest guest;
 
     public Order(Store store, LocalDateTime pickUpTime, Day pickupDay) {
         this.store = store;
@@ -112,4 +116,18 @@ public class Order {
     public Day getPickupDay() {
         return pickupDay;
     }
+
+    //TODO:maybe should dispear, as the state is an order progression, we could use different method "pay","withdraw" etc
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
+    }
+
+    public void pay() {
+
+    }
+
+    public OrderState getState() {
+        return orderState;
+    }
+
 }

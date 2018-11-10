@@ -19,6 +19,7 @@ public class Order {
 
 
     boolean payed = false;
+
     public Order(Store store, LocalDateTime pickUpTime, Day pickupDay) {
         this.store = store;
         this.pickUpTime = pickUpTime;
@@ -38,6 +39,14 @@ public class Order {
 
     public Store getStore() {
         return this.store;
+    }
+
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
     }
 
     /**
@@ -69,6 +78,14 @@ public class Order {
         if (orderLine.amount <= 0)
             orderLines.remove(orderLine);
 
+    }
+
+    public boolean isPayed() {
+        return payed;
+    }
+
+    public void setPayed() {
+        this.payed = true;
     }
 
     public Collection<OrderLine> getOrderLines() {

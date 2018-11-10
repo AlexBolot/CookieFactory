@@ -104,14 +104,21 @@ public class Store {
             return false;
         } else {
             orders.add(order);
+            order.setOrderState(OrderState.ORDERED);
         }
         return true;
     }
 
     public void cancelOrder(Order order) {
-        if(order.isPayed() && order.getOrderState() == OrderState.ORDERED){
+
+        if (order.getOrderState() == OrderState.ORDERED) {
             order.setOrderState(OrderState.CANCELED);
-            //order
+
+            if (order.isPayed()) {
+                order.getGuest().refund();
+            }
+        } else {
+            throw new IllegalStateException("Order has already been Canceled or Withdrawn and can not be canceled");
         }
     }
 
@@ -167,15 +174,15 @@ public class Store {
     /**
      * Set the order to payed
      *
-     * @param day to pick up the order
+     * @param day        to pick up the order
      * @param pickUpTime time to pick up the order
-     * @param guest the current customer
+     * @param guest      the current customer
      */
-    void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, Guest guest){
+    void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, Guest guest) {
         Order findOrder = new Order(this, pickUpTime, day);
 
-        orders.forEach(order->{
-            if(order.equals(findOrder)){
+        orders.forEach(order -> {
+            if (order.equals(findOrder)) {
                 order.setPayed();
             }
         });

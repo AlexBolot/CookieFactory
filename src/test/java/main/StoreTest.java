@@ -1,6 +1,7 @@
 package main;
 
 import order.Order;
+import order.OrderState;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -175,4 +176,24 @@ public class StoreTest {
         assertFalse(store.findOrder(pickUpTime, pickUpDay, guestAlice.getEmail()).isPresent());
     }
 
+    @Test
+    public void cancelOrder(){
+        Day pickUpDay = Day.TUESDAY;
+        LocalDateTime pickUpTime = LocalDateTime.now().plusHours(3);
+        final Order order = new Order(store, pickUpTime, pickUpDay);
+        order.addCookie(utils.randomRecipe(), 2);
+        Guest guest = new Guest("");
+        guest.setTemporaryOrder(order);
+
+        assertEquals(OrderState.DRAFT, order.getOrderState());
+
+        guest.placeOrder(true);
+
+        assertEquals(OrderState.ORDERED, order.getOrderState());
+
+        store.cancelOrder(order);
+
+        assertEquals(OrderState.CANCELED, order.getOrderState());
+
+    }
 }

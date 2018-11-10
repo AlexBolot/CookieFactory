@@ -43,6 +43,10 @@ public class Order {
         return this.store;
     }
 
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
     /**
      * @param recipe
      * @param amount
@@ -81,6 +85,14 @@ public class Order {
     public void setGuest(Guest guest) {
         this.guest = guest;
     }
+    public boolean isPayed() {
+        return payed;
+    }
+
+    public void setPayed() {
+        this.payed = true;
+    }
+
     public Collection<OrderLine> getOrderLines() {
         return orderLines;
     }
@@ -92,4 +104,34 @@ public class Order {
     public Day getPickupDay() {
         return pickupDay;
     }
+
+    //TODO:maybe should dispear, as the state is an order progression, we could use different method "pay","withdraw" etc
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
+    }
+
+    public OrderState getState() {
+        return orderState;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        if (pickUpTime != null ? !pickUpTime.equals(order.pickUpTime) : order.pickUpTime != null) return false;
+        if (pickupDay != order.pickupDay) return false;
+        return guest != null ? guest.equals(order.guest) : order.guest == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = pickUpTime != null ? pickUpTime.hashCode() : 0;
+        result = 31 * result + (pickupDay != null ? pickupDay.hashCode() : 0);
+        result = 31 * result + (guest != null ? guest.hashCode() : 0);
+        return result;
+    }
+
 }

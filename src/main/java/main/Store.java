@@ -1,6 +1,7 @@
 package main;
 
 import order.Order;
+import order.OrderState;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ public class Store {
         this.closingTimes = closingTimes;
         this.tax = tax;
     }
+
+    // region --------------- Getters and Setters ---------------
 
     /**
      * Builds a list of Recipe containing the Global ones and the monthly of this store
@@ -71,27 +74,6 @@ public class Store {
         return monthlyRecipe;
     }
 
-    public void setOpeningTime(Day day, LocalDateTime localDateTime) {
-        this.openingTimes.remove(day, localDateTime);
-    }
-
-    public void setClosingTimes(Day day, LocalDateTime localDateTime) {
-        this.closingTimes.remove(day, localDateTime);
-    }
-
-    public Collection<Order> getOrders() {
-        return orders;
-    }
-
-    public boolean placeOrder(Order order) {
-        if (!this.checkOrderValidity(order)) {
-            return false;
-        } else {
-            orders.add(order);
-        }
-        return true;
-    }
-
     /**
      * Sets the new Monthly Recipe of the store
      * Raise an exception if new ingredient is the same as the previous one
@@ -104,6 +86,36 @@ public class Store {
         }
 
         this.monthlyRecipe = newRecipe;
+    }
+
+    public void setOpeningTime(Day day, LocalDateTime localDateTime) {
+        this.openingTimes.remove(day, localDateTime);
+    }
+
+    public void setClosingTimes(Day day, LocalDateTime localDateTime) {
+        this.closingTimes.remove(day, localDateTime);
+    }
+
+    public Collection<Order> getOrders() {
+        return orders;
+    }
+
+    // endregion
+
+    public boolean placeOrder(Order order) {
+        if (!this.checkOrderValidity(order)) {
+            return false;
+        } else {
+            orders.add(order);
+        }
+        return true;
+    }
+
+    public void cancelOrder(Order order) {
+        if(order.isPayed() && order.getOrderState() == OrderState.ORDERED){
+            order.setOrderState(OrderState.CANCELED);
+            //order
+        }
     }
 
     /**
@@ -152,6 +164,24 @@ public class Store {
 
         // Else -> no problem :)
         return true;
+    }
+
+
+    /**
+     * Set the order to payed
+     *
+     * @param day to pick up the order
+     * @param pickUpTime time to pick up the order
+     * @param guest the current customer
+     */
+    void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, Guest guest){
+        Order findOrder = new Order(this, pickUpTime, day);
+
+        orders.forEach(order->{
+            if(order.equals(findOrder)){
+                order.setPayed();
+            }
+        });
     }
 
 }

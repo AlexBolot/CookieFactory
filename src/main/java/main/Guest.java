@@ -23,6 +23,8 @@ public class Guest {
         if (temporaryOrder.isPayed())
             throw new IllegalStateException("The order you are trying to place has already been paid");
 
+        temporaryOrder.setGuest(this);
+
         if (onlinePayment) {
             temporaryOrder.setPayed();
         }

@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class GuestTest {
@@ -33,6 +34,7 @@ public class GuestTest {
         assertFalse(order.isPayed());
         guest.placeOrder(false);
         assertFalse(order.isPayed());
+        assertEquals(guest, order.getGuest());
     }
 
     @Test (expected = IllegalStateException.class)

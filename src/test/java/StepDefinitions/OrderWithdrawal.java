@@ -24,7 +24,7 @@ public class OrderWithdrawal {
 
     @Given("^A customer \"([^\"]*)\"$")
     public void aCustomer(String name) throws Throwable {
-        guests.put(name, new Guest());
+        guests.put(name, new Guest(""));
     }
 
     @Given("^An order \"([^\"]*)\"$")

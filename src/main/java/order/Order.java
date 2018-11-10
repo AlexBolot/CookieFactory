@@ -2,6 +2,7 @@ package order;
 
 import main.Day;
 import main.Guest;
+import main.Store;
 import main.Recipe;
 import main.Store;
 
@@ -110,10 +111,20 @@ public class Order {
         this.orderState = orderState;
     }
 
+    public void pay() {
+        this.payed = true;
+    }
+
     public OrderState getState() {
         return orderState;
     }
-
+    public void withdraw() {
+        if (this.payed)
+            this.orderState = OrderState.WITHDRAWN;
+        else {
+            throw new WithdrawNotPaidOrderException();
+        }
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -133,5 +144,6 @@ public class Order {
         result = 31 * result + (guest != null ? guest.hashCode() : 0);
         return result;
     }
+
 
 }

@@ -2,6 +2,7 @@ package main;
 
 import order.Order;
 
+
 public class Guest {
 
     private Order temporaryOrder;
@@ -21,6 +22,8 @@ public class Guest {
 
         if (temporaryOrder.isPayed())
             throw new IllegalStateException("The order you are trying to place has already been paid");
+
+        temporaryOrder.setGuest(this);
 
         if (onlinePayment) {
             temporaryOrder.setPayed();

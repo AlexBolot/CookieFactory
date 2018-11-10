@@ -125,7 +125,7 @@ public class StoreTest {
         normalOrder.addCookie(utils.randomRecipe(), 10);
         store.placeOrder(normalOrder);
         assertEquals(false, normalOrder.isPayed());
-        store.setStatusPaymentOrder(Day.TUESDAY, now.plusHours(3), new Guest());
+        store.setStatusPaymentOrder(Day.TUESDAY, now.plusHours(3), new Guest(""));
         assertEquals(true, normalOrder.isPayed());
     }
 }

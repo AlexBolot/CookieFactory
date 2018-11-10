@@ -5,9 +5,10 @@ import order.Order;
 public class Guest {
 
     private Order temporaryOrder;
-
-    public Guest() {
+    private String email;
+    public Guest(String email) {
         this.temporaryOrder = createOrder();
+        this.email = email;
     }
 
     public Order createOrder() {
@@ -30,5 +31,13 @@ public class Guest {
 
     public void setTemporaryOrder(Order order) {
         this.temporaryOrder = order;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    void setEmail(String email) {
+        this.email = email;
     }
 }

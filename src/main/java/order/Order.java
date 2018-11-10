@@ -2,8 +2,8 @@ package order;
 
 import main.Day;
 import main.Guest;
-import main.Store;
 import main.Recipe;
+import main.Store;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -78,6 +78,13 @@ public class Order {
 
     }
 
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
     public boolean isPayed() {
         return payed;
     }

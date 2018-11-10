@@ -7,16 +7,16 @@ import java.util.Collection;
 public class Customer extends Guest {
 
     private Collection<Order> orderHistory;
-    private int firstName;
-    private int lastName;
-    private int phoneNumber;
-    private int email;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String email;
     private boolean loyaltyProgram = false;
     private int cookieCount=0;
     private boolean haveDiscount = false;
 
-    public Customer(Collection<Order> orderHistory, int firstName, int lastName, int phoneNumber, int email) {
-        super();
+    public Customer(Collection<Order> orderHistory, String firstName, String lastName, String phoneNumber, String email) {
+        super(email);
         this.orderHistory = orderHistory;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -91,5 +91,4 @@ public class CustomerTest {
         assertEquals(true, customer.canHaveDiscount());
     }
 
-
 }

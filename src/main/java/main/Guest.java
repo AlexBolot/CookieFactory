@@ -6,8 +6,9 @@ public class Guest {
 
     private Order temporaryOrder;
     private String email;
-    public Guest() {
+    public Guest(String email) {
         this.temporaryOrder = createOrder();
+        this.email = email;
     }
 
     public Order createOrder() {

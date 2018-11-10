@@ -13,12 +13,11 @@ public class Customer extends Guest {
     private String email;
 
     public Customer(Collection<Order> orderHistory, String firstName, String lastName, String phoneNumber, String email) {
-        super();
+        super(email);
         this.orderHistory = orderHistory;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.email = email;
     }
 
     /**

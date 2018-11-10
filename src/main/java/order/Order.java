@@ -16,9 +16,9 @@ public class Order {
     LocalDateTime pickUpTime;
     Day pickupDay;
     OrderState orderState = OrderState.DRAFT;
-
-
+    String email = "test";
     boolean payed = false;
+
     public Order(Store store, LocalDateTime pickUpTime, Day pickupDay) {
         this.store = store;
         this.pickUpTime = pickUpTime;
@@ -69,6 +69,36 @@ public class Order {
         if (orderLine.amount <= 0)
             orderLines.remove(orderLine);
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        if (!store.equals(order.store)) return false;
+        if (!pickUpTime.equals(order.pickUpTime)) return false;
+        if (pickupDay != order.pickupDay) return false;
+        return email.equals(order.email);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = store.hashCode();
+        result = 31 * result + pickUpTime.hashCode();
+        result = 31 * result + pickupDay.hashCode();
+        result = 31 * result + email.hashCode();
+        return result;
+    }
+
+    public boolean isPayed() {
+        return payed;
+    }
+
+    public void setPayed() {
+        this.payed = true;
     }
 
     public Collection<OrderLine> getOrderLines() {

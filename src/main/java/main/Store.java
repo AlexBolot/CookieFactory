@@ -154,4 +154,22 @@ public class Store {
         return true;
     }
 
+
+    /**
+     * Set the order to payed
+     *
+     * @param day to pick up the order
+     * @param pickUpTime time to pick up the order
+     * @param email of the customer
+     */
+    void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, String email){
+        Order findOrder = new Order(this, pickUpTime, day);
+
+        orders.forEach(order->{
+            if(order.equals(findOrder)){
+                order.setPayed();
+            }
+        });
+    }
+
 }

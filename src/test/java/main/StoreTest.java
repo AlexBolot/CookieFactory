@@ -4,16 +4,11 @@ import order.Order;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class StoreTest {
 
@@ -38,19 +33,10 @@ public class StoreTest {
             globalRecipes.add(utils.randomRecipe());
         }
 
-        int startDay = 5;
-
+        // Each day the store opens 5h before now and closes 5h after now (for easier testing purposes)
         for (Day day : Day.values()) {
-
-            int openHour = new Random().nextInt(2) + 7;
-            int openMin = new Random().nextInt(60);
-            int closeHour = new Random().nextInt(2) + 17;
-            int closeMin = new Random().nextInt(60);
-
-            openingTimes.put(day, LocalDateTime.of(LocalDate.of(2018, 11, startDay), LocalTime.of(openHour, openMin)));
-            closingTimes.put(day, LocalDateTime.of(LocalDate.of(2018, 11, startDay), LocalTime.of(closeHour, closeMin)));
-
-            startDay++;
+            openingTimes.put(day, LocalDateTime.now().minusHours(5));
+            closingTimes.put(day, LocalDateTime.now().plusHours(5));
         }
 
         store = new Store(oldRecipe, globalRecipes, new ArrayList<>(), openingTimes, closingTimes, 15.5);
@@ -95,11 +81,11 @@ public class StoreTest {
 
         LocalDateTime now = LocalDateTime.now();
 
-        Order emptyOrder = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(now.plusHours(3))), Day.TUESDAY);
-        Order normalOrder = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(now.plusHours(3))), Day.TUESDAY);
-        Order tooEarlyOrder = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.of(6, 30)), Day.TUESDAY);
-        Order tooLateOrder = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.of(19, 30)), Day.TUESDAY);
-        Order tooShortOrder = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(now.plusHours(1))), Day.TUESDAY);
+        Order emptyOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
+        Order normalOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
+        Order tooEarlyOrder = new Order(store, now.minusHours(6), Day.TUESDAY);
+        Order tooLateOrder = new Order(store, now.plusHours(6), Day.TUESDAY);
+        Order tooShortOrder = new Order(store, now.plusHours(1), Day.TUESDAY);
 
         for (int i = 1; i < 4; i++) {
             normalOrder.addCookie(utils.randomRecipe(), i);
@@ -115,18 +101,18 @@ public class StoreTest {
     }
 
     @Test
-    public void placeOrder(){
+    public void placeOrder() {
 
         LocalDateTime now = LocalDateTime.now();
 
-        Order normalOrder = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(now.plusHours(3))), Day.TUESDAY);
-        Order faultyOrder = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(now.plusHours(3))), Day.TUESDAY);
+        Order normalOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
+        Order emptyOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
 
         for (int i = 1; i < 4; i++) {
             normalOrder.addCookie(utils.randomRecipe(), i);
         }
 
         assertTrue(store.placeOrder(normalOrder));
-        assertFalse(store.placeOrder(faultyOrder));
+        assertFalse(store.placeOrder(emptyOrder));
     }
 }

@@ -118,5 +118,4 @@ public class OrderTest {
     public void removeNonExistingCookiesThrows() {
         order.removeCookie(unavailableRecep, 3);
     }
-
 }

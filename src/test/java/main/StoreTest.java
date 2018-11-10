@@ -115,4 +115,17 @@ public class StoreTest {
         assertTrue(store.placeOrder(normalOrder));
         assertFalse(store.placeOrder(emptyOrder));
     }
+
+
+    @Test
+    public void payingAnOrder(){
+        LocalDateTime now = LocalDateTime.now();
+
+        Order normalOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
+        normalOrder.addCookie(utils.randomRecipe(), 10);
+        store.placeOrder(normalOrder);
+        assertEquals(false, normalOrder.isPayed());
+        store.setStatusPaymentOrder(Day.TUESDAY, now.plusHours(3), new Guest());
+        assertEquals(true, normalOrder.isPayed());
+    }
 }

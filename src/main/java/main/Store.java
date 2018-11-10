@@ -166,4 +166,22 @@ public class Store {
         return true;
     }
 
+
+    /**
+     * Set the order to payed
+     *
+     * @param day to pick up the order
+     * @param pickUpTime time to pick up the order
+     * @param guest the current customer
+     */
+    void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, Guest guest){
+        Order findOrder = new Order(this, pickUpTime, day);
+
+        orders.forEach(order->{
+            if(order.equals(findOrder)){
+                order.setPayed();
+            }
+        });
+    }
+
 }

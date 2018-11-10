@@ -3,10 +3,7 @@ package main;
 import order.Order;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Store {
 
@@ -154,4 +151,21 @@ public class Store {
         return true;
     }
 
+    /**
+     * Tries to find an order mathing the passed values
+     *
+     * @param pickUpTime {@link LocalDateTime } the required pick up time
+     * @param pickupDay  {@link Day} the required day
+     * @param email      {@link String} the guest email
+     * @return {@link Optional<Order>}Optional containing the found order if exists
+     */
+    public Optional<Order> findOrder(LocalDateTime pickUpTime, Day pickupDay, String email) {
+        return orders.stream()
+                .filter(order ->
+                        order.getPickupDay().equals(pickupDay) &&
+                                order.getPickUpTime().equals(pickUpTime) &&
+                                order.getGuest().getEmail().equals(email)
+                )
+                .findFirst();
+    }
 }

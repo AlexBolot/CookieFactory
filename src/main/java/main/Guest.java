@@ -2,12 +2,11 @@ package main;
 
 import order.Order;
 
-import java.util.Date;
 
 public class Guest {
 
     private Order temporaryOrder;
-
+    private String email;
     public Guest() {
         this.temporaryOrder = createOrder();
     }
@@ -24,5 +23,13 @@ public class Guest {
 
     public void setTemporaryOrder(Order order) {
         this.temporaryOrder=order;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    void setEmail(String email) {
+        this.email = email;
     }
 }

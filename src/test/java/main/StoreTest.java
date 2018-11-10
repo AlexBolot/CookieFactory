@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class StoreTest {
 
@@ -22,6 +20,9 @@ public class StoreTest {
     private Store store;
     private Recipe oldRecipe;
     private Recipe newRecipe;
+
+    private Guest guestBob = new Guest();
+    private Guest guestAlice = new Guest();
 
     private HashMap<Day, LocalDateTime> openingTimes = new HashMap<>();
     private HashMap<Day, LocalDateTime> closingTimes = new HashMap<>();
@@ -52,8 +53,22 @@ public class StoreTest {
 
             startDay++;
         }
+        guestAlice.setEmail("Alice");
+        guestBob.setEmail("Bob");
 
-        store = new Store(oldRecipe, globalRecipes, new ArrayList<>(), openingTimes, closingTimes, 15.5);
+        ArrayList<Order> orders = new ArrayList<>();
+        store = new Store(oldRecipe, globalRecipes, orders, openingTimes, closingTimes, 15.5);
+
+        Order order = new Order(store, LocalDateTime.now(), Day.TUESDAY);
+        order.setGuest(guestBob);
+        orders.add(order);
+
+        order = new Order(store, LocalDateTime.now().plusHours(1), Day.FRIDAY);
+        order.addCookie(globalRecipes.get(0), 1);
+        order.addCookie(globalRecipes.get(2), 3);
+        order.setGuest(guestAlice);
+
+        orders.add(order);
     }
 
     @Test
@@ -129,4 +144,34 @@ public class StoreTest {
         assertTrue(store.placeOrder(normalOrder));
         assertFalse(store.placeOrder(faultyOrder));
     }
+
+    @Test
+    public void findOrderFromDayTimeAndEmail() {
+        Day pickUpDay = Day.TUESDAY;
+        LocalDateTime pickUpTime = LocalDateTime.now();
+        Guest guest = new Guest();
+        guest.setEmail("email");
+        final Order order = new Order(store, pickUpTime, pickUpDay);
+        order.setGuest(guest);
+        store.getOrders().add(order);
+        assertEquals(store.findOrder(pickUpTime, pickUpDay, guest.getEmail()).orElse(null), order);
+    }
+
+    @Test
+    public void findOrderWithDuplicateCriterias() {
+        Day pickUpDay = Day.TUESDAY;
+        LocalDateTime pickUpTime = LocalDateTime.now();
+        final Order order = new Order(store, pickUpTime, pickUpDay);
+        store.getOrders().add(order);
+        order.setGuest(guestAlice);
+        assertEquals(store.findOrder(pickUpTime, pickUpDay, guestAlice.getEmail()).orElse(null), order);
+    }
+
+    @Test
+    public void emptyWhenOrderNotFound() {
+        Day pickUpDay = Day.TUESDAY;
+        LocalDateTime pickUpTime = LocalDateTime.now();
+        assertFalse(store.findOrder(pickUpTime, pickUpDay, guestAlice.getEmail()).isPresent());
+    }
+
 }

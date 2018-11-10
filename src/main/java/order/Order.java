@@ -99,11 +99,18 @@ public class Order {
     }
 
     public void pay() {
-
+        this.payed = true;
     }
 
     public OrderState getState() {
         return orderState;
     }
 
+    public void withdraw() {
+        if (this.payed)
+            this.orderState = OrderState.WITHDRAWN;
+        else {
+            throw new WithdrawNotPaidOrderException();
+        }
+    }
 }

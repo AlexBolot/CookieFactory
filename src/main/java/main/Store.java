@@ -152,7 +152,7 @@ public class Store {
     }
 
     /**
-     * Tries to find an order mathing the passed values
+     * Tries to find an order matching the passed values
      *
      * @param pickUpTime {@link LocalDateTime } the required pick up time
      * @param pickupDay  {@link Day} the required day

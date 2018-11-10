@@ -13,7 +13,7 @@ public class Customer extends Guest {
     private int email;
     private boolean loyaltyProgram = false;
     private int cookieCount=0;
-    private boolean discount = false;
+    private boolean haveDiscount = false;
 
     public Customer(Collection<Order> orderHistory, int firstName, int lastName, int phoneNumber, int email) {
         super();
@@ -30,7 +30,7 @@ public class Customer extends Guest {
      * loyalty program
      * @param order by the customer
      */
-    private void addToOrderHistory(Order order) {
+    void addToOrderHistory(Order order) {
         if(loyaltyProgram){
             order.getOrderLines().forEach(orderLine ->
             {
@@ -43,14 +43,15 @@ public class Customer extends Guest {
     /**
      * Add the amount of cookie to the cookie counter
      * When the cookie counter is more than 30, then
-     * the customer can have a discount
+     * the customer can have a haveDiscount
      * @param amount of cookie
      */
     private void fideltyPoints(int amount) {
-        if (cookieCount < 30 && !discount) {
+        if (cookieCount < 30 && !haveDiscount) {
             cookieCount += amount;
-        } else {
-            discount = true;
+        }
+        if (cookieCount>=30){
+            haveDiscount = true;
         }
     }
 
@@ -61,7 +62,8 @@ public class Customer extends Guest {
         loyaltyProgram = true;
     }
 
+
     public boolean canHaveDiscount() {
-        return discount;
+        return haveDiscount;
     }
 }

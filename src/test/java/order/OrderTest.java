@@ -4,6 +4,7 @@ import main.Day;
 import main.Recipe;
 import main.Store;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import ingredient.*;
 
@@ -83,11 +84,12 @@ public class OrderTest {
         order.addCookie(unavailableRecep, -1);
     }
 
-    /*
+
+    @Ignore
     @Test(expected = IllegalArgumentException.class)
     public void addUnavailableCookieThrowsAndException() {
         order.addCookie(unavailableRecep, 1);
-    }*/
+    }
 
     @Test
     public void basicRemoveCookie() {
@@ -116,4 +118,5 @@ public class OrderTest {
     public void removeNonExistingCookiesThrows() {
         order.removeCookie(unavailableRecep, 3);
     }
+
 }

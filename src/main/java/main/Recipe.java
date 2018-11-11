@@ -24,18 +24,30 @@ public class Recipe {
         this.price = price;
     }
 
-    private void setFlavors(List<Flavor> flavors) {
-        if(flavors.size()>3)
+    public void setFlavors(List<Flavor> flavors) {
+        if (flavors.size() > 3)
             throw new IllegalArgumentException("To much flavors!!!");
         else
             this.flavors = flavors;
     }
 
-    private void setToppings(List<Topping> toppings) {
-        if(flavors.size()>3)
+    public void setToppings(List<Topping> toppings) {
+        if (flavors.size() > 3)
             throw new IllegalArgumentException("To much toppings!!!");
         else
             this.toppings = toppings;
+    }
+
+    public void setDough(Dough dough) {
+        this.dough = dough;
+    }
+
+    public void setCooking(Cooking cooking) {
+        this.cooking = cooking;
+    }
+
+    public void setMix(Mix mix) {
+        this.mix = mix;
     }
 
     public Dough getDough() {
@@ -57,6 +69,7 @@ public class Recipe {
     public Cooking getCooking() {
         return cooking;
     }
+
     public float getPrice() {
         return price;
     }

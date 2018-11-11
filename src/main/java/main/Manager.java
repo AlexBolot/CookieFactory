@@ -10,11 +10,15 @@ public class Manager {
         this.store = store;
     }
 
-    public void changeOpeningTime(LocalDateTime time, Day day) {
+    public Store getStore() {
+        return store;
+    }
+
+    public void changeOpeningTime(Day day, LocalDateTime time) {
         store.setOpeningTime(day, time);
     }
 
-    public void changeClosingTime(LocalDateTime time, Day day) {
+    public void changeClosingTime(Day day, LocalDateTime time) {
         store.setClosingTimes(day, time);
     }
 

@@ -86,11 +86,25 @@ public class Store {
     }
 
     public void setOpeningTime(Day day, LocalDateTime localDateTime) {
-        this.openingTimes.remove(day, localDateTime);
+        // Check if store has a closing time for the [day], to ensure no time crossing
+        if (closingTimes.containsKey(day) && localDateTime.isAfter(closingTimes.get(day)))
+            throw new IllegalArgumentException("Trying to set opening time after closing time for " + day);
+
+        if (openingTimes.containsKey(day))
+            this.openingTimes.replace(day, localDateTime);
+        else
+            this.openingTimes.put(day, localDateTime);
     }
 
     public void setClosingTimes(Day day, LocalDateTime localDateTime) {
-        this.closingTimes.remove(day, localDateTime);
+        // Check if store has a opening time for the [day], to ensure no time crossing
+        if (openingTimes.containsKey(day) && localDateTime.isBefore(openingTimes.get(day)))
+            throw new IllegalArgumentException("Trying to set closing time before opening time for " + day);
+
+        if (closingTimes.containsKey(day))
+            this.closingTimes.replace(day, localDateTime);
+        else
+            this.closingTimes.put(day, localDateTime);
     }
 
     public Collection<Order> getOrders() {

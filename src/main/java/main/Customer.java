@@ -41,6 +41,6 @@ public class Customer extends Guest {
         if (lastName != null ? !lastName.equals(customer.lastName) : customer.lastName != null) return false;
         if (firstName != null ? !firstName.equals(customer.firstName) : customer.firstName != null) return false;
         if (password != null ? !password.equals(customer.password) : customer.password != null) return false;
-        return email != null ? customer.equals(customer.email) : customer.email == null;
+        return email != null ? email.equals(customer.email) : customer.email == null;
     }
 }

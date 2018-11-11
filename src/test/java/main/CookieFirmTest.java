@@ -38,4 +38,14 @@ public class CookieFirmTest {
         cookieFirm.createAccount(new ArrayList<Order>(),"a","a","a","email@email.fr","a");
         cookieFirm.createAccount(new ArrayList<Order>(),"b","b","b","email@email.fr","b");
     }
+
+    @Test
+    public void createAccount_deletingOneAccount() {
+        cookieFirm.addGuest(new Guest("email2@email.fr"));
+        cookieFirm.addGuest(new Guest("email3@email.fr"));
+        assertEquals("Guests incorrectly initialzed",3,cookieFirm.getGuests().size());
+        Customer createdAccount = cookieFirm.createAccount(new ArrayList<Order>(),"","",
+                "","email@email.fr","");
+        assertEquals("Guest badly deleted",2,cookieFirm.getGuests().size());
+    }
 }

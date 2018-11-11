@@ -92,7 +92,7 @@ public class RecipeStepDefs {
         }
     }
 
-    @And("^la topping of \"([^\"]*)\" is \"([^\"]*)\"$")
+    @And("^The topping of \"([^\"]*)\" is \"([^\"]*)\"$")
     public void laToppingOfIs(String recipeName, String toppingName) {
         Topping topping = toppingFromName(toppingName);
         if (topping!=null) {

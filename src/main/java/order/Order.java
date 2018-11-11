@@ -1,9 +1,6 @@
 package order;
 
-import main.Day;
-import main.Guest;
-import main.Store;
-import main.Recipe;
+import main.*;
 import main.Store;
 
 import java.time.LocalDateTime;
@@ -35,18 +32,8 @@ public class Order {
         this.pickUpTime=null;
     }
 
-    public double getPrice() {
-        double storeTax = store.getTax();
-        return orderLines.stream().mapToDouble(line -> line.amount * line.recipe.getPrice()).sum() * storeTax;
-    }
 
-    public Store getStore() {
-        return this.store;
-    }
 
-    public OrderState getOrderState() {
-        return orderState;
-    }
 
     /**
      * @param recipe
@@ -77,6 +64,27 @@ public class Order {
         if (orderLine.amount <= 0)
             orderLines.remove(orderLine);
 
+    }
+
+    /**
+     * Compute the price of the order given the store taxe and if the customer have discount
+     * @return the price
+     */
+    public double getPrice() {
+        double storeTax = store.getTax();
+        double price = orderLines.stream().mapToDouble(line -> line.amount * line.recipe.getPrice()).sum() * storeTax;
+        if(guest instanceof Customer && ((Customer) guest).isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()){
+            price=(price*0.90);
+        }
+        return price;
+    }
+
+    public Store getStore() {
+        return this.store;
+    }
+
+    public OrderState getOrderState() {
+        return orderState;
     }
 
     public Guest getGuest() {
@@ -125,6 +133,7 @@ public class Order {
             throw new WithdrawNotPaidOrderException();
         }
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

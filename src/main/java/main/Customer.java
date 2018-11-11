@@ -24,6 +24,39 @@ public class Customer extends Guest {
         this.email = email;
     }
 
+
+
+    /**
+     * Check if the order has been place and return the price
+     *
+     * @param onlinePayment boolean if the client payed online or not
+     * @param order of the customer
+     * @return price of the order, or 0.0 if the order is not taken
+     */
+    public double placeOrder(boolean onlinePayment, Order order) {
+
+        if (order.isPayed())
+            throw new IllegalStateException("The order you are trying to place has already been paid");
+
+        order.setGuest(this);
+
+        double price = 0.0;
+        try {
+            price = order.getStore().placeOrder(order);
+        }
+        catch (IllegalArgumentException e){
+            return 0.0;
+        }
+
+        if (onlinePayment) {
+            order.setPayed();
+        }
+
+        addToOrderHistory(order);
+
+        return price;
+    }
+
     /**
      * Add the new order to the history of the customer
      * For each new order add the number of coocki in the
@@ -37,7 +70,6 @@ public class Customer extends Guest {
                 fideltyPoints(orderLine.getAmount());
             });
         }
-        orderHistory.add(order);
     }
 
     /**
@@ -53,6 +85,10 @@ public class Customer extends Guest {
         if (cookieCount>=30){
             haveDiscount = true;
         }
+    }
+
+    public boolean isInLoyaltyProgram() {
+        return loyaltyProgram;
     }
 
     /**

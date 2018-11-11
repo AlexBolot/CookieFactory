@@ -32,32 +32,20 @@ public class CustomerTest {
     public void before(){
 
         Collection<Order> orders = new ArrayList<>();
-        customer = new Customer(orders,1,1,1,1 );
+        customer = new Customer(orders,"","","","" );
 
 
         for (int i = 0; i < 12; i++) {
             globalRecipes.add(utils.randomRecipe());
         }
 
-        int startDay = 5;
-
+        // Each day the store opens 5h before now and closes 5h after now (for easier testing purposes)
         for (Day day : Day.values()) {
-
-            int openHour = new Random().nextInt(2) + 7;
-            int openMin = new Random().nextInt(60);
-            int closeHour = new Random().nextInt(2) + 17;
-            int closeMin = new Random().nextInt(60);
-
-            openingTimes.put(day, LocalDateTime.of(LocalDate.of(2018, 10, startDay), LocalTime.of(openHour,
-                    openMin)));
-            closingTimes.put(day, LocalDateTime.of(LocalDate.of(2018, 10, startDay), LocalTime.of(closeHour,
-                    closeMin)));
-
-            startDay++;
+            openingTimes.put(day, LocalDateTime.now().minusHours(5));
+            closingTimes.put(day, LocalDateTime.now().plusHours(5));
         }
 
-        store = new Store(utils.randomRecipe(), globalRecipes, new ArrayList<>(), openingTimes, closingTimes, 15.5);
-
+        store = new Store(utils.randomRecipe(), globalRecipes, orders, openingTimes, closingTimes, 15.5);
 
     }
 
@@ -66,6 +54,7 @@ public class CustomerTest {
     public void cannotHaveDiscountfideltyP(){
         Order order = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
                 (3))), Day.TUESDAY);
+
         order.addCookie(globalRecipes.get(1), 10);
         customer.addToLoyaltyP();
         customer.addToOrderHistory(order);
@@ -89,6 +78,39 @@ public class CustomerTest {
         customer.addToLoyaltyP();
         customer.addToOrderHistory(order);
         assertEquals(true, customer.canHaveDiscount());
+    }
+
+    @Test
+    public void notHaveALowerPriceFirstPurchase(){
+        customer.addToLoyaltyP();
+        Order order = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
+                (3))), Day.TUESDAY);
+        order.addCookie(globalRecipes.get(1), 30);
+        assertTrue((globalRecipes.get(1).price * 30 * store.getTax())*0.9 != customer.placeOrder(true, order));
+    }
+
+    @Test
+    public void haveALowerPriceSecondPurchase(){
+        customer.addToLoyaltyP();
+        Order order = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
+                (3))), Day.TUESDAY);
+        order.addCookie(globalRecipes.get(1), 30);
+        customer.placeOrder(true, order);
+
+        Order order2 = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
+                (3))), Day.TUESDAY);
+        order2.addCookie(globalRecipes.get(2), 2);
+
+        assertEquals((globalRecipes.get(2).price * 2 * store.getTax())*0.9, customer.placeOrder(true, order2),0.0);
+    }
+
+    @Test
+    public void doNothaveALowerPrice(){
+        Order order = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
+                (3))), Day.TUESDAY);
+        order.addCookie(globalRecipes.get(1), 30);
+        assertTrue((globalRecipes.get(1).price * 30 * store.getTax())*0.9 != customer.placeOrder(true, order));
+
     }
 
 }

@@ -1,6 +1,7 @@
 Feature: Add cookie to order
 
   Scenario : Add 1 cookie in the order
-    Given The "Guest" see the list of cookies
-    When The "Guest" select "1" cookie
+    Given The guest see the list of cookies
+    When The guest select the recipee "NyILoveYou"
+    And add 1 cookie of the selected recipee
     Then The order contain "1" cookie

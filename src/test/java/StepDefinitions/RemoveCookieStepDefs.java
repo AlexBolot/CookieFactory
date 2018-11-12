@@ -1,26 +1,57 @@
 package StepDefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import ingredient.Catalog;
+import ingredient.Cooking;
+import ingredient.Mix;
+import main.Guest;
+import main.Recipe;
+import order.Order;
+
+import static org.junit.Assert.assertEquals;
 
 public class RemoveCookieStepDefs {
-    @Given("^The \"([^\"]*)\" checks his order$")
-    public void theChecksHisOrder(String arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    private Guest guest;
+    private Order order;
+
+    @Given("^The customer checks his order$")
+    public void theChecksHisOrder() throws Throwable {
+        guest.setTemporaryOrder(order);
+        order.setGuest(guest);
     }
 
-    @When("^The \"([^\"]*)\" select (\\d+) cookie to remove$")
-    public void theSelectCookieToRemove(String arg0, int arg1) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @When("^The customer select (\\d+) cookie to remove$")
+    public void theSelectCookieToRemove(int cookieAmount) throws Throwable {
+        order.removeCookie(order.getOrderLines().get(0).getRecipe(), cookieAmount);
     }
 
-    @Then("^the order contains (\\d+) cookies less$")
-    public void theOrderContainsCookiesLess(int arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+
+    @Given("^A customer$")
+    public void aCustomer() throws Throwable {
+        this.guest = new Guest("guest");
+    }
+
+
+    @Given("^An order with (\\d+) recipe of (\\d+) cookie$")
+    public void anOrderWithRecipeOfCookie(int recipies, int cookies) throws Throwable {
+        this.order = new Order();
+        final Catalog kitchen = new Catalog();
+        for (int i = 0; i < recipies; i++) {
+            this.order.addCookie(
+                    new Recipe(String.valueOf(i),
+                            kitchen.getDoughList().get(0),
+                            kitchen.getFlavorList().subList(0, 1),
+                            kitchen.getToppingList().subList(0, 1),
+                            Mix.MIXED,
+                            Cooking.CHEWY,
+                            1.0f), cookies);
+        }
+    }
+
+    @Then("^The order contains (\\d+) cookie recipee$")
+    public void theOrderContainsCookieRecipee(int recipeeAmount) throws Throwable {
+        assertEquals(recipeeAmount, this.order.getOrderLines().size());
     }
 }

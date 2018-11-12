@@ -37,4 +37,8 @@ public class OrderLine {
     public int hashCode() {
         return Objects.hash(orderLines, recipe, amount);
     }
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
 }

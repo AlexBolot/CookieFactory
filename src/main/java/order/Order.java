@@ -1,17 +1,16 @@
 package order;
 
 import main.*;
-import main.Store;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public class Order {
 
     Store store;
-    Collection<OrderLine> orderLines = new ArrayList<>();
+    List<OrderLine> orderLines = new ArrayList<>();
     LocalDateTime pickUpTime;
     Day pickupDay;
     OrderState orderState = OrderState.DRAFT;
@@ -102,7 +101,7 @@ public class Order {
         this.payed = true;
     }
 
-    public Collection<OrderLine> getOrderLines() {
+    public List<OrderLine> getOrderLines() {
         return orderLines;
     }
 

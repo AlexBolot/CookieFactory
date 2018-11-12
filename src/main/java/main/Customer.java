@@ -13,7 +13,7 @@ public class Customer extends Guest {
     private int email;
 
     public Customer(Collection<Order> orderHistory, int firstName, int lastName, int phoneNumber, int email) {
-        super();
+        super("");
         this.orderHistory = orderHistory;
         this.firstName = firstName;
         this.lastName = lastName;

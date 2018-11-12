@@ -21,8 +21,8 @@ public class StoreTest {
     private Recipe oldRecipe;
     private Recipe newRecipe;
 
-    private Guest guestBob = new Guest();
-    private Guest guestAlice = new Guest();
+    private Guest guestBob = new Guest("");
+    private Guest guestAlice = new Guest("");
 
     private HashMap<Day, LocalDateTime> openingTimes = new HashMap<>();
     private HashMap<Day, LocalDateTime> closingTimes = new HashMap<>();
@@ -149,7 +149,7 @@ public class StoreTest {
     public void findOrderFromDayTimeAndEmail() {
         Day pickUpDay = Day.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
-        Guest guest = new Guest();
+        Guest guest = new Guest("");
         guest.setEmail("email");
         final Order order = new Order(store, pickUpTime, pickUpDay);
         order.setGuest(guest);
@@ -165,6 +165,14 @@ public class StoreTest {
         store.getOrders().add(order);
         order.setGuest(guestAlice);
         assertEquals(store.findOrder(pickUpTime, pickUpDay, guestAlice.getEmail()).orElse(null), order);
+    }
+
+    @Test
+    public void returnsEmptyOptionalOnEmptyOrderList() {
+        Day pickUpDay = Day.TUESDAY;
+        LocalDateTime pickUpTime = LocalDateTime.now();
+        store = new Store(1.0);
+        assertFalse(store.findOrder(pickUpTime, pickUpDay, guestAlice.getEmail()).isPresent());
     }
 
     @Test

@@ -162,9 +162,9 @@ public class Store {
     public Optional<Order> findOrder(LocalDateTime pickUpTime, Day pickupDay, String email) {
         return orders.stream()
                 .filter(order ->
-                        order.getPickupDay().equals(pickupDay) &&
-                                order.getPickUpTime().equals(pickUpTime) &&
-                                order.getGuest().getEmail().equals(email)
+                        pickupDay.equals(order.getPickupDay()) &&
+                                pickUpTime.equals(order.getPickUpTime()) &&
+                                email.equals(order.getGuest().getEmail())
                 )
                 .findFirst();
     }

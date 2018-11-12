@@ -7,6 +7,7 @@ public class Guest {
 
     private Order temporaryOrder;
     private String email;
+
     public Guest(String email) {
         this.temporaryOrder = createOrder();
         this.email = email;
@@ -18,18 +19,26 @@ public class Guest {
         return voidOrder;
     }
 
-    public void placeOrder(boolean onlinePayment) {
+    public double placeOrder(boolean onlinePayment) {
 
         if (temporaryOrder.isPayed())
             throw new IllegalStateException("The order you are trying to place has already been paid");
 
         temporaryOrder.setGuest(this);
 
+        double price = 0.0;
+        try {
+            price = temporaryOrder.getStore().placeOrder(temporaryOrder);
+        }
+        catch (IllegalArgumentException e){
+
+        }
+
         if (onlinePayment) {
             temporaryOrder.setPayed();
         }
 
-        temporaryOrder.getStore().placeOrder(temporaryOrder);
+        return price;
     }
 
     public void setTemporaryOrder(Order order) {

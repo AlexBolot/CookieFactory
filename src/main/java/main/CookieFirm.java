@@ -36,4 +36,8 @@ public class CookieFirm {
         return globalRecipes.contains(recipe);
     }
 
+    private void addCustomerToLoyaltyP(Customer customer){
+        customer.addToLoyaltyP();
+    }
+
 }

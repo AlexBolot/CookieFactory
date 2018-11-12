@@ -113,14 +113,14 @@ public class Store {
 
     // endregion
 
-    public boolean placeOrder(Order order) {
+    public double placeOrder(Order order) {
         if (!this.checkOrderValidity(order)) {
-            return false;
+            throw new IllegalArgumentException("The order is not valid");
         } else {
             orders.add(order);
             order.setOrderState(OrderState.ORDERED);
+            return order.getPrice();
         }
-        return true;
     }
 
     public void cancelOrder(Order order) {

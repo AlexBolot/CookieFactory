@@ -32,7 +32,7 @@ public class CustomerTest {
     public void before(){
 
         Collection<Order> orders = new ArrayList<>();
-        customer = new Customer(orders,"","","","" );
+        customer = new Customer(orders,"","","","" ,"");
 
 
         for (int i = 0; i < 12; i++) {

@@ -170,6 +170,14 @@ public class StoreTest {
     }
 
     @Test
+    public void returnsEmptyOptionalOnEmptyOrderList() {
+        Day pickUpDay = Day.TUESDAY;
+        LocalDateTime pickUpTime = LocalDateTime.now();
+        store = new Store(1.0);
+        assertFalse(store.findOrder(pickUpTime, pickUpDay, guestAlice.getEmail()).isPresent());
+    }
+
+    @Test
     public void emptyWhenOrderNotFound() {
         Day pickUpDay = Day.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();

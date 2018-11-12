@@ -1,20 +1,30 @@
 package main;
 
 import ingredient.*;
+import order.Order;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CookieFirm {
 
-    List<Guest> guests;
+    Set<Guest> guests;
+    Set<Customer> accounts;
     List<Store> stores;
     List<Manager> managers;
     List<Recipe> globalRecipes;
 
-
-    public List<Store> getStores() {
-        return stores;
+    public CookieFirm(List<Store> stores, List<Manager> managers, List<Recipe> globalRecipes) {
+        this.guests = new HashSet<Guest>();
+        this.accounts = new HashSet<Customer>();
+        this.stores = stores;
+        this.managers = managers;
+        this.globalRecipes = globalRecipes;
     }
+
 
     /**
      * @param cooking
@@ -34,6 +44,35 @@ public class CookieFirm {
      */
     private boolean checkRecipeExists(Recipe recipe) {
         return globalRecipes.contains(recipe);
+    }
+
+    public Customer createAccount(Collection<Order> orderHistory, String firstName, String lastName, String phoneNumber, String email, String password) {
+        Customer newAccount = new Customer(orderHistory, firstName, lastName, phoneNumber, email, password);
+        for (Customer account : this.accounts) {
+            if (account.getEmail() == email) {
+                throw new IllegalArgumentException("An account already exists with this email");
+            }
+        }
+        guests = guests.stream().filter(g -> g.getEmail() != email).collect(Collectors.toSet());
+        accounts.add(newAccount);
+        return newAccount;
+
+    }
+
+    public void addGuest(Guest guest) {
+        guests.add(guest);
+    }
+
+    public List<Store> getStores() {
+        return stores;
+    }
+
+    public Set<Guest> getGuests() {
+        return guests;
+    }
+
+    public Set<Customer> getAccounts() {
+        return accounts;
     }
 
     private void addCustomerToLoyaltyP(Customer customer){

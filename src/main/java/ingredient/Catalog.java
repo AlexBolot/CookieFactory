@@ -15,11 +15,11 @@ public class Catalog {
 
     public Catalog() {
         this.doughList.add(new Dough("Oatmeal"));
-        this.doughList.add(new Dough("Chocolat"));
+        this.doughList.add(new Dough("Chocolate"));
         this.flavorList.add(new Flavor("Vanilla"));
         this.flavorList.add(new Flavor("Chili"));
-        this.toppingList.add(new Topping("White Chocolat"));
-        this.toppingList.add(new Topping("Mnms"));
+        this.toppingList.add(new Topping("White Chocolate"));
+        this.toppingList.add(new Topping("M&M's"));
         this.mixList =  new ArrayList<>();
         this.cookingList =  new ArrayList<>();
     }

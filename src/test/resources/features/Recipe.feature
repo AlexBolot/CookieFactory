@@ -1,12 +1,16 @@
 Feature: Create a Recipe
 
-  Scenario: Ajout d une recette normal
-    Given Une recette "montly" creer par "Bob"
-    And la pate de "montly" est "chocolat"
-    And le gout de "montly" est "vanille"
-    And la garniture de "montly" est "mnm"
-    And le melange de "montly" est "mixer"
-    And la cuisson de "montly" est "cronstillant"
-    When "Bob" ajoute "montly" comme recette du mois
-    Then la recette du mois du magasin de "Bob" est "montly"
+  Background:
+    Given "store" a store
+    Given "Bob" the Manager of "store"
+
+  Scenario: Adding a monthy recipe
+    Given A recipe "monthly" is created by "Bob"
+    And The dough of "monthly" is "Chocolate"
+    And The flavor of "monthly" is "Vanilla"
+    And The topping of "monthly" is "M&M's"
+    And The mix of "monthly" is "Mixed"
+    And The cooking of "monthly" is "Crunchy"
+    When "Bob" add "monthly" as monthly recipe
+    Then The monthly recipe of the store of "Bob" is "monthly"
 

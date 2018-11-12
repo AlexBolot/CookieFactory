@@ -5,41 +5,106 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import ingredient.*;
+import main.*;
+import order.Order;
+import org.junit.Assert;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class NewAccountStepDefs {
-    @Given("^The customer wants to place his order$")
-    public void theCustomerWantsToPlaceHisOrder() throws Throwable {
 
+    private Map<String, Order> orders = new HashMap<>();
+    private Map<String, Guest> guests = new HashMap<>();
+    private Map<String, Customer> accounts = new HashMap<>();
+    private Catalog catalog = new Catalog();
+    private CookieFirm cookieFirm;
+
+    private Mix mixFromName(String mixName) {
+        for (Mix mix : Mix.values()) {
+            if (mix.name().equalsIgnoreCase(mixName)) return mix;
+        }
+        return null;
+    }
+    private Cooking cookingFromName(String cookingName) {
+        for (Cooking cooking : Cooking.values()) {
+            if (cooking.name().equalsIgnoreCase(cookingName)) return cooking;
+        }
+        return null;
+    }
+    private Dough doughFromName(String doughName) {
+        for (Dough dough : catalog.getDoughList()) {
+            if (dough.getName().equalsIgnoreCase(doughName)) return dough;
+        }
+        return null;
+    }
+    private Topping toppingFromName(String toppingName) {
+        for (Topping topping : catalog.getToppingList()) {
+            if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
+        }
+        return null;
+    }
+    private Flavor flavorFromName(String flavorName) {
+        for (Flavor flavor : catalog.getFlavorList()) {
+            if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
+        }
+        return null;
     }
 
-    @And("^The customer gives his \"([^\"]*)\"$")
-    public void theCustomerGivesHis(String arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @Given("^A recipe \"([^\"]*)\" as follows \"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\" in sale at CookieFactory$")
+    public void aRecipeAsFollowsInSaleInCookieFirm(String recipeName, String doughName, String flavorName,
+                                                   String toppingName, String mixName, String cookingName) {
+        List<Flavor> flavors = new ArrayList<>();
+        flavors.add(flavorFromName(flavorName));
+        List<Topping>toppings = new ArrayList<>();
+        toppings.add(toppingFromName(toppingName));
+        Recipe recipe = new Recipe(recipeName, doughFromName(doughName), flavors, toppings, mixFromName(mixName),cookingFromName(cookingName),0);
+        List<Recipe> recipes = new ArrayList<>();
+        recipes.add(recipe);
+        cookieFirm = new CookieFirm(new ArrayList<Store>(), new ArrayList<Manager>(), recipes);
     }
 
-    @When("^The customer \"([^\"]*)\" of an account$")
-    public void theCustomerOfAnAccount(String arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @Given("^An order \"([^\"]*)\" with (\\d+) cookies \"([^\"]*)\"$")
+    public void anOrderWithCookiesAsFollows(String orderName, int nbrCookies, String recipeName) {
+        Order order = new Order(new Store(1), null, null);
+        for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
+            if (cookie.getName().equals(recipeName)){
+                order.addCookie(cookie, nbrCookies);
+                orders.put(orderName, order);
+                return;
+            }
+        }
     }
 
-    @Then("^An account is created with the supplied \"([^\"]*)\"$")
-    public void anAccountIsCreatedWithTheSupplied(String arg0) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @And("^A guest \"([^\"]*)\" is ordering the order \"([^\"]*)\"$")
+    public void aGuestOrderingTheOrder(String guestName, String orderName) {
+        guests.get(guestName).setTemporaryOrder(orders.get(orderName));
     }
 
-    @And("^The password is saved$")
-    public void thePasswordIsSaved() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @And("^The guest \"([^\"]*)\" gives \"([^\"]*)\" as email$")
+    public void theGuestGivesAsEmail(String guestName, String email) {
+        guests.get(guestName).setEmail(email);
     }
 
-    @And("^The order is placed$")
-    public void theOrderIsPlaced() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @When("^The guest \"([^\"]*)\" create an account \"([^\"]*)\" at the name of \"([^\"]*)\" \"([^\"]*)\" with the password \"([^\"]*)\" and the phone \"([^\"]*)\"$")
+    public void theGuestCreateAnAccountATheNameOfWithThePassword(String guestName,String accountName, String firstName, String lastName, String password, String phoneNumber) {
+        Customer account = cookieFirm.createAccount(firstName, lastName,phoneNumber,guests.get(guestName).getEmail(),password, guests.get(guestName).getTemporaryOrder());
+        accounts.put(accountName, account);
     }
 
+    @Then("^The account \"([^\"]*)\" is saved$")
+    public void anAccountIsCreatedWithTheMailAndThePassword(String accountName) {
+        Assert.assertTrue(cookieFirm.getAccounts().contains(accounts.get(accountName)));
+    }
+
+    @And("^The order \"([^\"]*)\" is saved in the account \"([^\"]*)\"$")
+    public void theOrderOfIsSaved(String orderName, String accountName) {
+        Assert.assertTrue(accounts.get(accountName).getTemporaryOrder().equals(orders.get(orderName)));
+    }
+
+    @Given("^A guest \"([^\"]*)\"$")
+    public void aGuest(String guestName) {
+        guests.put(guestName, new Guest(""));
+    }
 }

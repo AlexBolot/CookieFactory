@@ -48,15 +48,29 @@ public class CookieFirm {
 
     public Customer createAccount(Collection<Order> orderHistory, String firstName, String lastName, String phoneNumber, String email, String password) {
         Customer newAccount = new Customer(orderHistory, firstName, lastName, phoneNumber, email, password);
+        if(updateAccounts(newAccount, email)) {
+            return newAccount;
+        } else {
+            throw new IllegalArgumentException("An account already exists with this email");
+        }
+    }
+    public Customer createAccount(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
+        Customer newAccount = new Customer(firstName, lastName, phoneNumber, email, password, temporaryOrder);
+        if(updateAccounts(newAccount, email)) {
+            return newAccount;
+        } else {
+            throw new IllegalArgumentException("An account already exists with this email");
+        }
+    }
+    public boolean updateAccounts(Customer customer, String email) {
         for (Customer account : this.accounts) {
             if (account.getEmail() == email) {
-                throw new IllegalArgumentException("An account already exists with this email");
+                return false;
             }
         }
         guests = guests.stream().filter(g -> g.getEmail() != email).collect(Collectors.toSet());
-        accounts.add(newAccount);
-        return newAccount;
-
+        accounts.add(customer);
+        return true;
     }
 
     public void addGuest(Guest guest) {
@@ -73,6 +87,10 @@ public class CookieFirm {
 
     public Set<Customer> getAccounts() {
         return accounts;
+    }
+
+    public List<Recipe> getGlobalRecipes() {
+        return globalRecipes;
     }
 
     private void addCustomerToLoyaltyProgram(Customer customer){

@@ -6,7 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
+import static main.Day.MONDAY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -14,10 +16,25 @@ public class GuestTest {
 
     private Order order;
     private Guest guest;
+    private ArrayList<Recipe> globalRecipes = new ArrayList<>();
+    private TestUtils utils = new TestUtils();
 
     @Before
     public void before() {
-        order = new Order(new Store(14), LocalDateTime.now().plusHours(3), Day.MONDAY);
+
+        for (int i = 0; i < 12; i++) {
+            globalRecipes.add(utils.randomRecipe());
+        }
+
+        Store store = new Store(14);
+
+        store.setOpeningTime(MONDAY, LocalDateTime.now().minusHours(6));
+        store.setClosingTime(MONDAY, LocalDateTime.now().plusHours(6));
+
+        order = new Order(store, LocalDateTime.now().plusHours(3), MONDAY);
+
+        order.addCookie(globalRecipes.get(0), 5);
+
         guest = new Guest("");
         guest.setTemporaryOrder(order);
     }

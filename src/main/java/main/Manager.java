@@ -19,7 +19,7 @@ public class Manager {
     }
 
     public void changeClosingTime(Day day, LocalDateTime time) {
-        store.setClosingTimes(day, time);
+        store.setClosingTime(day, time);
     }
 
     public void changeMontlyRecipe(Recipe recipe) {

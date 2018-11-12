@@ -58,7 +58,7 @@ public class ChangeScheduleStepDefs {
         Store store = stores.get(storeName);
 
         store.setOpeningTime(day, opTime);
-        store.setClosingTimes(day, clTime);
+        store.setClosingTime(day, clTime);
     }
 
     @When("^\"([^\"]*)\" changes opening time of \"([^\"]*)\" to \"([^\"]*)\"$")

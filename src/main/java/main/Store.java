@@ -96,7 +96,7 @@ public class Store {
             this.openingTimes.put(day, localDateTime);
     }
 
-    public void setClosingTimes(Day day, LocalDateTime localDateTime) {
+    public void setClosingTime(Day day, LocalDateTime localDateTime) {
         // Check if store has a opening time for the [day], to ensure no time crossing
         if (openingTimes.containsKey(day) && localDateTime.isBefore(openingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set closing time before opening time for " + day);

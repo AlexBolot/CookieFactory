@@ -26,23 +26,23 @@ public class Guest {
 
         temporaryOrder.setGuest(this);
 
-        double price = 0.0;
-        try {
-            price = temporaryOrder.getStore().placeOrder(temporaryOrder);
-        }
-        catch (IllegalArgumentException e){
-
-        }
+        double price = temporaryOrder.getStore().placeOrder(temporaryOrder);
 
         if (onlinePayment) {
             temporaryOrder.setPayed();
         }
+
+        setTemporaryOrder(createOrder());
 
         return price;
     }
 
     public void setTemporaryOrder(Order order) {
         this.temporaryOrder = order;
+    }
+
+    public Order getTemporaryOrder() {
+        return temporaryOrder;
     }
 
     public String getEmail() {
@@ -60,4 +60,5 @@ public class Guest {
     public void refund() {
         // Does nothing :D
     }
+
 }

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class TestUtils {
 
-    Recipe randomRecipe() {
+   public Recipe randomRecipe() {
         Random random = new Random();
         Catalog catalog = new Catalog();
         ArrayList<Topping> toppings = new ArrayList<>();
@@ -29,7 +29,7 @@ public class TestUtils {
                 10);
     }
 
-    String randomString() {
+    public String randomString() {
         return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6);
     }
 

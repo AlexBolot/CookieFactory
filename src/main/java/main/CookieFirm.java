@@ -75,8 +75,8 @@ public class CookieFirm {
         return accounts;
     }
 
-    private void addCustomerToLoyaltyP(Customer customer){
-        customer.addToLoyaltyP();
+    private void addCustomerToLoyaltyProgram(Customer customer){
+        customer.addToLoyaltyProgram();
     }
 
 }

@@ -52,6 +52,10 @@ public class Customer extends Guest {
             order.setPayed();
         }
 
+        if(loyaltyProgram && haveDiscount){
+            useDiscount();
+        }
+
         addToOrderHistory(order);
 
         return price;
@@ -101,5 +105,10 @@ public class Customer extends Guest {
 
     public boolean canHaveDiscount() {
         return haveDiscount;
+    }
+
+    public void useDiscount(){
+        haveDiscount = false;
+        cookieCount = 0;
     }
 }

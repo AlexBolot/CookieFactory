@@ -105,6 +105,51 @@ public class CustomerTest {
     }
 
     @Test
+    public void loseDiscountAfterSecondPurchase(){
+        customer.addToLoyaltyP();
+        Order order = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
+                (3))), Day.TUESDAY);
+        order.addCookie(globalRecipes.get(1), 30);
+        customer.placeOrder(true, order);
+
+        Order order2 = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
+                (3))), Day.TUESDAY);
+        order2.addCookie(globalRecipes.get(2), 2);
+        customer.placeOrder(true, order2);
+        assertFalse(customer.canHaveDiscount());
+    }
+
+    @Test
+    public void recoverDiscountAfter4Purchase(){
+        customer.addToLoyaltyP();
+
+        //First order, no discount
+        Order order = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
+                (3))), Day.TUESDAY);
+        order.addCookie(globalRecipes.get(1), 30);
+        assertEquals(globalRecipes.get(1).price * 30 * store.getTax(),   customer.placeOrder(true, order),0.0);
+
+        //Second order, first Discount :
+        Order order2 = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
+                (3))), Day.TUESDAY);
+        order2.addCookie(globalRecipes.get(2), 2);
+        assertEquals((globalRecipes.get(2).price * 2 * store.getTax())*0.9, customer.placeOrder(true, order2),0.0);
+
+        //Third order, no discount
+        Order order3 = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
+                (3))), Day.TUESDAY);
+        order3.addCookie(globalRecipes.get(1), 30);
+        assertEquals(globalRecipes.get(1).price * 30 * store.getTax(),  customer.placeOrder(true, order3),0.0);
+
+        //Forth order,second discount :
+        Order order4 = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
+                (3))), Day.TUESDAY);
+        order4.addCookie(globalRecipes.get(2), 2);
+        assertEquals((globalRecipes.get(2).price * 2 * store.getTax())*0.9, customer.placeOrder(true, order4),0.0);
+        assertFalse(customer.canHaveDiscount());
+    }
+
+    @Test
     public void doNothaveALowerPrice(){
         Order order = new Order(store, LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
                 (3))), Day.TUESDAY);

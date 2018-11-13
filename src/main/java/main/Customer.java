@@ -33,6 +33,16 @@ public class Customer extends Guest {
         this.password = password;
     }
 
+    public Customer(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
+        super(email);
+        this.orderHistory = orderHistory;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.setTemporaryOrder(temporaryOrder);
+    }
+
     public Collection<Order> getOrderHistory() {
         return orderHistory;
     }

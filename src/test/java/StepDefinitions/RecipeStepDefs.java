@@ -65,9 +65,10 @@ public class RecipeStepDefs {
         managers.put(managerName, manager);
     }
 
-    @Given("^A recipe \"([^\"]*)\" is created by \"([^\"]*)\"$")
-    public void aRecipeIsCreatedBy(String recipeName, String managerName) {
-        recipes.put(recipeName,new Recipe(recipeName,null,new ArrayList<Flavor>(),new ArrayList<Topping>(),null,null,0));
+    @Given("^A recipe \"([^\"]*)\" is created by \"([^\"]*)\" for \"([^\"]*)\" dollars$")
+    public void aRecipeIsCreatedBy(String recipeName, String managerName, String recipePrice) {
+        recipes.put(recipeName,new Recipe(recipeName,null,new ArrayList<Flavor>(),new ArrayList<Topping>(),
+                null,null,Float.parseFloat(recipePrice)));
     }
 
     @And("^The dough of \"([^\"]*)\" is \"([^\"]*)\"$")

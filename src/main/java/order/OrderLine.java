@@ -5,9 +5,8 @@ import main.Recipe;
 import java.util.Objects;
 
 public class OrderLine {
-    Recipe orderLines;
-    Recipe recipe;
-    int amount;
+    private Recipe recipe;
+    private int amount;
 
     public OrderLine(Recipe recipe, int amount) {
         this.recipe = recipe;
@@ -16,6 +15,10 @@ public class OrderLine {
 
     public int getAmount() {
         return amount;
+    }
+
+    public void reduceAmount(int amount) {
+        this.amount-= amount;
     }
 
     public void setAmount(int amount) {
@@ -34,13 +37,12 @@ public class OrderLine {
         if (o == null || getClass() != o.getClass()) return false;
         OrderLine orderLine = (OrderLine) o;
         return amount == orderLine.amount &&
-                Objects.equals(orderLines, orderLine.orderLines) &&
                 Objects.equals(recipe, orderLine.recipe);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderLines, recipe, amount);
+        return Objects.hash(recipe, amount);
     }
 
 }

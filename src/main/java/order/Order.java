@@ -9,14 +9,14 @@ import java.util.Optional;
 
 public class Order {
 
-    Store store;
-    List<OrderLine> orderLines = new ArrayList<>();
-    LocalDateTime pickUpTime;
-    Day pickupDay;
-    OrderState orderState = OrderState.DRAFT;
+    private Store store;
+    private List<OrderLine> orderLines = new ArrayList<>();
+    private LocalDateTime pickUpTime;
+    private Day pickupDay;
+    private OrderState orderState = OrderState.DRAFT;
 
 
-    boolean payed = false;
+    private boolean payed = false;
     private Guest guest;
 
     public Order(Store store, LocalDateTime pickUpTime, Day pickupDay) {
@@ -38,7 +38,7 @@ public class Order {
      */
     public void addCookie(Recipe recipe, int amount) {
         if (amount <= 0) throw new IllegalArgumentException("Amount should be a strictly positive number");
-        Optional<OrderLine> orderLineOptional = orderLines.stream().filter(line -> line.recipe.equals(recipe)).findFirst();
+        Optional<OrderLine> orderLineOptional = orderLines.stream().filter(line -> line.getRecipe().equals(recipe)).findFirst();
         if (!orderLineOptional.isPresent()) {
             OrderLine orderLine = new OrderLine(recipe, amount);
             orderLines.add(orderLine);
@@ -55,10 +55,10 @@ public class Order {
      */
     public void removeCookie(Recipe recipe, int amount) {
         OrderLine orderLine = orderLines.stream()
-                .filter(line -> line.recipe.equals(recipe))
+                .filter(line -> line.getRecipe().equals(recipe))
                 .findFirst().orElseThrow(IllegalArgumentException::new);
-        orderLine.amount -= amount;
-        if (orderLine.amount <= 0)
+        orderLine.reduceAmount(amount);
+        if (orderLine.getAmount() <= 0)
             orderLines.remove(orderLine);
 
     }
@@ -77,7 +77,7 @@ public class Order {
      */
     public double getPrice() {
         double storeTax = store.getTax();
-        double price = orderLines.stream().mapToDouble(line -> line.amount * line.recipe.getPrice()).sum() * storeTax;
+        double price = orderLines.stream().mapToDouble(line -> line.getAmount() * line.getRecipe().getPrice()).sum() * storeTax;
         if(guest instanceof Customer && ((Customer) guest).isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()){
             price=(price*0.90);
         }
@@ -105,6 +105,10 @@ public class Order {
 
     public void setPayed() {
         this.payed = true;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public List<OrderLine> getOrderLines() {

@@ -1,16 +1,17 @@
 package order;
 
+import ingredient.Catalog;
+import ingredient.Cooking;
+import ingredient.Mix;
 import main.Day;
 import main.Recipe;
 import main.Store;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import ingredient.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -27,7 +28,7 @@ public class OrderTest {
         Catalog catalog = new Catalog();
 
         Store store = new Store(1);
-        recipe1 = new Recipe("real",catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), Mix.MIXED,
+        recipe1 = new Recipe("real", catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), Mix.MIXED,
                 Cooking.CHEWY, 1.2f);
 
         unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), Mix.TOPPED, Cooking.CHEWY, 3.14f);
@@ -50,32 +51,32 @@ public class OrderTest {
     @Test
     public void pricesUseStoreTax() {
         order.addCookie(recipe1, 1);
-        order.store = new Store(1.25);
+        order.setStore(new Store(1.25));
         assertEquals(1.5, order.getPrice(), 0.0001);
-        order.store = new Store(1);
+        order.setStore(new Store(1));
         assertEquals(1.2, order.getPrice(), 0.0001);
 
     }
 
     @Test
     public void basicAddCookie() {
-        assertEquals(0, order.orderLines.size());
+        assertEquals(0, order.getOrderLines().size());
         order.addCookie(recipe1, 3);
-        assertEquals(1, order.orderLines.size());
-        assertTrue(order.orderLines.contains(new OrderLine(recipe1, 3)));
+        assertEquals(1, order.getOrderLines().size());
+        assertTrue(order.getOrderLines().contains(new OrderLine(recipe1, 3)));
 
     }
 
     @Test
     public void addAlreadyExistingCookieMergeLines() {
-        assertEquals(0, order.orderLines.size());
+        assertEquals(0, order.getOrderLines().size());
         order.addCookie(recipe1, 3);
-        assertEquals(1, order.orderLines.size());
-        assertTrue(order.orderLines.contains(new OrderLine(recipe1, 3)));
+        assertEquals(1, order.getOrderLines().size());
+        assertTrue(order.getOrderLines().contains(new OrderLine(recipe1, 3)));
 
         order.addCookie(recipe1, 2);
-        assertEquals(1, order.orderLines.size());
-        assertTrue(order.orderLines.contains(new OrderLine(recipe1, 5)));
+        assertEquals(1, order.getOrderLines().size());
+        assertTrue(order.getOrderLines().contains(new OrderLine(recipe1, 5)));
 
     }
 
@@ -95,17 +96,17 @@ public class OrderTest {
     public void basicRemoveCookie() {
         order.addCookie(recipe1, 3);
         order.removeCookie(recipe1, 1);
-        assertEquals(1, order.orderLines.size());
-        assertTrue(order.orderLines.contains(new OrderLine(recipe1, 2)));
+        assertEquals(1, order.getOrderLines().size());
+        assertTrue(order.getOrderLines().contains(new OrderLine(recipe1, 2)));
     }
 
     @Test
     public void removeAllCookieDeletesLine() {
         order.addCookie(recipe1, 3);
-        assertEquals(1, order.orderLines.size());
+        assertEquals(1, order.getOrderLines().size());
         order.removeCookie(recipe1, 2);
         order.removeCookie(recipe1, 1);
-        assertEquals(0, order.orderLines.size());
+        assertEquals(0, order.getOrderLines().size());
 
     }
 

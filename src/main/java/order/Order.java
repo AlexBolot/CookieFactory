@@ -32,8 +32,6 @@ public class Order {
     }
 
 
-
-
     /**
      * @param recipe
      * @param amount
@@ -63,6 +61,14 @@ public class Order {
         if (orderLine.amount <= 0)
             orderLines.remove(orderLine);
 
+    }
+
+    public void withdraw() {
+        if (this.payed)
+            this.orderState = OrderState.WITHDRAWN;
+        else {
+            throw new WithdrawNotPaidOrderException();
+        }
     }
 
     /**
@@ -125,13 +131,7 @@ public class Order {
     public OrderState getState() {
         return orderState;
     }
-    public void withdraw() {
-        if (this.payed)
-            this.orderState = OrderState.WITHDRAWN;
-        else {
-            throw new WithdrawNotPaidOrderException();
-        }
-    }
+
 
     @Override
     public boolean equals(Object o) {

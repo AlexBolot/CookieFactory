@@ -1,6 +1,5 @@
 package main;
 
-import ingredient.*;
 import order.Order;
 
 import java.util.Collection;
@@ -11,11 +10,11 @@ import java.util.stream.Collectors;
 
 public class CookieFirm {
 
-    Set<Guest> guests;
-    Set<Customer> accounts;
-    List<Store> stores;
-    List<Manager> managers;
-    List<Recipe> globalRecipes;
+    private Set<Guest> guests;
+    private Set<Customer> accounts;
+    private List<Store> stores;
+    private List<Manager> managers;
+    private List<Recipe> globalRecipes;
 
     public CookieFirm(List<Store> stores, List<Manager> managers, List<Recipe> globalRecipes) {
         this.guests = new HashSet<Guest>();
@@ -27,19 +26,6 @@ public class CookieFirm {
 
 
     /**
-     * @param cooking
-     * @param mix
-     * @param dough
-     * @param flavors
-     * @param toppings
-     */
-    public Recipe chooseMonthlyRecipe(String name, Cooking cooking, Mix mix, Dough dough, List<Flavor> flavors, List<Topping> toppings, float price, Store store) {
-        Recipe newMonthlyRecipe = new Recipe(name, dough, flavors, toppings, mix, cooking, price);
-        store.setMonthlyRecipe(newMonthlyRecipe);
-        return newMonthlyRecipe;
-    }
-
-    /**
      * @param recipe
      */
     private boolean checkRecipeExists(Recipe recipe) {
@@ -48,7 +34,7 @@ public class CookieFirm {
 
     public Customer createAccount(Collection<Order> orderHistory, String firstName, String lastName, String phoneNumber, String email, String password) {
         Customer newAccount = new Customer(orderHistory, firstName, lastName, phoneNumber, email, password);
-        if(updateAccounts(newAccount, email)) {
+        if(saveCustomerAccountIfAbsent(newAccount, email)) {
             return newAccount;
         } else {
             throw new IllegalArgumentException("An account already exists with this email");
@@ -56,13 +42,13 @@ public class CookieFirm {
     }
     public Customer createAccount(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
         Customer newAccount = new Customer(firstName, lastName, phoneNumber, email, password, temporaryOrder);
-        if(updateAccounts(newAccount, email)) {
+        if(saveCustomerAccountIfAbsent(newAccount, email)) {
             return newAccount;
         } else {
             throw new IllegalArgumentException("An account already exists with this email");
         }
     }
-    public boolean updateAccounts(Customer customer, String email) {
+    public boolean saveCustomerAccountIfAbsent(Customer customer, String email) {
         for (Customer account : this.accounts) {
             if (account.getEmail() == email) {
                 return false;

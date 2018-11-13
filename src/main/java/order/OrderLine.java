@@ -5,14 +5,14 @@ import main.Recipe;
 import java.util.Objects;
 
 public class OrderLine {
+    Recipe orderLines;
+    Recipe recipe;
+    int amount;
+
     public OrderLine(Recipe recipe, int amount) {
         this.recipe = recipe;
         this.amount = amount;
     }
-
-    Recipe orderLines;
-    Recipe recipe;
-    int amount;
 
     public int getAmount() {
         return amount;
@@ -22,6 +22,11 @@ public class OrderLine {
         if (amount < 0) throw new IllegalArgumentException("Amount should be positive");
         this.amount = amount;
     }
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -38,7 +43,4 @@ public class OrderLine {
         return Objects.hash(orderLines, recipe, amount);
     }
 
-    public Recipe getRecipe() {
-        return recipe;
-    }
 }

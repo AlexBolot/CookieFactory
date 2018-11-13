@@ -32,7 +32,7 @@ public class Recipe {
     }
 
     public void setToppings(List<Topping> toppings) {
-        if (flavors.size() > 3)
+        if (toppings.size() > 3)
             throw new IllegalArgumentException("To much toppings!!!");
         else
             this.toppings = toppings;

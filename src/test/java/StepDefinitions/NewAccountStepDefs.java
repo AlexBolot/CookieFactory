@@ -1,6 +1,5 @@
 package StepDefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -10,8 +9,10 @@ import main.*;
 import order.Order;
 import org.junit.Assert;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class NewAccountStepDefs {
 
@@ -22,14 +23,14 @@ public class NewAccountStepDefs {
     private CookieFirm cookieFirm;
 
     private Mix mixFromName(String mixName) {
-        for (Mix mix : Mix.values()) {
-            if (mix.name().equalsIgnoreCase(mixName)) return mix;
+        for (Mix mix : catalog.getMixList()) {
+            if (mix.getName().equalsIgnoreCase(mixName)) return mix;
         }
         return null;
     }
     private Cooking cookingFromName(String cookingName) {
-        for (Cooking cooking : Cooking.values()) {
-            if (cooking.name().equalsIgnoreCase(cookingName)) return cooking;
+        for (Cooking cooking : catalog.getCookingList()) {
+            if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
         }
         return null;
     }

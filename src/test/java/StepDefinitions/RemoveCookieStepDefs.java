@@ -4,8 +4,6 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import ingredient.Catalog;
-import ingredient.Cooking;
-import ingredient.Mix;
 import main.Guest;
 import main.Recipe;
 import order.Order;
@@ -44,8 +42,8 @@ public class RemoveCookieStepDefs {
                             kitchen.getDoughList().get(0),
                             kitchen.getFlavorList().subList(0, 1),
                             kitchen.getToppingList().subList(0, 1),
-                            Mix.MIXED,
-                            Cooking.CHEWY,
+                            kitchen.getMixList().get(0),
+                            kitchen.getCookingList().get(0),
                             1.0f), cookies);
         }
     }

@@ -22,8 +22,8 @@ public class TestUtils {
             flavors.add(catalog.getFlavorList().get(1));
         }
 
-        Mix mix = random.nextBoolean() ? Mix.MIXED : Mix.TOPPED;
-        Cooking cooking = random.nextBoolean() ? Cooking.CHEWY : Cooking.CRUNCHY;
+       Mix mix = catalog.getMixList().get(random.nextBoolean() ? 0 : 1);
+       Cooking cooking = catalog.getCookingList().get(random.nextBoolean() ? 0 : 1);
 
         return new Recipe(randomString(), catalog.getDoughList().get(1), flavors, toppings, mix, cooking, random.nextFloat() *
                 10);

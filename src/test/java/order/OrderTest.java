@@ -1,8 +1,6 @@
 package order;
 
 import ingredient.Catalog;
-import ingredient.Cooking;
-import ingredient.Mix;
 import main.Day;
 import main.Recipe;
 import main.Store;
@@ -28,10 +26,9 @@ public class OrderTest {
         Catalog catalog = new Catalog();
 
         Store store = new Store(1);
-        recipe1 = new Recipe("real", catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), Mix.MIXED,
-                Cooking.CHEWY, 1.2f);
+        recipe1 = new Recipe("real", catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), 1.2f);
 
-        unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), Mix.TOPPED, Cooking.CHEWY, 3.14f);
+        unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), 3.14f);
         LocalDateTime pickUpTime = LocalDateTime.now();
         order = new Order(store, pickUpTime, Day.TUESDAY);
     }

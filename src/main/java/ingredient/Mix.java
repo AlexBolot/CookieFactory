@@ -1,8 +1,6 @@
 package ingredient;
 
-public enum Mix {
-    MIXED("Mixed"),
-    TOPPED("Topped");
+public class Mix {
 
     private final String name;
 

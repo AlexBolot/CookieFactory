@@ -1,8 +1,6 @@
 package ingredient;
 
-public enum Cooking {
-    CRUNCHY("Crunchy"),
-    CHEWY("Chewy");
+public class Cooking {
 
     private final String name;
 

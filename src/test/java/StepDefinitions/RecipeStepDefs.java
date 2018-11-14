@@ -1,6 +1,5 @@
 package StepDefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -24,14 +23,14 @@ public class RecipeStepDefs {
     private Catalog catalog = new Catalog();
 
     private Mix mixFromName(String mixName) {
-        for (Mix mix : Mix.values()) {
-            if (mix.name().equalsIgnoreCase(mixName)) return mix;
+        for (Mix mix : catalog.getMixList()) {
+            if (mix.getName().equalsIgnoreCase(mixName)) return mix;
         }
         return null;
     }
     private Cooking cookingFromName(String cookingName) {
-        for (Cooking cooking : Cooking.values()) {
-            if (cooking.name().equalsIgnoreCase(cookingName)) return cooking;
+        for (Cooking cooking : catalog.getCookingList()) {
+            if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
         }
         return null;
     }

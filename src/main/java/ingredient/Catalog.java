@@ -1,10 +1,12 @@
 package ingredient;
 
-import ingredient.*;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represent the {@link main.CookieFirm} ingredients catalog
+ */
 public class Catalog {
 
     private List<Dough> doughList = new ArrayList<>();
@@ -14,14 +16,35 @@ public class Catalog {
     private List<Cooking> cookingList = new ArrayList<>();
 
     public Catalog() {
-        this.doughList.add(new Dough("Oatmeal"));
-        this.doughList.add(new Dough("Chocolate"));
-        this.flavorList.add(new Flavor("Vanilla"));
-        this.flavorList.add(new Flavor("Chili"));
-        this.toppingList.add(new Topping("White Chocolate"));
-        this.toppingList.add(new Topping("M&M's"));
-        this.mixList =  new ArrayList<>();
-        this.cookingList =  new ArrayList<>();
+
+        this.doughList.addAll(Arrays.asList(
+                new Dough("Oatmeal"),
+                new Dough("Plain"),
+                new Dough("Chocolate"),
+                new Dough("Peanut butter")
+        ));
+        this.flavorList.addAll(Arrays.asList(
+                new Flavor("Vanilla"),
+                new Flavor("Cinnamon"),
+                new Flavor("Chili")
+                )
+        );
+
+        this.toppingList.addAll(Arrays.asList(
+                new Topping("White Chocolate"),
+                new Topping("Milk Chocolate"),
+                new Topping("M&m's"),
+                new Topping("Resse's buttercup")
+        ));
+        this.mixList.addAll(Arrays.asList(
+                new Mix("Mixed"),
+                new Mix("Topped")
+        ));
+        this.cookingList.addAll(Arrays.asList(
+                new Cooking("Crunchy"),
+                new Cooking("Chewy")
+        ));
+
     }
 
     public List<Dough> getDoughList() {

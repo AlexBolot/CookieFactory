@@ -34,84 +34,6 @@ public class Store {
         this.tax = tax;
     }
 
-    // region --------------- Getters and Setters ---------------
-
-    /**
-     * Builds a list of Recipe containing the Global ones and the monthly of this store
-     *
-     * @return The list of all available Recipes at this Store
-     */
-    public Collection<Recipe> getRecipes() {
-        Collection<Recipe> recipes = globalRecipes;
-        recipes.add(monthlyRecipe);
-        return recipes;
-    }
-
-    public Map<Day, LocalDateTime> openingTimes() {
-        return openingTimes;
-    }
-
-    public LocalDateTime openingTime(Day day) {
-        return openingTimes.get(day);
-    }
-
-    public Map<Day, LocalDateTime> closingTimes() {
-        return closingTimes;
-    }
-
-    public LocalDateTime closingTime(Day day) {
-        return closingTimes.get(day);
-    }
-
-    public double getTax() {
-        return tax;
-    }
-
-    public Recipe getMonthlyRecipe() {
-        return monthlyRecipe;
-    }
-
-    /**
-     * Sets the new Monthly Recipe of the store
-     * Raise an exception if new ingredient is the same as the previous one
-     *
-     * @param newRecipe new monthly ingredient of the store
-     */
-    public void setMonthlyRecipe(Recipe newRecipe) {
-        if (this.monthlyRecipe != null && this.monthlyRecipe == newRecipe) {
-            throw new IllegalArgumentException("Recipe " + newRecipe + " is the same as the previous one");
-        }
-
-        this.monthlyRecipe = newRecipe;
-    }
-
-    public void setOpeningTime(Day day, LocalDateTime localDateTime) {
-        // Check if store has a closing time for the [day], to ensure no time crossing
-        if (closingTimes.containsKey(day) && localDateTime.isAfter(closingTimes.get(day)))
-            throw new IllegalArgumentException("Trying to set opening time after closing time for " + day);
-
-        if (openingTimes.containsKey(day))
-            this.openingTimes.replace(day, localDateTime);
-        else
-            this.openingTimes.put(day, localDateTime);
-    }
-
-    public void setClosingTime(Day day, LocalDateTime localDateTime) {
-        // Check if store has a opening time for the [day], to ensure no time crossing
-        if (openingTimes.containsKey(day) && localDateTime.isBefore(openingTimes.get(day)))
-            throw new IllegalArgumentException("Trying to set closing time before opening time for " + day);
-
-        if (closingTimes.containsKey(day))
-            this.closingTimes.replace(day, localDateTime);
-        else
-            this.closingTimes.put(day, localDateTime);
-    }
-
-    public Collection<Order> getOrders() {
-        return orders;
-    }
-
-    // endregion
 
     public double placeOrder(Order order) {
         if (!this.checkOrderValidity(order)) {
@@ -219,4 +141,84 @@ public class Store {
                 )
                 .findFirst();
     }
+
+    // region --------------- Getters and Setters ---------------
+
+    /**
+     * Builds a list of Recipe containing the Global ones and the monthly of this store
+     *
+     * @return The list of all available Recipes at this Store
+     */
+    public Collection<Recipe> getRecipes() {
+        Collection<Recipe> recipes = globalRecipes;
+        recipes.add(monthlyRecipe);
+        return recipes;
+    }
+
+    public Map<Day, LocalDateTime> openingTimes() {
+        return openingTimes;
+    }
+
+    public LocalDateTime openingTime(Day day) {
+        return openingTimes.get(day);
+    }
+
+    public Map<Day, LocalDateTime> closingTimes() {
+        return closingTimes;
+    }
+
+    public LocalDateTime closingTime(Day day) {
+        return closingTimes.get(day);
+    }
+
+    public double getTax() {
+        return tax;
+    }
+
+    public Recipe getMonthlyRecipe() {
+        return monthlyRecipe;
+    }
+
+    public Collection<Order> getOrders() {
+        return orders;
+    }
+
+
+
+    /**
+     * Sets the new Monthly Recipe of the store
+     * Raise an exception if new ingredient is the same as the previous one
+     *
+     * @param newRecipe new monthly ingredient of the store
+     */
+    public void setMonthlyRecipe(Recipe newRecipe) {
+        if (this.monthlyRecipe != null && this.monthlyRecipe == newRecipe) {
+            throw new IllegalArgumentException("Recipe " + newRecipe + " is the same as the previous one");
+        }
+
+        this.monthlyRecipe = newRecipe;
+    }
+
+    public void setOpeningTime(Day day, LocalDateTime localDateTime) {
+        // Check if store has a closing time for the [day], to ensure no time crossing
+        if (closingTimes.containsKey(day) && localDateTime.isAfter(closingTimes.get(day)))
+            throw new IllegalArgumentException("Trying to set opening time after closing time for " + day);
+
+        if (openingTimes.containsKey(day))
+            this.openingTimes.replace(day, localDateTime);
+        else
+            this.openingTimes.put(day, localDateTime);
+    }
+
+    public void setClosingTime(Day day, LocalDateTime localDateTime) {
+        // Check if store has a opening time for the [day], to ensure no time crossing
+        if (openingTimes.containsKey(day) && localDateTime.isBefore(openingTimes.get(day)))
+            throw new IllegalArgumentException("Trying to set closing time before opening time for " + day);
+
+        if (closingTimes.containsKey(day))
+            this.closingTimes.replace(day, localDateTime);
+        else
+            this.closingTimes.put(day, localDateTime);
+    }
+
 }

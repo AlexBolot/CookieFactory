@@ -10,10 +10,6 @@ public class Manager {
         this.store = store;
     }
 
-    public Store getStore() {
-        return store;
-    }
-
     public void changeOpeningTime(Day day, LocalDateTime time) {
         store.setOpeningTime(day, time);
     }
@@ -25,5 +21,10 @@ public class Manager {
     public void changeMontlyRecipe(Recipe recipe) {
         store.setMonthlyRecipe(recipe);
     }
+
+    public Store getStore() {
+        return store;
+    }
+
 
 }

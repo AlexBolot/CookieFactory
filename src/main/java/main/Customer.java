@@ -43,9 +43,6 @@ public class Customer extends Guest {
         this.setTemporaryOrder(temporaryOrder);
     }
 
-    public Collection<Order> getOrderHistory() {
-        return orderHistory;
-    }
 
     /**
      * Check if the order has been place and return the price
@@ -75,7 +72,7 @@ public class Customer extends Guest {
 
         addToOrderHistory(order);
 
-        setTemporaryOrder(createOrder());
+        setTemporaryOrder(initOrder());
 
         return price;
     }
@@ -91,7 +88,6 @@ public class Customer extends Guest {
         if (loyaltyProgram) {
             order.getOrderLines().forEach(orderLine -> fideltyPoints(orderLine.getAmount()));
         }
-
         orderHistory.add(order);
     }
 
@@ -111,8 +107,9 @@ public class Customer extends Guest {
         }
     }
 
-    public boolean isInLoyaltyProgram() {
-        return loyaltyProgram;
+    public void useDiscount() {
+        haveDiscount = false;
+        cookieCount = 0;
     }
 
     /**
@@ -126,9 +123,12 @@ public class Customer extends Guest {
         return haveDiscount;
     }
 
-    public void useDiscount() {
-        haveDiscount = false;
-        cookieCount = 0;
+    public boolean isInLoyaltyProgram() {
+        return loyaltyProgram;
+    }
+
+    public Collection<Order> getOrderHistory() {
+        return orderHistory;
     }
 
     @Override
@@ -138,11 +138,27 @@ public class Customer extends Guest {
 
         Customer customer = (Customer) o;
 
+        if (loyaltyProgram != customer.loyaltyProgram) return false;
+        if (cookieCount != customer.cookieCount) return false;
+        if (haveDiscount != customer.haveDiscount) return false;
         if (orderHistory != null ? !orderHistory.equals(customer.orderHistory) : customer.orderHistory != null)
             return false;
-        if (lastName != null ? !lastName.equals(customer.lastName) : customer.lastName != null) return false;
-        if (firstName != null ? !firstName.equals(customer.firstName) : customer.firstName != null) return false;
-        if (password != null ? !password.equals(customer.password) : customer.password != null) return false;
-        return getEmail() != null ? getEmail().equals(customer.getEmail()) : customer.getEmail() == null;
+        if (!firstName.equals(customer.firstName)) return false;
+        if (!lastName.equals(customer.lastName)) return false;
+        if (!phoneNumber.equals(customer.phoneNumber)) return false;
+        return password.equals(customer.password);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = orderHistory != null ? orderHistory.hashCode() : 0;
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + phoneNumber.hashCode();
+        result = 31 * result + (loyaltyProgram ? 1 : 0);
+        result = 31 * result + cookieCount;
+        result = 31 * result + (haveDiscount ? 1 : 0);
+        result = 31 * result + password.hashCode();
+        return result;
     }
 }

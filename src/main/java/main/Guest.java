@@ -9,15 +9,14 @@ public class Guest {
     private String email;
 
     public Guest(String email) {
-        this.temporaryOrder = createOrder();
+        this.temporaryOrder = initOrder();
         this.email = email;
     }
 
 
-    Order createOrder() {
-        Order voidOrder = new Order();
-        this.temporaryOrder = voidOrder;
-        return voidOrder;
+    Order initOrder() {
+        this.temporaryOrder = new Order();
+        return this.temporaryOrder;
     }
 
     public double placeOrder(boolean onlinePayment) {
@@ -33,7 +32,7 @@ public class Guest {
             temporaryOrder.setPayed();
         }
 
-        setTemporaryOrder(createOrder());
+        setTemporaryOrder(initOrder());
 
         return price;
     }

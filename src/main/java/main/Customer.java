@@ -53,6 +53,7 @@ public class Customer extends Guest {
      * @param onlinePayment boolean if the client payed online or not
      * @return price of the order, or 0.0 if the order is not taken
      */
+    @Override
     public double placeOrder(boolean onlinePayment) {
 
         Order order = getTemporaryOrder();

@@ -36,8 +36,8 @@ public class AddCookieOrderStepDefs {
         this.guest.getTemporaryOrder().addCookie(currentRecipe, cookieAmount);
     }
 
-    @Then("^The order contain \"([^\"]*)\" cookie$")
-    public void theOrderContainCookie(String arg0) throws Throwable {
+    @Then("^The order contain (\\d+) cookie$")
+    public void theOrderContainCookie(int arg0) throws Throwable {
         assertEquals(arg0, this.guest.getTemporaryOrder().getOrderLines().size());
     }
 }

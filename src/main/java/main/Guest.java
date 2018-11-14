@@ -14,7 +14,7 @@ public class Guest {
     }
 
 
-    public Order createOrder() {
+    Order createOrder() {
         Order voidOrder = new Order();
         this.temporaryOrder = voidOrder;
         return voidOrder;

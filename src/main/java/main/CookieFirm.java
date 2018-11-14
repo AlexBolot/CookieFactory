@@ -62,6 +62,7 @@ public class CookieFirm {
             throw new IllegalArgumentException("An account already exists with this email");
         }
     }
+
     public boolean updateAccounts(Customer customer, String email) {
         for (Customer account : this.accounts) {
             if (account.getEmail() == email) {

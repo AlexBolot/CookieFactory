@@ -13,7 +13,6 @@ public class Guest {
         this.email = email;
     }
 
-
     Order initOrder() {
         this.temporaryOrder = new Order();
         return this.temporaryOrder;

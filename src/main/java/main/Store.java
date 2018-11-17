@@ -14,6 +14,7 @@ public class Store {
     private Map<Day, LocalDateTime> openingTimes;
     private Map<Day, LocalDateTime> closingTimes;
     private double tax;
+    private Kitchen kitchen;
 
     public Store(double tax) {
         this.tax = tax;
@@ -183,7 +184,13 @@ public class Store {
         return orders;
     }
 
+    public Kitchen getKitchen() {
+        return kitchen;
+    }
 
+    public void setKitchen(Kitchen kitchen) {
+        this.kitchen = kitchen;
+    }
 
     /**
      * Sets the new Monthly Recipe of the store

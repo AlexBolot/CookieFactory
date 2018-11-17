@@ -68,7 +68,8 @@ public class NewAccountStepDefs {
 
     @Given("^An order \"([^\"]*)\" with (\\d+) cookies \"([^\"]*)\"$")
     public void anOrderWithCookiesAsFollows(String orderName, int nbrCookies, String recipeName) {
-        Order order = new Order(new Store(1), null, null);
+        Order order = new Order(new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(),1)
+                , null, null);
         for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
             if (cookie.getName().equals(recipeName)){
                 order.addCookie(cookie, nbrCookies);

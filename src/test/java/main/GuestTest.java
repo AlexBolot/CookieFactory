@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static main.Day.MONDAY;
 import static org.junit.Assert.assertEquals;
@@ -26,7 +27,7 @@ public class GuestTest {
             globalRecipes.add(utils.randomRecipe());
         }
 
-        Store store = new Store(14);
+        Store store = new Store(utils.randomRecipe(), globalRecipes, new ArrayList<>(), new HashMap<>(), new HashMap<>(),14);
 
         store.setOpeningTime(MONDAY, LocalDateTime.now().minusHours(6));
         store.setClosingTime(MONDAY, LocalDateTime.now().plusHours(6));

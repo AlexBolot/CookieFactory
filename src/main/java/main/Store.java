@@ -15,16 +15,6 @@ public class Store {
     private Map<Day, LocalDateTime> closingTimes;
     private double tax;
 
-    public Store(double tax) {
-        this.tax = tax;
-
-        globalRecipes = new ArrayList<>();
-        orders = new ArrayList<>();
-
-        openingTimes = new HashMap<>();
-        closingTimes = new HashMap<>();
-    }
-
     public Store(Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<Day, LocalDateTime> openingTimes, Map<Day, LocalDateTime> closingTimes, double tax) {
         this.monthlyRecipe = monthlyRecipe;
         this.globalRecipes = globalRecipes;

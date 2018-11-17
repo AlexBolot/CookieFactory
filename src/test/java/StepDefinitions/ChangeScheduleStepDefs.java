@@ -11,6 +11,7 @@ import org.junit.Assert;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class ChangeScheduleStepDefs {
 
     @Given("^A store \"([^\"]*)\"$")
     public void aStore(String storeName) {
-        stores.put(storeName, new Store(15));
+        stores.put(storeName, new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 15));
     }
 
     @Given("^\"([^\"]*)\" the manager of \"([^\"]*)\"$")

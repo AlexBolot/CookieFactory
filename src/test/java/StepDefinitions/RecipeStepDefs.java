@@ -55,7 +55,7 @@ public class RecipeStepDefs {
 
     @Given("^\"([^\"]*)\" a store$")
     public void aStore(String storeName) {
-        stores.put(storeName, new Store(15));
+        stores.put(storeName, new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(),15));
     }
 
     @Given("^\"([^\"]*)\" the Manager of \"([^\"]*)\"$")

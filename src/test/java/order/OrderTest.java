@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +26,7 @@ public class OrderTest {
 
         Catalog catalog = new Catalog();
 
-        Store store = new Store(1);
+        Store store = new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(),1);
         recipe1 = new Recipe("real", catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), 1.2f);
 
         unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), new ArrayList<>(), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), 3.14f);
@@ -48,9 +49,9 @@ public class OrderTest {
     @Test
     public void pricesUseStoreTax() {
         order.addCookie(recipe1, 1);
-        order.setStore(new Store(1.25));
+        order.setStore(new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(),1.25));
         assertEquals(1.5, order.getPrice(), 0.0001);
-        order.setStore(new Store(1));
+        order.setStore(new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(),1));
         assertEquals(1.2, order.getPrice(), 0.0001);
 
     }

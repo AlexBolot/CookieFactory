@@ -1,10 +1,11 @@
 package main;
 
 import order.Order;
-import order.OrderState;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 
 public class Store {
 
@@ -25,28 +26,17 @@ public class Store {
         this.tax = tax;
     }
 
-
     public double placeOrder(Order order) {
         if (!this.checkOrderValidity(order)) {
             throw new IllegalArgumentException("The order is not valid");
         } else {
             orders.add(order);
-            order.setOrderState(OrderState.ORDERED);
-            return order.getPrice();
+            return order.placeOrder();
         }
     }
 
     public void cancelOrder(Order order) {
-
-        if (order.getOrderState() == OrderState.ORDERED) {
-            order.setOrderState(OrderState.CANCELED);
-
-            if (order.isPayed()) {
-                order.getGuest().refund();
-            }
-        } else {
-            throw new IllegalStateException("Order has already been Canceled or Withdrawn and can not be canceled");
-        }
+        order.cancel();
     }
 
     /**

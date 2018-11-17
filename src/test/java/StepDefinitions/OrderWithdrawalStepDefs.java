@@ -44,7 +44,7 @@ public class OrderWithdrawalStepDefs {
 
     @Given("^the customer \"([^\"]*)\" has paid for \"([^\"]*)\"$")
     public void theCustomerHasPaidFor(String customerName, String orderName) throws Throwable {
-        orders.get(orderName).setOrderState(OrderState.ORDERED);
+        orders.get(orderName).placeOrder();
         orders.get(orderName).pay();
     }
 

@@ -134,7 +134,6 @@ public class StoreTest {
        // assertFalse(store.placeOrder(emptyOrder));
     }
 
-
     @Test
     public void payingAnOrder(){
         LocalDateTime now = LocalDateTime.now();
@@ -193,15 +192,15 @@ public class StoreTest {
         Guest guest = new Guest("");
         guest.setTemporaryOrder(order);
 
-        assertEquals(OrderState.DRAFT, order.getOrderState());
+        assertEquals(OrderState.DRAFT, order.getState());
 
         guest.placeOrder(true);
 
-        assertEquals(OrderState.ORDERED, order.getOrderState());
+        assertEquals(OrderState.ORDERED, order.getState());
 
         store.cancelOrder(order);
 
-        assertEquals(OrderState.CANCELED, order.getOrderState());
+        assertEquals(OrderState.CANCELED, order.getState());
 
     }
 }

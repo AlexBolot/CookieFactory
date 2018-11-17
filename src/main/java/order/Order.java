@@ -7,14 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static order.OrderState.*;
+
 public class Order {
 
     private Store store;
     private List<OrderLine> orderLines = new ArrayList<>();
     private LocalDateTime pickUpTime;
     private Day pickupDay;
-    private OrderState orderState = OrderState.DRAFT;
-
+    private OrderState orderState = DRAFT;
 
     private boolean payed = false;
     private Guest guest;
@@ -27,18 +28,21 @@ public class Order {
     }
 
     public Order() {
-        this.store=null;
-        this.pickUpTime=null;
+        this.store = null;
+        this.pickUpTime = null;
     }
 
-
     /**
-     * @param recipe
-     * @param amount
+     * Adds a cookie to this order
+     *
+     * @param recipe Recipe of the cookie to add
+     * @param amount Amount of cookies of [recipe] (must be strictly positive)
      */
     public void addCookie(Recipe recipe, int amount) {
         if (amount <= 0) throw new IllegalArgumentException("Amount should be a strictly positive number");
+
         Optional<OrderLine> orderLineOptional = orderLines.stream().filter(line -> line.getRecipe().equals(recipe)).findFirst();
+
         if (!orderLineOptional.isPresent()) {
             OrderLine orderLine = new OrderLine(recipe, amount);
             orderLines.add(orderLine);
@@ -50,46 +54,78 @@ public class Order {
     }
 
     /**
-     * @param recipe
-     * @param amount
+     * Removes a cookie from this order
+     *
+     * @param recipe Recipe of the cookie to remove
+     * @param amount Amount of cookies of [recipe] (must be strictly positive)
      */
     public void removeCookie(Recipe recipe, int amount) {
+        if (amount <= 0) throw new IllegalArgumentException("Amount should be a strictly positive number");
+
         OrderLine orderLine = orderLines.stream()
                 .filter(line -> line.getRecipe().equals(recipe))
                 .findFirst().orElseThrow(IllegalArgumentException::new);
+
         orderLine.reduceAmount(amount);
+
         if (orderLine.getAmount() <= 0)
             orderLines.remove(orderLine);
-
     }
 
+    /**
+     * Changes the OrderState to WITHDRAWN
+     * Condition : The order has to be payed
+     */
     public void withdraw() {
-        if (this.payed)
-            this.orderState = OrderState.WITHDRAWN;
-        else {
-            throw new WithdrawNotPaidOrderException();
-        }
+        if (this.payed && this.orderState == ORDERED)
+            this.orderState = WITHDRAWN;
+        else if (orderState != ORDERED)
+            throw new IllegalStateException("Trying to withdraw an order that wasn't ORDERED first !");
+        else
+            throw new WithdrawNotPaidOrderException("Trying to withdraw an unpayed order !");
+    }
+
+    /**
+     * Changes the OrderState to ORDERED
+     * Condition : The order must be in a DRAFT state
+     *
+     * @return The total price of the order
+     */
+    public double placeOrder() {
+        if (this.orderState == DRAFT)
+            this.orderState = ORDERED;
+        else throw new IllegalStateException("Trying to place order on an order that isn't in a DRAFT state");
+
+        return getPrice();
+    }
+
+    /**
+     * Changes the OrderState to CANCELED
+     * Condition : The order has to be in ORDERED state
+     */
+    public void cancel() {
+        if (this.orderState == ORDERED) {
+            this.orderState = CANCELED;
+            guest.refund();
+        } else throw new IllegalStateException("Order has already been Canceled or Withdrawn and can not be canceled");
     }
 
     /**
      * Compute the price of the order given the store taxe and if the customer have discount
+     *
      * @return the price
      */
     public double getPrice() {
         double storeTax = store.getTax();
         double price = orderLines.stream().mapToDouble(line -> line.getAmount() * line.getRecipe().getPrice()).sum() * storeTax;
-        if(guest instanceof Customer && ((Customer) guest).isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()){
-            price=(price*0.90);
+        if (guest instanceof Customer && ((Customer) guest).isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()) {
+            price = (price * 0.90);
         }
         return price;
     }
 
     public Store getStore() {
         return this.store;
-    }
-
-    public OrderState getOrderState() {
-        return orderState;
     }
 
     public Guest getGuest() {
@@ -99,6 +135,7 @@ public class Order {
     public void setGuest(Guest guest) {
         this.guest = guest;
     }
+
     public boolean isPayed() {
         return payed;
     }
@@ -123,11 +160,6 @@ public class Order {
         return pickupDay;
     }
 
-    //TODO:maybe should dispear, as the state is an order progression, we could use different method "pay","withdraw" etc
-    public void setOrderState(OrderState orderState) {
-        this.orderState = orderState;
-    }
-
     public void pay() {
         this.payed = true;
     }
@@ -135,7 +167,6 @@ public class Order {
     public OrderState getState() {
         return orderState;
     }
-
 
     @Override
     public boolean equals(Object o) {

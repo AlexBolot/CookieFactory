@@ -1,11 +1,14 @@
 package main;
 
+import ingredient.Topping;
 import order.Order;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -15,10 +18,11 @@ public class CookieFirmTest {
     private CookieFirm cookieFirm;
     private Guest guest = new Guest("email@email.fr");
     private Customer customer = new Customer("","","","email@email.fr","");
+    private TestUtils utils = new TestUtils();
 
     @Before
     public void before() {
-        cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>(),new ArrayList<>());
+        cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>());
         cookieFirm.addGuest(guest);
     }
 
@@ -47,5 +51,55 @@ public class CookieFirmTest {
         Customer createdAccount = cookieFirm.createAccount("","",
                 "","email@email.fr","");
         assertEquals("Guest badly deleted",2,cookieFirm.getGuests().size());
+    }
+
+    @Ignore
+    @Test
+    public void recipesCreation() {
+        Recipe trueSimpleRecipe = new Recipe("Cookie for nothing",
+                utils.doughFromName("Chocolate"),
+                null,
+                new ArrayList<>(),
+                utils.mixFromName("Topped"),
+                utils.cookingFromName("Chewy"),
+                0.9f);
+        Recipe falseSimpleRecipe = new Recipe("Cookie for nothing",
+                utils.doughFromName("Chocolate"),
+                null,
+                new ArrayList<>(),
+                utils.mixFromName("Topped"),
+                utils.cookingFromName("Chewy"),
+                0.8f);
+        Recipe trueComplexRecipe = new Recipe("White Dog",
+                utils.doughFromName("Peanut Butter"),
+                utils.flavorFromName("Vanilla"),
+                Arrays.asList(utils.toppingFromName("White Chocolate"),
+                        utils.toppingFromName("White Chocolate"),
+                        utils.toppingFromName("White Chocolate")),
+                utils.mixFromName("Mixed"),
+                utils.cookingFromName("Crunchy"),
+                2.0f);
+        Recipe falseComplexRecipe = new Recipe("White Doge",
+                utils.doughFromName("Peanut Butter"),
+                utils.flavorFromName("Vanilla"),
+                Arrays.asList(utils.toppingFromName("White Chocolate"),
+                        utils.toppingFromName("White Chocolate"),
+                        utils.toppingFromName("White Chocolate")),
+                utils.mixFromName("Mixed"),
+                utils.cookingFromName("Crunchy"),
+                2.0f);
+        Recipe real = utils.randomRecipe();
+        for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
+            if (cookie.getName().equals("White Dog")) {
+                real = cookie;
+                System.out.println("Cookie found");
+                break;
+            }
+        }
+        Assert.assertTrue(cookieFirm.getGlobalRecipes().contains(trueSimpleRecipe));
+        Assert.assertFalse(cookieFirm.getGlobalRecipes().contains(falseSimpleRecipe));
+        Assert.assertTrue(cookieFirm.getGlobalRecipes().contains(trueComplexRecipe));
+        Assert.assertFalse(cookieFirm.getGlobalRecipes().contains(falseComplexRecipe));
+
     }
 }

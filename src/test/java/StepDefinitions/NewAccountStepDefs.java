@@ -20,55 +20,7 @@ public class NewAccountStepDefs {
     private Map<String, Guest> guests = new HashMap<>();
     private Map<String, Customer> accounts = new HashMap<>();
     private Catalog catalog = new Catalog();
-    private CookieFirm cookieFirm;
-
-    private Mix mixFromName(String mixName) {
-        for (Mix mix : catalog.getMixList()) {
-            if (mix.getName().equalsIgnoreCase(mixName)) return mix;
-        }
-        return null;
-    }
-    private Cooking cookingFromName(String cookingName) {
-        for (Cooking cooking : catalog.getCookingList()) {
-            if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
-        }
-        return null;
-    }
-    private Dough doughFromName(String doughName) {
-        for (Dough dough : catalog.getDoughList()) {
-            if (dough.getName().equalsIgnoreCase(doughName)) return dough;
-        }
-        return null;
-    }
-    private Topping toppingFromName(String toppingName) {
-        for (Topping topping : catalog.getToppingList()) {
-            if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
-        }
-        return null;
-    }
-    private Flavor flavorFromName(String flavorName) {
-        for (Flavor flavor : catalog.getFlavorList()) {
-            if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
-        }
-        return null;
-    }
-
-    @Given("^A recipe \"([^\"]*)\" as follows \"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\" in sale at CookieFactory$")
-    public void aRecipeAsFollowsInSaleInCookieFirm(String recipeName, String doughName, String flavorName,
-                                                   String toppingName, String mixName, String cookingName) {
-        List<Topping>toppings = new ArrayList<>();
-        toppings.add(toppingFromName(toppingName));
-        Recipe recipe = new Recipe(recipeName,
-                doughFromName(doughName),
-                flavorFromName(flavorName),
-                toppings,
-                mixFromName(mixName),
-                cookingFromName(cookingName),
-                0);
-        List<Recipe> recipes = new ArrayList<>();
-        recipes.add(recipe);
-        cookieFirm = new CookieFirm(new ArrayList<Store>(), new ArrayList<Manager>(), recipes);
-    }
+    private CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>());
 
     @Given("^An order \"([^\"]*)\" with (\\d+) cookies \"([^\"]*)\"$")
     public void anOrderWithCookiesAsFollows(String orderName, int nbrCookies, String recipeName) {

@@ -8,6 +8,7 @@ import ingredient.*;
 import main.Manager;
 import main.Recipe;
 import main.Store;
+import main.TestUtils;
 import org.junit.Assert;
 
 import java.util.ArrayList;
@@ -21,37 +22,7 @@ public class RecipeStepDefs {
     private Map<String, Store> stores = new HashMap<>();
     private Map<String, Recipe> recipes = new HashMap<>();
     private Catalog catalog = new Catalog();
-
-    private Mix mixFromName(String mixName) {
-        for (Mix mix : catalog.getMixList()) {
-            if (mix.getName().equalsIgnoreCase(mixName)) return mix;
-        }
-        return null;
-    }
-    private Cooking cookingFromName(String cookingName) {
-        for (Cooking cooking : catalog.getCookingList()) {
-            if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
-        }
-        return null;
-    }
-    private Dough doughFromName(String doughName) {
-        for (Dough dough : catalog.getDoughList()) {
-            if (dough.getName().equalsIgnoreCase(doughName)) return dough;
-        }
-        return null;
-    }
-    private Topping toppingFromName(String toppingName) {
-        for (Topping topping : catalog.getToppingList()) {
-            if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
-        }
-        return null;
-    }
-    private Flavor flavorFromName(String flavorName) {
-        for (Flavor flavor : catalog.getFlavorList()) {
-            if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
-        }
-        return null;
-    }
+    private TestUtils utils = new TestUtils();
 
     @Given("^\"([^\"]*)\" a store$")
     public void aStore(String storeName) {
@@ -72,7 +43,7 @@ public class RecipeStepDefs {
 
     @And("^The dough of \"([^\"]*)\" is \"([^\"]*)\"$")
     public void theDoughOfIs(String recipeName, String doughName) {
-        Dough dough = doughFromName(doughName);
+        Dough dough = utils.doughFromName(doughName);
         if (dough!=null) {
             recipes.get(recipeName).setDough(dough);
         } else {
@@ -82,7 +53,7 @@ public class RecipeStepDefs {
 
     @And("^The flavor of \"([^\"]*)\" is \"([^\"]*)\"$")
     public void theFlavorOfIs(String recipeName, String flavorName) {
-        Flavor flavor = flavorFromName(flavorName);
+        Flavor flavor = utils.flavorFromName(flavorName);
         if (flavor!=null) {
             recipes.get(recipeName).setFlavor(flavor);
         } else {
@@ -92,7 +63,7 @@ public class RecipeStepDefs {
 
     @And("^The topping of \"([^\"]*)\" is \"([^\"]*)\"$")
     public void laToppingOfIs(String recipeName, String toppingName) {
-        Topping topping = toppingFromName(toppingName);
+        Topping topping = utils.toppingFromName(toppingName);
         if (topping!=null) {
             List<Topping> toppings = new ArrayList<>();
             toppings.add(topping);
@@ -104,7 +75,7 @@ public class RecipeStepDefs {
 
     @And("^The mix of \"([^\"]*)\" is \"([^\"]*)\"$")
     public void theMixOfIs(String recipeName, String mixName) {
-        Mix mix = mixFromName(mixName);
+        Mix mix = utils.mixFromName(mixName);
         if (mix!=null) {
             recipes.get(recipeName).setMix(mix);
         } else {
@@ -114,7 +85,7 @@ public class RecipeStepDefs {
 
     @And("^The cooking of \"([^\"]*)\" is \"([^\"]*)\"$")
     public void theCookingOfIs(String recipeName, String cookingName) {
-        Cooking cooking = cookingFromName(cookingName);
+        Cooking cooking = utils.cookingFromName(cookingName);
         if (cooking!=null) {
             recipes.get(recipeName).setCooking(cooking);
         } else {

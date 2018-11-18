@@ -5,9 +5,12 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import ingredient.Catalog;
+import main.CookieFirm;
 import main.Guest;
 import main.Recipe;
 import order.Order;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,6 +18,7 @@ public class AddCookieOrderStepDefs {
 
     private Guest guest;
     private Recipe currentRecipe;
+    private CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>());
 
     @Given("^The guest see the list of cookies$")
     public void theGuestSeeTheListOfCookies() throws Throwable {
@@ -25,7 +29,12 @@ public class AddCookieOrderStepDefs {
     @When("^The guest select the recipee \"([^\"]*)\"$")
     public void theGuestSelectTheRecipee(String recipee) throws Throwable {
         final Catalog catalog = new Catalog();
-        this.currentRecipe = new Recipe(recipee, catalog.getDoughList().get(0), catalog.getFlavorList().get(0), catalog.getToppingList().subList(0, 1), catalog.getMixList().get(0), catalog.getCookingList().get(0), 1f);
+        for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
+            if (cookie.getName().equals(recipee)){
+                this.currentRecipe=cookie;
+                return;
+            }
+        }
 
     }
 

@@ -56,7 +56,7 @@ public class CookieFirm {
         this.globalRecipes.add(new Recipe("Cookie for nothing",
                 catalog.getDoughList().get(2),
                 null,
-                Collections.singletonList(catalog.getToppingList().get(1)),
+                new ArrayList<>(),
                 catalog.getMixList().get(1),
                 catalog.getCookingList().get(1),
                 0.9f));

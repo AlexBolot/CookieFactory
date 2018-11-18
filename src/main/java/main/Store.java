@@ -36,7 +36,7 @@ public class Store {
         }
     }
 
-    void cancelOrder(Order order) {
+    public void cancelOrder(Order order) {
         order.cancel();
     }
 

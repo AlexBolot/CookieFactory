@@ -26,15 +26,17 @@ public class Catalog {
         this.flavorList.addAll(Arrays.asList(
                 new Flavor("Vanilla"),
                 new Flavor("Cinnamon"),
-                new Flavor("Chili")
+                new Flavor("Chili"),
+                new Flavor("Oyster")
                 )
         );
 
         this.toppingList.addAll(Arrays.asList(
                 new Topping("White Chocolate"),
                 new Topping("Milk Chocolate"),
+                new Topping("Black Chocolate"),
                 new Topping("M&m's"),
-                new Topping("Resse's buttercup")
+                new Topping("Reese's buttercup")
         ));
         this.mixList.addAll(Arrays.asList(
                 new Mix("Mixed"),

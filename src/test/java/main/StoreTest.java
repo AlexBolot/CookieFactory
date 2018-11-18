@@ -140,9 +140,10 @@ public class StoreTest {
 
         Order normalOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
         normalOrder.addCookie(utils.randomRecipe(), 10);
+        normalOrder.setGuest(guestAlice);
         store.placeOrder(normalOrder);
         assertFalse(normalOrder.isPayed());
-        store.setStatusPaymentOrder(Day.TUESDAY, now.plusHours(3), new Guest(""));
+        store.setStatusPaymentOrder(Day.TUESDAY, now.plusHours(3), "Alice");
         assertTrue(normalOrder.isPayed());
     }
 

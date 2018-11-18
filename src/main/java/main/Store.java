@@ -2,6 +2,7 @@ package main;
 
 import order.Order;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class Store {
         this.tax = tax;
     }
 
-    public double placeOrder(Order order) {
+    double placeOrder(Order order) {
         if (!this.checkOrderValidity(order)) {
             throw new IllegalArgumentException("The order is not valid");
         } else {
@@ -35,7 +36,7 @@ public class Store {
         }
     }
 
-    public void cancelOrder(Order order) {
+    void cancelOrder(Order order) {
         order.cancel();
     }
 
@@ -45,7 +46,7 @@ public class Store {
      * @param order Customer's order to check before sending the order
      * @return True if the order is valid, false otherwise
      */
-    public boolean checkOrderValidity(Order order) {
+    boolean checkOrderValidity(Order order) {
         return checkOrderContent(order) && checkOrderDelay(order);
     }
 
@@ -93,16 +94,13 @@ public class Store {
      *
      * @param day        to pick up the order
      * @param pickUpTime time to pick up the order
-     * @param guest      the current customer
+     * @param email      the current customer
      */
-    void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, Guest guest) {
-        Order findOrder = new Order(this, pickUpTime, day);
+    void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, String email) {
+        Optional<Order> order = findOrder(pickUpTime, day, email);
 
-        orders.forEach(order -> {
-            if (order.equals(findOrder)) {
-                order.setPayed();
-            }
-        });
+        if(order.isPresent())
+            order.get().setPayed();
     }
 
     /**
@@ -130,7 +128,7 @@ public class Store {
      *
      * @return The list of all available Recipes at this Store
      */
-    public Collection<Recipe> getRecipes() {
+    Collection<Recipe> getRecipes() {
         Collection<Recipe> recipes = globalRecipes;
         recipes.add(monthlyRecipe);
         return recipes;
@@ -178,7 +176,7 @@ public class Store {
      *
      * @param newRecipe new monthly ingredient of the store
      */
-    public void setMonthlyRecipe(Recipe newRecipe) {
+    void setMonthlyRecipe(Recipe newRecipe) {
         if (this.monthlyRecipe != null && this.monthlyRecipe == newRecipe) {
             throw new IllegalArgumentException("Recipe " + newRecipe + " is the same as the previous one");
         }

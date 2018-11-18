@@ -66,7 +66,7 @@ public class RecipeStepDefs {
 
     @Given("^A recipe \"([^\"]*)\" is created by \"([^\"]*)\" for \"([^\"]*)\" dollars$")
     public void aRecipeIsCreatedBy(String recipeName, String managerName, String recipePrice) {
-        recipes.put(recipeName,new Recipe(recipeName,null,new ArrayList<Flavor>(),new ArrayList<Topping>(),
+        recipes.put(recipeName,new Recipe(recipeName,null,null,new ArrayList<Topping>(),
                 null,null,Float.parseFloat(recipePrice)));
     }
 
@@ -84,9 +84,7 @@ public class RecipeStepDefs {
     public void theFlavorOfIs(String recipeName, String flavorName) {
         Flavor flavor = flavorFromName(flavorName);
         if (flavor!=null) {
-            List<Flavor> flavors = new ArrayList<>();
-            flavors.add(flavor);
-            recipes.get(recipeName).setFlavors(flavors);
+            recipes.get(recipeName).setFlavor(flavor);
         } else {
             throw new IllegalArgumentException("This ingredient doesn't exists");
         }

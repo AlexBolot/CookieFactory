@@ -35,16 +35,16 @@ public class KitchenTest {
 
         Kitchen kitchen = new Kitchen(stock);
 
-        Recipe valid = new Recipe("", doughs.get(0), Arrays.asList(flavors.get(0), flavors.get(1)), Arrays.asList(toppings.get(0), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
-        Recipe notContained = new Recipe("", doughs.get(0), Arrays.asList(flavors.get(2), flavors.get(1)), Collections.emptyList(), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
-        Recipe doubleFlavor = new Recipe("", doughs.get(0), Arrays.asList(flavors.get(1), flavors.get(1)), Collections.emptyList(), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
+        Recipe valid = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(0), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
+        Recipe notContained = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(2), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
+        Recipe doubleTopping = new Recipe("", doughs.get(0), flavors.get(1), Arrays.asList(toppings.get(1), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
 
         assertTrue(kitchen.canDo(valid));
-        assertTrue(kitchen.canDo(doubleFlavor));
+        assertTrue(kitchen.canDo(doubleTopping));
         assertFalse(kitchen.canDo(notContained));
 
         //Empty the flavors.get(1) stock
-        stock.replace(flavors.get(1), 0);
+        stock.replace(toppings.get(1), 0);
 
         assertFalse(kitchen.canDo(valid));
     }
@@ -72,10 +72,11 @@ public class KitchenTest {
 
         Kitchen kitchen = new Kitchen(stock);
 
-        Recipe valid = new Recipe("", doughs.get(0), Collections.singletonList(flavors.get(0)), Arrays.asList(toppings.get(0), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
+        Recipe valid = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(0), toppings.get(0)), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
 
         kitchen.cook(valid, 3);
 
+        assertEquals(4, (int) stock.get(toppings.get(0)));
         assertEquals(7, (int) stock.get(flavors.get(0)));
     }
 

@@ -18,14 +18,10 @@ public class TestUtils {
             toppings.add(catalog.getToppingList().get(1));
         }
 
-        for (int i = 0; i < random.nextInt(3); i++) {
-            flavors.add(catalog.getFlavorList().get(1));
-        }
-
        Mix mix = catalog.getMixList().get(random.nextBoolean() ? 0 : 1);
        Cooking cooking = catalog.getCookingList().get(random.nextBoolean() ? 0 : 1);
 
-        return new Recipe(randomString(), catalog.getDoughList().get(1), flavors, toppings, mix, cooking, random.nextFloat() *
+        return new Recipe(randomString(), catalog.getDoughList().get(1), catalog.getFlavorList().get(1), toppings, mix, cooking, random.nextFloat() *
                 10);
     }
 

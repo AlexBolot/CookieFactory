@@ -39,22 +39,17 @@ public class Kitchen {
 
         Map<Ingredient, Integer> required = new HashMap<>();
 
-        for (Flavor flavor : recipe.getFlavors()) {
-            if (required.containsKey(flavor))
-                required.replace(flavor, required.get(flavor) + 1);
+        for (Topping topping : recipe.getToppings()) {
+            if (required.containsKey(topping))
+                required.replace(topping, required.get(topping) + 1);
             else
-                required.put(flavor, 1);
-        }
-
-        for (Flavor flavor : recipe.getFlavors()) {
-            if (required.containsKey(flavor))
-                required.replace(flavor, required.get(flavor) + 1);
-            else
-                required.put(flavor, 1);
+                required.put(topping, 1);
         }
 
         Dough dough = recipe.getDough();
         if (!stock.containsKey(dough) || stock.get(dough) < 1) return false;
+        Flavor flavor = recipe.getFlavor();
+        if (flavor != null && (!stock.containsKey(flavor) || stock.get(flavor) < 1)) return false;
 
         return required.entrySet().stream().allMatch(entry -> hasInStock(entry.getKey(), entry.getValue()));
     }
@@ -87,16 +82,17 @@ public class Kitchen {
             if (!canDo(recipe))
                 throw new IllegalArgumentException("Can not prepare recipe " + recipe.getName() + " : missing ingredients");
 
-            for (Flavor flavor : recipe.getFlavors()) {
-                stock.replace(flavor, stock.get(flavor) - 1);
-            }
-
             for (Topping topping : recipe.getToppings()) {
                 stock.replace(topping, stock.get(topping) - 1);
             }
 
             Dough dough = recipe.getDough();
             stock.replace(dough, stock.get(dough) - 1);
+
+            Flavor flavor = recipe.getFlavor();
+            if (flavor != null) {
+                stock.replace(flavor, stock.get(flavor) - 1);
+            }
         }
     }
 

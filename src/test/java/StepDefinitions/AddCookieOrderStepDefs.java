@@ -25,7 +25,7 @@ public class AddCookieOrderStepDefs {
     @When("^The guest select the recipee \"([^\"]*)\"$")
     public void theGuestSelectTheRecipee(String recipee) throws Throwable {
         final Catalog catalog = new Catalog();
-        this.currentRecipe = new Recipe(recipee, catalog.getDoughList().get(0), catalog.getFlavorList().subList(0, 1), catalog.getToppingList().subList(0, 1), catalog.getMixList().get(0), catalog.getCookingList().get(0), 1f);
+        this.currentRecipe = new Recipe(recipee, catalog.getDoughList().get(0), catalog.getFlavorList().get(0), catalog.getToppingList().subList(0, 1), catalog.getMixList().get(0), catalog.getCookingList().get(0), 1f);
 
     }
 

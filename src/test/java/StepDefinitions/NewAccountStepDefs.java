@@ -56,11 +56,15 @@ public class NewAccountStepDefs {
     @Given("^A recipe \"([^\"]*)\" as follows \"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\",\"([^\"]*)\" in sale at CookieFactory$")
     public void aRecipeAsFollowsInSaleInCookieFirm(String recipeName, String doughName, String flavorName,
                                                    String toppingName, String mixName, String cookingName) {
-        List<Flavor> flavors = new ArrayList<>();
-        flavors.add(flavorFromName(flavorName));
         List<Topping>toppings = new ArrayList<>();
         toppings.add(toppingFromName(toppingName));
-        Recipe recipe = new Recipe(recipeName, doughFromName(doughName), flavors, toppings, mixFromName(mixName),cookingFromName(cookingName),0);
+        Recipe recipe = new Recipe(recipeName,
+                doughFromName(doughName),
+                flavorFromName(flavorName),
+                toppings,
+                mixFromName(mixName),
+                cookingFromName(cookingName),
+                0);
         List<Recipe> recipes = new ArrayList<>();
         recipes.add(recipe);
         cookieFirm = new CookieFirm(new ArrayList<Store>(), new ArrayList<Manager>(), recipes);

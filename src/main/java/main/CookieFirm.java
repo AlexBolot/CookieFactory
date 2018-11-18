@@ -17,8 +17,8 @@ public class CookieFirm {
     private List<Recipe> globalRecipes;
 
     public CookieFirm(List<Store> stores, List<Manager> managers, List<Recipe> globalRecipes) {
-        this.guests = new HashSet<Guest>();
-        this.accounts = new HashSet<Customer>();
+        this.guests = new HashSet<>();
+        this.accounts = new HashSet<>();
         this.stores = stores;
         this.managers = managers;
         this.globalRecipes = globalRecipes;
@@ -26,14 +26,14 @@ public class CookieFirm {
 
 
     /**
-     * @param recipe
+     * @param recipe current recipe to check
      */
     private boolean checkRecipeExists(Recipe recipe) {
         return globalRecipes.contains(recipe);
     }
 
-    public Customer createAccount(Collection<Order> orderHistory, String firstName, String lastName, String phoneNumber, String email, String password) {
-        Customer newAccount = new Customer(orderHistory, firstName, lastName, phoneNumber, email, password);
+    Customer createAccount(String firstName, String lastName, String phoneNumber, String email, String password) {
+        Customer newAccount = new Customer(firstName, lastName, phoneNumber, email, password);
         if(saveCustomerAccountIfAbsent(newAccount, email)) {
             return newAccount;
         } else {
@@ -49,18 +49,18 @@ public class CookieFirm {
         }
     }
 
-    public boolean saveCustomerAccountIfAbsent(Customer customer, String email) {
+    private boolean saveCustomerAccountIfAbsent(Customer customer, String email) {
         for (Customer account : this.accounts) {
-            if (account.getEmail() == email) {
+            if (account.getEmail().equals(email)) {
                 return false;
             }
         }
-        guests = guests.stream().filter(g -> g.getEmail() != email).collect(Collectors.toSet());
+        guests = guests.stream().filter(g -> !g.getEmail().equals(email)).collect(Collectors.toSet());
         accounts.add(customer);
         return true;
     }
 
-    public void addGuest(Guest guest) {
+    void addGuest(Guest guest) {
         guests.add(guest);
     }
 
@@ -68,7 +68,7 @@ public class CookieFirm {
         return stores;
     }
 
-    public Set<Guest> getGuests() {
+    Set<Guest> getGuests() {
         return guests;
     }
 

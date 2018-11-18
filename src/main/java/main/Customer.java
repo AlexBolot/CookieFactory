@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class Customer extends Guest {
 
-    private Collection<Order> orderHistory;
+    private Collection<Order> orderHistory = new ArrayList<>();
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -16,26 +16,17 @@ public class Customer extends Guest {
     private boolean haveDiscount = false;
     private String password;
 
-    public Customer(String email, String firstName, String lastName, String phoneNumber) {
+    Customer(String firstName, String lastName, String phoneNumber, String email, String password) {
         super(email);
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.orderHistory = new ArrayList<>();
-    }
-
-    public Customer(Collection<Order> orderHistory, String firstName, String lastName, String phoneNumber, String email, String password) {
-        super(email);
-        this.orderHistory = orderHistory;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.orderHistory = new ArrayList<>();
     }
 
-    public Customer(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
+    Customer(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
         super(email);
-        this.orderHistory = orderHistory;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
@@ -107,7 +98,7 @@ public class Customer extends Guest {
         }
     }
 
-    public void useDiscount() {
+    private void useDiscount() {
         haveDiscount = false;
         cookieCount = 0;
     }
@@ -115,7 +106,7 @@ public class Customer extends Guest {
     /**
      * Add the customer to the loyalty program
      */
-    public void addToLoyaltyProgram() {
+    void addToLoyaltyProgram() {
         loyaltyProgram = true;
     }
 

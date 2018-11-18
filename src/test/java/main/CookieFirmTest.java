@@ -14,11 +14,11 @@ public class CookieFirmTest {
 
     private CookieFirm cookieFirm;
     private Guest guest = new Guest("email@email.fr");
-    private Customer customer = new Customer(new ArrayList<Order>(),"","","","email@email.fr","");
+    private Customer customer = new Customer("","","","email@email.fr","");
 
     @Before
     public void before() {
-        cookieFirm = new CookieFirm(new ArrayList<Store>(), new ArrayList<Manager>(),new ArrayList<Recipe>());
+        cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>(),new ArrayList<>());
         cookieFirm.addGuest(guest);
     }
 
@@ -26,7 +26,7 @@ public class CookieFirmTest {
     public void createAccount_newAccount() {
         Assert.assertTrue("CookieFirm incorrectly initialized",cookieFirm.getGuests().contains(guest));
         assertFalse("CookieFirm incorrectly initialized",cookieFirm.getAccounts().contains(customer));
-        Customer createdAccount = cookieFirm.createAccount(new ArrayList<Order>(),"","",
+        Customer createdAccount = cookieFirm.createAccount("","",
                 "","email@email.fr","");
         assertEquals("Customer object incorrectly created",createdAccount,customer);
         assertFalse("Linked Guest not removed",cookieFirm.getGuests().contains(guest));
@@ -35,8 +35,8 @@ public class CookieFirmTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void createAccount_existingAccount() {
-        cookieFirm.createAccount(new ArrayList<Order>(),"a","a","a","email@email.fr","a");
-        cookieFirm.createAccount(new ArrayList<Order>(),"b","b","b","email@email.fr","b");
+        cookieFirm.createAccount("a","a","a","email@email.fr","a");
+        cookieFirm.createAccount("b","b","b","email@email.fr","b");
     }
 
     @Test
@@ -44,7 +44,7 @@ public class CookieFirmTest {
         cookieFirm.addGuest(new Guest("email2@email.fr"));
         cookieFirm.addGuest(new Guest("email3@email.fr"));
         assertEquals("Guests incorrectly initialzed",3,cookieFirm.getGuests().size());
-        Customer createdAccount = cookieFirm.createAccount(new ArrayList<Order>(),"","",
+        Customer createdAccount = cookieFirm.createAccount("","",
                 "","email@email.fr","");
         assertEquals("Guest badly deleted",2,cookieFirm.getGuests().size());
     }

@@ -1,6 +1,9 @@
 package main;
 
+import ingredient.*;
 import order.Order;
+
+import java.util.List;
 
 
 public class Guest {
@@ -34,6 +37,24 @@ public class Guest {
         setTemporaryOrder(initOrder());
 
         return price;
+    }
+
+    /**
+     * Order a custom recipe by giving the ingrdients to a recipe Factory
+     *
+      * @param quantity of cookie ordered
+     * @param dough
+     * @param flavor
+     * @param topping
+     * @param mix
+     * @param cooking
+     * @return
+     */
+    public Recipe orderCustomRecipe(int quantity, Dough dough, Flavor flavor, List<Topping> topping, Mix mix, Cooking cooking) {
+        RecipeBuilder rBuilder = new RecipeBuilder();
+        Recipe customRecipe = rBuilder.createRecipe(dough, flavor, topping, mix, cooking);
+        this.temporaryOrder.addCookie(customRecipe, quantity);
+        return customRecipe;
     }
 
     public void setTemporaryOrder(Order order) {

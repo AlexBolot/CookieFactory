@@ -28,24 +28,6 @@ public class AnonymousOrderStepDefs {
     private final CucumberContext context= CucumberContext.getContext();
     private Order currentOrder;
 
-    private OrderState getStateFromName(String targetStateName) {
-        OrderState targetState = null;
-        switch (targetStateName) {
-            case "Draft":
-                targetState = OrderState.DRAFT;
-                break;
-            case "Ordered":
-                targetState = OrderState.ORDERED;
-                break;
-            case "Canceled":
-                targetState = OrderState.CANCELED;
-                break;
-            case "Withdrawn":
-                targetState = OrderState.WITHDRAWN;
-        }
-        return targetState;
-    }
-
     @Given("^A guest \"([^\"]*)\" have selected (\\d+) cookies in the \"([^\"]*)\"$")
     public void aGuestHaveSelectedCookiesInThe(String sName, int iCookies, String sStore) throws Throwable {
         context.addGuest(sName, new Guest(""));
@@ -54,18 +36,17 @@ public class AnonymousOrderStepDefs {
         context.getGuest(sName).setTemporaryOrder(order);
     }
 
-    @And("^\"([^\"]*)\" selected a \"([^\"]*)\" in \"([^\"]*)\" on \"([^\"]*)\" and want to pay in the \"([^\"]*)\"$")
-    public void selectedAInOnAndWantToPayInThe(String sName, String timeSpan, String sStore, String sDay, String payment) throws Throwable {
+    @And("^\"([^\"]*)\" choose to pickup her \"([^\"]*)\" in (\\d+) hours in the \"([^\"]*)\" on \"([^\"]*)\" and want to pay in the \"([^\"]*)\"$")
+    public void chooseToPickupHerInHoursInTheOnAndWantToPayInThe(String sName, String sOrderName, int hours, String
+            sStore, String sDay, String payment) throws Throwable {
         Guest guest  = context.getGuest(sName);
 
-        int pickHours = Integer.parseInt(timeSpan.split(":")[0]);
-        int pickMinutes = Integer.parseInt(timeSpan.split(":")[1]);
-
-        LocalDateTime pickTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(pickHours, pickMinutes));
+        LocalDateTime pickTime = LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours(hours)));
 
         guest.getTemporaryOrder().setStore(context.stores.get(sStore));
         guest.getTemporaryOrder().setPickupDay(context.utils.dayFromName(sDay));
         guest.getTemporaryOrder().setPickUpTime(pickTime);
+        context.orders.put(sOrderName, context.getGuest(sName).getTemporaryOrder());
 
         if(payment.equals("online"))
             guest.placeOrder(true);
@@ -76,7 +57,6 @@ public class AnonymousOrderStepDefs {
     @And("^\"([^\"]*)\" entered her \"([^\"]*)\" to put her \"([^\"]*)\"$")
     public void enteredHerToPutHer(String sName, String sEmail, String sOrderName) throws Throwable {
         context.getGuest(sName).setEmail(sEmail);
-        context.orders.put(sOrderName, context.getGuest(sName).getTemporaryOrder());
     }
 
     @Then("^The purchase \"([^\"]*)\" is scan in the \"([^\"]*)\"$")
@@ -96,7 +76,7 @@ public class AnonymousOrderStepDefs {
 
     @And("^The order is \"([^\"]*)\"$")
     public void theOrderIs(String sEtat) throws Throwable {
-       assertEquals(currentOrder.getState(), getStateFromName(sEtat));
+       assertEquals(currentOrder.getState(), context.utils.stateFromName(sEtat));
     }
 
 

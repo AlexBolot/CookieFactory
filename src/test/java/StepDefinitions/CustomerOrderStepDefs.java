@@ -19,12 +19,6 @@ public class CustomerOrderStepDefs {
 
     private final CucumberContext context= CucumberContext.getContext();
 
-    private Day dayFromName(String dayName) {
-        for (Day day : Day.values()) {
-            if (day.name().equalsIgnoreCase(dayName)) return day;
-        }
-        return null;
-    }
 
     @Given("^An order \"([^\"]*)\" at the store \"([^\"]*)\", to pickup \"([^\"]*)\" at \"([^\"]*)\"$")
     public void anOrderAtTheStoreToPickupAt(String orderName, String storeName, String dayName, String pickupTime) {
@@ -33,7 +27,7 @@ public class CustomerOrderStepDefs {
 
         LocalDateTime pickTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(pickHours, pickMinutes));
 
-        Order order = new Order(context.stores.get(storeName), pickTime, dayFromName(dayName));
+        Order order = new Order(context.stores.get(storeName), pickTime, context.utils.dayFromName(dayName));
         order.addCookie(context.utils.randomRecipe(), 5);
 
         context.orders.put(orderName, order);

@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
+import static utils.TestUtils.getInfiniteMockKitchen;
 
 
 public class CustomerTest {
@@ -42,6 +43,8 @@ public class CustomerTest {
         }
 
         store = new Store(utils.randomRecipe(), globalRecipes, orders, openingTimes, closingTimes, 15.5);
+
+        store.setKitchen(getInfiniteMockKitchen());
 
     }
 
@@ -110,6 +113,8 @@ public class CustomerTest {
     public void loseDiscountAfterSecondPurchase() {
         customer.addToLoyaltyProgram();
         Order order = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+//        fillKitchenForRecipe(store.getKitchen(),globalRecipes.get(1),30);
+//        fillKitchenForRecipe(store.getKitchen(),globalRecipes.get(2),3);
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
         customer.placeOrder(true);

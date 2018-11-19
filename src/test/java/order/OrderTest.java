@@ -1,46 +1,54 @@
 package order;
 
 import ingredient.Catalog;
-import main.Day;
-import main.Guest;
-import main.Recipe;
-import main.Store;
+import main.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static order.OrderState.*;
 import static org.junit.Assert.*;
+import static utils.TestUtils.fillKitchenForRecipe;
 
 public class OrderTest {
 
     private Order order;
     private Recipe recipe1;
     private Recipe unavailableRecep;
+    private CookieFirm cookieFirm;
 
     @Before
     public void setUp() {
-
         Catalog catalog = new Catalog();
 
         Store store = new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1);
-        recipe1 = new Recipe("real", catalog.getDoughList().get(1), catalog.getFlavorList().get(0), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), 1.2f);
+        store.setKitchen(new Kitchen());
+        recipe1 = new Recipe(
+                "real",
+                catalog.getDoughList().get(1),
+                catalog.getFlavorList().get(0),
+                new ArrayList<>(),
+                catalog.getMixList().get(0),
+                catalog.getCookingList().get(0),
+                1.2f);
 
+        cookieFirm = new CookieFirm(Collections.singletonList(store), Collections.emptyList());
         unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), catalog.getFlavorList().get(0), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), 3.14f);
         LocalDateTime pickUpTime = LocalDateTime.now();
         order = new Order(store, pickUpTime, Day.TUESDAY);
 
         Guest guest = new Guest("Bob");
         order.setGuest(guest);
+
+        fillKitchenForRecipe(store.getKitchen(), recipe1, 10);
     }
 
     @Test
     public void basicGetPrices() {
-
         order.addCookie(recipe1, 2);
         assertEquals(2.4, order.getPrice(), 0.0001);
     }
@@ -87,10 +95,24 @@ public class OrderTest {
         order.addCookie(unavailableRecep, -1);
     }
 
-    @Ignore
-    @Test(expected = IllegalArgumentException.class)
-    public void addUnavailableCookieThrowsAndException() {
-        order.addCookie(unavailableRecep, 1);
+    @Test
+    public void notEnoughIngredientOnAddReturnFalse() {
+        order.getStore().setKitchen(new Kitchen());
+        assertFalse(order.addCookie(cookieFirm.getGlobalRecipes().get(0), 1));
+    }
+
+    @Test
+    public void notEnoughForAmountTruncate() {
+        Kitchen kitchen = new Kitchen();
+        Recipe recipe = cookieFirm.getGlobalRecipes().get(0);
+        int recipeCount = 2;
+        kitchen.refill(recipe.getDough(), recipeCount);
+        kitchen.refill(recipe.getFlavor(), recipeCount);
+        recipe.getToppings().forEach(t -> kitchen.refill(t, recipeCount));
+        order.getStore().setKitchen(kitchen);
+
+        assertTrue(order.addCookie(recipe, 3));
+        assertEquals(2, order.getOrderLines().get(0).getAmount());
     }
 
     @Test
@@ -133,7 +155,7 @@ public class OrderTest {
         assertEquals(WITHDRAWN, order.getState());
     }
 
-    @Test (expected = WithdrawNotPaidOrderException.class)
+    @Test(expected = WithdrawNotPaidOrderException.class)
     public void withdrawNotPayedOrder() {
 
         order.placeOrder();
@@ -142,7 +164,7 @@ public class OrderTest {
         order.withdraw();
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void withdrawNotOrdered() {
 
         // Should throw exception
@@ -159,7 +181,7 @@ public class OrderTest {
         assertEquals(ORDERED, order.getState());
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void placeOrderNotDraft() {
 
         assertEquals(DRAFT, order.getState());
@@ -179,7 +201,7 @@ public class OrderTest {
         assertEquals(CANCELED, order.getState());
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void cancelWithdrawn() {
         order.placeOrder();
         order.pay();
@@ -189,7 +211,7 @@ public class OrderTest {
         order.cancel();
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void cancelCanceled() {
         order.placeOrder();
         order.cancel();

@@ -13,6 +13,8 @@ import utils.CucumberContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static utils.TestUtils.getInfiniteMockKitchen;
+
 public class NewAccountStepDefs {
 
     private final CucumberContext context = CucumberContext.getContext();
@@ -24,6 +26,7 @@ public class NewAccountStepDefs {
     public void anOrderWithCookiesAsFollows(String orderName, int nbrCookies, String recipeName) {
         Order order = new Order(new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(),1)
                 , null, null);
+        order.getStore().setKitchen(getInfiniteMockKitchen());
         for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
             if (cookie.getName().equals(recipeName)){
                 order.addCookie(cookie, nbrCookies);

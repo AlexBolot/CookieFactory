@@ -13,6 +13,7 @@ import utils.CucumberContext;
 import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertEquals;
+import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class CustomerOrderStepDefs {
 
@@ -29,10 +30,9 @@ public class CustomerOrderStepDefs {
     public void anOrderAtTheStoreToPickupHourBeforeClosingTime(String orderName, String storeName, String dayName, int hoursBeforeEnd) throws Throwable {
 
         Store store = context.stores.get(storeName);
-
         LocalDateTime pickTime = store.closingTime(dayFromName(dayName)).minusHours(hoursBeforeEnd);
-
         Order order = new Order(store, pickTime, dayFromName(dayName));
+        order.getStore().setKitchen(getInfiniteMockKitchen());
         order.addCookie(context.utils.randomRecipe(), 5);
 
         context.orders.put(orderName, order);

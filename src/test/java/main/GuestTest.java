@@ -13,6 +13,7 @@ import java.util.HashMap;
 import static main.Day.MONDAY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class GuestTest {
 
@@ -34,6 +35,7 @@ public class GuestTest {
         store.setClosingTime(MONDAY, LocalDateTime.now().plusHours(6));
 
         order = new Order(store, LocalDateTime.now().plusHours(3), MONDAY);
+        order.getStore().setKitchen(getInfiniteMockKitchen());
 
         order.addCookie(globalRecipes.get(0), 5);
 

@@ -11,6 +11,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static utils.TestUtils.getInfiniteMockKitchen;
+
 public class CommonStepDefs {
 
     private final CucumberContext context = CucumberContext.getContext();
@@ -57,5 +59,10 @@ public class CommonStepDefs {
 
         store.setOpeningTime(day, opTime);
         store.setClosingTime(day, clTime);
+    }
+
+    @Given("^The kitchen for \"([^\"]*)\" is infinite$")
+    public void theKitchenForIsInfinite(String storeName) throws Throwable {
+        context.getStore(storeName).setKitchen(getInfiniteMockKitchen());
     }
 }

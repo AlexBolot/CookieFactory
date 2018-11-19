@@ -6,9 +6,15 @@ import cucumber.api.java.en.When;
 import ingredient.Catalog;
 import main.Guest;
 import main.Recipe;
+import main.Store;
 import order.Order;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
 import static org.junit.Assert.assertEquals;
+import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class RemoveCookieStepDefs {
 
@@ -34,16 +40,19 @@ public class RemoveCookieStepDefs {
     @Given("^An order with (\\d+) recipe of (\\d+) cookie$")
     public void anOrderWithRecipeOfCookie(int recipies, int cookies) {
         this.order = new Order();
+        this.order.setStore(new Store(null, Collections.emptyList(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1.0));
+        this.order.getStore().setKitchen(getInfiniteMockKitchen());
         final Catalog kitchen = new Catalog();
         for (int i = 0; i < recipies; i++) {
+            Recipe recipe = new Recipe(String.valueOf(i),
+                    kitchen.getDoughList().get(0),
+                    kitchen.getFlavorList().get(0),
+                    kitchen.getToppingList().subList(0, 1),
+                    kitchen.getMixList().get(0),
+                    kitchen.getCookingList().get(0),
+                    1.0f);
             this.order.addCookie(
-                    new Recipe(String.valueOf(i),
-                            kitchen.getDoughList().get(0),
-                            kitchen.getFlavorList().get(0),
-                            kitchen.getToppingList().subList(0, 1),
-                            kitchen.getMixList().get(0),
-                            kitchen.getCookingList().get(0),
-                            1.0f), cookies);
+                    recipe, cookies);
         }
     }
 

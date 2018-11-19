@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Math.min;
 import static order.OrderState.*;
 
 public class Order {
@@ -34,15 +35,18 @@ public class Order {
 
     /**
      * Adds a cookie to this order
-     *
-     * @param recipe Recipe of the cookie to add
+     *  @param recipe Recipe of the cookie to add
      * @param amount Amount of cookies of [recipe] (must be strictly positive)
+     * @return boolean, true if cookies where added to the list false if the store couldn't make the recipe
      */
-    public void addCookie(Recipe recipe, int amount) {
+    public boolean addCookie(Recipe recipe, int amount) {
         if (amount <= 0) throw new IllegalArgumentException("Amount should be a strictly positive number");
 
         Optional<OrderLine> orderLineOptional = orderLines.stream().filter(line -> line.getRecipe().equals(recipe)).findFirst();
-
+        if (!store.getKitchen().canDo(recipe))
+            return false;
+        else
+            amount = min(store.getKitchen().recipeCapacity(recipe), amount);
         if (!orderLineOptional.isPresent()) {
             OrderLine orderLine = new OrderLine(recipe, amount);
             orderLines.add(orderLine);
@@ -50,7 +54,7 @@ public class Order {
             OrderLine orderLine = orderLineOptional.get();
             orderLine.setAmount(orderLine.getAmount() + amount);
         }
-
+        return true;
     }
 
     /**

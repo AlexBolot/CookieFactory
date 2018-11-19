@@ -2,7 +2,6 @@ package main;
 
 import order.Order;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class Store {
         }
     }
 
-    void cancelOrder(Order order) {
+    public void cancelOrder(Order order) {
         order.cancel();
     }
 
@@ -99,8 +98,7 @@ public class Store {
     void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, String email) {
         Optional<Order> order = findOrder(pickUpTime, day, email);
 
-        if(order.isPresent())
-            order.get().setPayed();
+        order.ifPresent(Order::setPayed);
     }
 
     /**
@@ -189,10 +187,7 @@ public class Store {
         if (closingTimes.containsKey(day) && localDateTime.isAfter(closingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set opening time after closing time for " + day);
 
-        if (openingTimes.containsKey(day))
-            this.openingTimes.replace(day, localDateTime);
-        else
-            this.openingTimes.put(day, localDateTime);
+        this.openingTimes.put(day, localDateTime);
     }
 
     public void setClosingTime(Day day, LocalDateTime localDateTime) {
@@ -200,10 +195,7 @@ public class Store {
         if (openingTimes.containsKey(day) && localDateTime.isBefore(openingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set closing time before opening time for " + day);
 
-        if (closingTimes.containsKey(day))
-            this.closingTimes.replace(day, localDateTime);
-        else
-            this.closingTimes.put(day, localDateTime);
+        this.closingTimes.put(day, localDateTime);
     }
 
 }

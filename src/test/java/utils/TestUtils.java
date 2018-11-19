@@ -3,6 +3,7 @@ package utils;
 import ingredient.*;
 import main.Day;
 import main.Recipe;
+import order.OrderState;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -32,6 +33,24 @@ public class TestUtils {
             if (day.name().equalsIgnoreCase(dayName)) return day;
         }
         return null;
+    }
+
+    public OrderState stateFromName(String targetStateName) {
+        OrderState targetState = null;
+        switch (targetStateName) {
+            case "Draft":
+                targetState = OrderState.DRAFT;
+                break;
+            case "Ordered":
+                targetState = OrderState.ORDERED;
+                break;
+            case "Canceled":
+                targetState = OrderState.CANCELED;
+                break;
+            case "Withdrawn":
+                targetState = OrderState.WITHDRAWN;
+        }
+        return targetState;
     }
 
     public Mix mixFromName(String mixName) {

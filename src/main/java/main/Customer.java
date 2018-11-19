@@ -25,7 +25,7 @@ public class Customer extends Guest {
         this.orderHistory = new ArrayList<>();
     }
 
-    Customer(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
+    public Customer(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
         super(email);
         this.firstName = firstName;
         this.lastName = lastName;

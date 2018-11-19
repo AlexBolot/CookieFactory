@@ -9,80 +9,19 @@ import main.Guest;
 import main.Store;
 import order.Order;
 import order.OrderState;
+import utils.CucumberContext;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 public class OrderWithdrawalStepDefs {
 
-    private Map<String, Guest> guests = new HashMap<String, Guest>();
-    private Map<String, Order> orders = new HashMap<String, Order>();
+    private final CucumberContext context = CucumberContext.getContext();
+
     private Order currentOrder;
-    private Store store;
-
-    @Given("^A customer \"([^\"]*)\"$")
-    public void aCustomer(String name) throws Throwable {
-        guests.put(name, new Guest(name));
-    }
-
-    @Given("^An order \"([^\"]*)\"$")
-    public void anOrder(String name) throws Throwable {
-        orders.put(name, new Order(store, LocalDateTime.now(), Day.TUESDAY));
-    }
-
-    @Given("^A store$")
-    public void aStore() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        store = new Store(null, Collections.emptyList(), new ArrayList<>(), null, null, 1.0);
-    }
-
-    @Given("^the customer \"([^\"]*)\" has paid for \"([^\"]*)\"$")
-    public void theCustomerHasPaidFor(String customerName, String orderName) throws Throwable {
-        orders.get(orderName).placeOrder();
-        orders.get(orderName).pay();
-    }
-
-    @When("^the employee scans \"([^\"]*)\"$")
-    public void theEmployeeScans(String orderName) throws Throwable {
-        final Order targetOrder = orders.get(orderName);
-        currentOrder = store
-                .findOrder(targetOrder.getPickUpTime(), targetOrder.getPickupDay(), targetOrder.getGuest().getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Not found the order"));
-    }
-
-
-    @And("^the employee recieves \"([^\"]*)\" payment$")
-    public void theEmpoyeeRecievesPayment(String customerName) throws Throwable {
-        currentOrder.pay();
-    }
-
-
-    @Given("^\"([^\"]*)\" is passed in the store by \"([^\"]*)\"$")
-    public void isPassedInTheStoreBy(String orderName, String clientName) throws Throwable {
-        final Order order = orders.get(orderName);
-        order.setGuest(guests.get(clientName));
-        store.getOrders().add(order);
-    }
-
-    @Given("^the customer \"([^\"]*)\" has the order \"([^\"]*)\"$")
-    public void theCustomerHasTheOrder(String customerName, String orderName) throws Throwable {
-        orders.get(orderName).setGuest(guests.get(customerName));
-    }
-
-
-    @When("^the employee delivers the current order$")
-    public void theEmployeeDeliversTheCurrentOrder() throws Throwable {
-        try {
-            currentOrder.withdraw();
-        } catch (Exception ignored) {
-        }
-    }
+    private Exception illegalWithdraw;
 
     private OrderState getStateFromName(String targetStateName) {
         OrderState targetState = null;
@@ -102,15 +41,69 @@ public class OrderWithdrawalStepDefs {
         return targetState;
     }
 
-    @Then("^The current order state is\"([^\"]*)\"$")
-    public void theCurrentOrderStateIs(String targetStateName) throws Throwable {
+    @Given("^An order \"([^\"]*)\"$")
+    public void anOrder(String name) {
+        context.orders.put(name, new Order(null, LocalDateTime.now(), Day.TUESDAY));
+    }
+
+    @Given("^the customer \"([^\"]*)\" has paid for \"([^\"]*)\"$")
+    public void theCustomerHasPaidFor(String customerName, String orderName) {
+        Order order = context.orders.get(orderName);
+        order.placeOrder();
+        order.pay();
+    }
+
+    @When("^the employee of \"([^\"]*)\" scans \"([^\"]*)\"$")
+    public void theEmployeeScans(String storeName, String orderName) {
+        final Order targetOrder = context.orders.get(orderName);
+        final Store store = context.stores.get(storeName);
+        currentOrder = store
+                .findOrder(targetOrder.getPickUpTime(), targetOrder.getPickupDay(), targetOrder.getGuest().getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Not found the order"));
+    }
+
+    @And("^the employee recieves \"([^\"]*)\" payment$")
+    public void theEmpoyeeRecievesPayment(String customerName) {
+        currentOrder.pay();
+    }
+
+    @Given("^\"([^\"]*)\" is passed in the store \"([^\"]*)\" by \"([^\"]*)\"$")
+    public void isPassedInTheStoreBy(String orderName, String storeName, String clientName) {
+        final Order order = context.orders.get(orderName);
+        final Guest guest = context.getGuest(clientName);
+        final Store store = context.stores.get(storeName);
+
+        order.setGuest(guest);
+        order.setStore(store);
+        store.getOrders().add(order);
+    }
+
+    @Given("^the customer \"([^\"]*)\" has the order \"([^\"]*)\"$")
+    public void theCustomerHasTheOrder(String customerName, String orderName) {
+        Order order = context.orders.get(orderName);
+        order.setGuest(context.getGuest(customerName));
+        order.placeOrder();
+    }
+
+    @When("^the employee delivers the current order$")
+    public void theEmployeeDeliversTheCurrentOrder() {
+        try {
+            currentOrder.withdraw();
+        } catch (Exception e) {
+            illegalWithdraw = e;
+        }
+    }
+
+    @Then("^The current order state is \"([^\"]*)\"$")
+    public void theCurrentOrderStateIs(String targetStateName) {
         OrderState targetState = getStateFromName(targetStateName);
         assertEquals(currentOrder.getState(), targetState);
     }
 
     @Then("^The current order state is not \"([^\"]*)\"$")
-    public void theCurrentOrderStateIsnot(String targetStateName) throws Throwable {
+    public void theCurrentOrderStateIsnot(String targetStateName) {
         OrderState targetState = getStateFromName(targetStateName);
         assertNotEquals(currentOrder.getState(), targetState);
+        assertEquals(illegalWithdraw.getMessage(), "Trying to withdraw an unpayed order !");
     }
 }

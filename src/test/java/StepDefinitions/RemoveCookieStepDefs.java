@@ -11,36 +11,35 @@ import order.Order;
 import static org.junit.Assert.assertEquals;
 
 public class RemoveCookieStepDefs {
+
     private Guest guest;
     private Order order;
 
     @Given("^The customer checks his order$")
-    public void theChecksHisOrder() throws Throwable {
+    public void theChecksHisOrder() {
         guest.setTemporaryOrder(order);
         order.setGuest(guest);
     }
 
     @When("^The customer select (\\d+) cookie to remove$")
-    public void theSelectCookieToRemove(int cookieAmount) throws Throwable {
+    public void theSelectCookieToRemove(int cookieAmount) {
         order.removeCookie(order.getOrderLines().get(0).getRecipe(), cookieAmount);
     }
 
-
-    @Given("^A customer$")
-    public void aCustomer() throws Throwable {
+    @Given("^A guest$")
+    public void aGuest() {
         this.guest = new Guest("guest");
     }
 
-
     @Given("^An order with (\\d+) recipe of (\\d+) cookie$")
-    public void anOrderWithRecipeOfCookie(int recipies, int cookies) throws Throwable {
+    public void anOrderWithRecipeOfCookie(int recipies, int cookies) {
         this.order = new Order();
         final Catalog kitchen = new Catalog();
         for (int i = 0; i < recipies; i++) {
             this.order.addCookie(
                     new Recipe(String.valueOf(i),
                             kitchen.getDoughList().get(0),
-                            kitchen.getFlavorList().subList(0, 1),
+                            kitchen.getFlavorList().get(0),
                             kitchen.getToppingList().subList(0, 1),
                             kitchen.getMixList().get(0),
                             kitchen.getCookingList().get(0),
@@ -49,7 +48,7 @@ public class RemoveCookieStepDefs {
     }
 
     @Then("^The order contains (\\d+) cookie recipee$")
-    public void theOrderContainsCookieRecipee(int recipeeAmount) throws Throwable {
+    public void theOrderContainsCookieRecipee(int recipeeAmount) {
         assertEquals(recipeeAmount, this.order.getOrderLines().size());
     }
 }

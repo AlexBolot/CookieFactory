@@ -4,6 +4,7 @@ import order.Order;
 import order.OrderState;
 import org.junit.Before;
 import org.junit.Test;
+import utils.TestUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,19 +14,19 @@ import static org.junit.Assert.*;
 
 public class StoreTest {
 
-    private TestUtils utils = new TestUtils();
+    private final TestUtils utils = new TestUtils();
 
     private Store store;
     private Recipe oldRecipe;
     private Recipe newRecipe;
 
-    private Guest guestBob = new Guest("");
-    private Guest guestAlice = new Guest("");
+    private final Guest guestBob = new Guest("");
+    private final Guest guestAlice = new Guest("");
 
-    private HashMap<Day, LocalDateTime> openingTimes = new HashMap<>();
-    private HashMap<Day, LocalDateTime> closingTimes = new HashMap<>();
+    private final HashMap<Day, LocalDateTime> openingTimes = new HashMap<>();
+    private final HashMap<Day, LocalDateTime> closingTimes = new HashMap<>();
 
-    private ArrayList<Recipe> globalRecipes = new ArrayList<>();
+    private final ArrayList<Recipe> globalRecipes = new ArrayList<>();
 
     @Before
     public void before() {
@@ -124,14 +125,21 @@ public class StoreTest {
         LocalDateTime now = LocalDateTime.now();
 
         Order normalOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
-        Order emptyOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
 
         for (int i = 1; i < 4; i++) {
             normalOrder.addCookie(utils.randomRecipe(), i);
         }
 
-        assertTrue(0<store.placeOrder(normalOrder));
-       // assertFalse(store.placeOrder(emptyOrder));
+        assertTrue(0 <store.placeOrder(normalOrder));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void placeOrderEmpty(){
+        LocalDateTime now = LocalDateTime.now();
+
+        Order emptyOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
+
+        store.placeOrder(emptyOrder);
     }
 
     @Test

@@ -1,7 +1,7 @@
 Feature: Create a Recipe
 
   Background:
-    Given "store" a store
+    Given A store "store"
     Given "Bob" the Manager of "store"
 
   Scenario: Adding a monthy recipe

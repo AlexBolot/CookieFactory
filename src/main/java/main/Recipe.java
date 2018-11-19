@@ -8,27 +8,20 @@ public class Recipe {
 
     private String name;
     private Dough dough;
-    private List<Flavor> flavors;
+    private Flavor flavor;
     private List<Topping> toppings;
     private Mix mix;
     private Cooking cooking;
     float price;
 
-    public Recipe(String name, Dough dough, List<Flavor> flavors, List<Topping> toppings, Mix mix, Cooking cooking, float price) {
+    public Recipe(String name, Dough dough, Flavor flavor, List<Topping> toppings, Mix mix, Cooking cooking, float price) {
         this.name = name;
         this.dough = dough;
         this.mix = mix;
         this.cooking = cooking;
-        setFlavors(flavors);
+        this.flavor = flavor;
         setToppings(toppings);
         this.price = price;
-    }
-
-    public void setFlavors(List<Flavor> flavors) {
-        if (flavors.size() > 3)
-            throw new IllegalArgumentException("To much flavors!!!");
-        else
-            this.flavors = flavors;
     }
 
     public void setToppings(List<Topping> toppings) {
@@ -40,6 +33,10 @@ public class Recipe {
 
     public void setDough(Dough dough) {
         this.dough = dough;
+    }
+
+    public void setFlavor(Flavor flavor) {
+        this.flavor = flavor;
     }
 
     public void setCooking(Cooking cooking) {
@@ -54,8 +51,8 @@ public class Recipe {
         return dough;
     }
 
-    public List<Flavor> getFlavors() {
-        return flavors;
+    public Flavor getFlavor() {
+        return flavor;
     }
 
     public List<Topping> getToppings() {

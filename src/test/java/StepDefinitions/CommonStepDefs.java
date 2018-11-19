@@ -1,8 +1,9 @@
-package utils;
+package StepDefinitions;
 
 import cucumber.api.java.en.Given;
 import main.*;
 import order.Order;
+import utils.CucumberContext;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

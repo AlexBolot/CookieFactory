@@ -6,12 +6,11 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import main.Customer;
 import main.Day;
+import main.Store;
 import order.Order;
 import utils.CucumberContext;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,14 +25,14 @@ public class CustomerOrderStepDefs {
         return null;
     }
 
-    @Given("^An order \"([^\"]*)\" at the store \"([^\"]*)\", to pickup \"([^\"]*)\" at \"([^\"]*)\"$")
-    public void anOrderAtTheStoreToPickupAt(String orderName, String storeName, String dayName, String pickupTime) {
-        int pickHours = Integer.parseInt(pickupTime.split(":")[0]);
-        int pickMinutes = Integer.parseInt(pickupTime.split(":")[1]);
+    @Given("^An order \"([^\"]*)\" at the store \"([^\"]*)\", to pickup \"([^\"]*)\" (\\d+) hour before closing time$")
+    public void anOrderAtTheStoreToPickupHourBeforeClosingTime(String orderName, String storeName, String dayName, int hoursBeforeEnd) throws Throwable {
 
-        LocalDateTime pickTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(pickHours, pickMinutes));
+        Store store = context.stores.get(storeName);
 
-        Order order = new Order(context.stores.get(storeName), pickTime, dayFromName(dayName));
+        LocalDateTime pickTime = store.closingTime(dayFromName(dayName)).minusHours(hoursBeforeEnd);
+
+        Order order = new Order(store, pickTime, dayFromName(dayName));
         order.addCookie(context.utils.randomRecipe(), 5);
 
         context.orders.put(orderName, order);
@@ -61,6 +60,20 @@ public class CustomerOrderStepDefs {
     public void hasAnEmptyTempraryOrder(String name) {
         Customer customer = context.getCustomer(name);
         assertEquals(new Order(), customer.getTemporaryOrder());
+    }
+
+    @Given("^The store \"([^\"]*)\" opens \"([^\"]*)\" (\\d+) hours ago and closes in (\\d+) hours$")
+    public void theStoreOpensHoursAgoAndClosesInHours(String storeName, String dayName, int behindHours, int aheadHours) {
+
+        Day day = context.utils.dayFromName(dayName);
+
+        LocalDateTime opTime = LocalDateTime.now().minusHours(behindHours);
+        LocalDateTime clTime = LocalDateTime.now().plusHours(aheadHours);
+
+        Store store = context.stores.get(storeName);
+
+        store.setOpeningTime(day, opTime);
+        store.setClosingTime(day, clTime);
     }
 }
 

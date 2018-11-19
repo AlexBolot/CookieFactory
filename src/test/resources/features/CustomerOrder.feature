@@ -2,7 +2,7 @@ Feature: Customer order
 
   Background:
     Given A store "store"
-    Given The "store" opens "Monday" at "8:00" and closes at "17:30"
+    Given The "store" opens "Monday" at "8:00" and closes at "23:30"
 
   Scenario: A customer places an order
     Given A customer "Bob"

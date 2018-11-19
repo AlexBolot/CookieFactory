@@ -5,59 +5,100 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import main.Guest;
+import main.Recipe;
+import main.Store;
+import order.Order;
+import order.OrderState;
+import utils.CucumberContext;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 
 public class AnonymousOrderStepDefs {
-    @Given("^A \"([^\"]*)\" have had cookies for a total of \"([^\"]*)\"$")
-    public void aHaveHadCookiesForATotalOf(String arg0, String arg1) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+
+    private final CucumberContext context= CucumberContext.getContext();
+    private Order currentOrder;
+
+    private OrderState getStateFromName(String targetStateName) {
+        OrderState targetState = null;
+        switch (targetStateName) {
+            case "Draft":
+                targetState = OrderState.DRAFT;
+                break;
+            case "Ordered":
+                targetState = OrderState.ORDERED;
+                break;
+            case "Canceled":
+                targetState = OrderState.CANCELED;
+                break;
+            case "Withdrawn":
+                targetState = OrderState.WITHDRAWN;
+        }
+        return targetState;
     }
 
-    @And("^A \"([^\"]*)\" selected a \"([^\"]*)\" in a store$")
-    public void aSelectedAInAStore(String arg0, String arg1) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @Given("^A guest \"([^\"]*)\" have selected (\\d+) cookies in the \"([^\"]*)\"$")
+    public void aGuestHaveSelectedCookiesInThe(String sName, int iCookies, String sStore) throws Throwable {
+        context.addGuest(sName, new Guest(""));
+        Order order = new Order();
+        order.addCookie(context.utils.randomRecipe(), iCookies);
+        context.getGuest(sName).setTemporaryOrder(order);
     }
 
-    @And("^A \"([^\"]*)\" entered his \"([^\"]*)\"$")
-    public void aEnteredHis(String arg0, String arg1) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @And("^\"([^\"]*)\" selected a \"([^\"]*)\" in \"([^\"]*)\" on \"([^\"]*)\" and want to pay in the \"([^\"]*)\"$")
+    public void selectedAInOnAndWantToPayInThe(String sName, String timeSpan, String sStore, String sDay, String payment) throws Throwable {
+        Guest guest  = context.getGuest(sName);
+
+        int pickHours = Integer.parseInt(timeSpan.split(":")[0]);
+        int pickMinutes = Integer.parseInt(timeSpan.split(":")[1]);
+
+        LocalDateTime pickTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(pickHours, pickMinutes));
+
+        guest.getTemporaryOrder().setStore(context.stores.get(sStore));
+        guest.getTemporaryOrder().setPickupDay(context.utils.dayFromName(sDay));
+        guest.getTemporaryOrder().setPickUpTime(pickTime);
+
+        if(payment.equals("online"))
+            guest.placeOrder(true);
+        else
+            guest.placeOrder(false);
     }
 
-    @And("^A \"([^\"]*)\" printed is purachse order$")
-    public void aPrintedIsPurachseOrder(String arg0) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @And("^\"([^\"]*)\" entered her \"([^\"]*)\" to put her \"([^\"]*)\"$")
+    public void enteredHerToPutHer(String sName, String sEmail, String sOrderName) throws Throwable {
+        context.getGuest(sName).setEmail(sEmail);
+        context.orders.put(sOrderName, context.getGuest(sName).getTemporaryOrder());
     }
 
-    @When("^A \"([^\"]*)\" show his purchase order in the store$")
-    public void aShowHisPurchaseOrderInTheStore(String arg0) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @Then("^The purchase \"([^\"]*)\" is scan in the \"([^\"]*)\"$")
+    public void thePurchaseIsScanInThe(String sOrderName, String sStore) throws Throwable {
+        final Order targetOrder = context.orders.get(sOrderName);
+        currentOrder = context.stores.get(sStore)
+                .findOrder(targetOrder.getPickUpTime(), targetOrder.getPickupDay(), targetOrder.getGuest().getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Not found the order"));
     }
 
-    @Then("^The purchase order is \"([^\"]*)\"$")
-    public void thePurchaseOrderIs(String arg0) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
 
-    @And("^A \"([^\"]*)\" \"([^\"]*)\" is cookies$")
-    public void aIsCookies(String arg0, String arg1) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @And("^\"([^\"]*)\" pay her cookies$")
+    public void payHerCookies(String sGuest) throws Throwable {
+        currentOrder.setPayed();
+        currentOrder.withdraw();
     }
 
     @And("^The order is \"([^\"]*)\"$")
-    public void theOrderIsS(String arg0) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    public void theOrderIs(String sEtat) throws Throwable {
+       assertEquals(currentOrder.getState(), getStateFromName(sEtat));
     }
 
-    @And("^A \"([^\"]*)\" want to \"([^\"]*)\"$")
-    public void aWantTo(String arg0, String arg1) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
+
+
 }

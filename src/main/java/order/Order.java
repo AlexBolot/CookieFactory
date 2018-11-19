@@ -160,6 +160,14 @@ public class Order {
         return pickupDay;
     }
 
+    public void setPickUpTime(LocalDateTime pickUpTime) {
+        this.pickUpTime = pickUpTime;
+    }
+
+    public void setPickupDay(Day pickupDay) {
+        this.pickupDay = pickupDay;
+    }
+
     public void pay() {
         this.payed = true;
     }

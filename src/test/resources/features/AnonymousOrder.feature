@@ -1,11 +1,12 @@
 Feature: Anonymous order
+  Background:
+    Given A store "store"
+    Given The "store" opens "Monday" at "8:00" and closes at "23:30"
+
   Scenario: A customer put an order anonymously
-  Given A "Guest" have had cookies for a total of "10€"
-    And A "Guest" selected a "timeSpan" in a store
-    And A "Guest" want to "pay to the store"
-    And A "Guest" entered his "email"
-    And A "Guest" printed is purachse order
-    When A "Guest" show his purchase order in the store
-    Then The purchase order is "scan"
-    And A "Guest" "pay" is cookies
-    And The order is "validated"
+    Given A guest "Joelle" have selected 4 cookies in the "store"
+    And "Joelle" selected a "16:30" in "store" on "Monday" and want to pay in the "store"
+    And "Joelle" entered her "jojo@gmail.com" to put her "order1"
+    Then The purchase "order1" is scan in the "store"
+    And "Joelle" pay her cookies
+    And The order is "Withdrawn"

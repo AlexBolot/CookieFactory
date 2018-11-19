@@ -51,8 +51,7 @@ public class CookieFirmTest {
                 "","email@email.fr","");
         assertEquals("Guest badly deleted",2,cookieFirm.getGuests().size());
     }
-
-    @Ignore
+    
     @Test
     public void recipesCreation() {
         Recipe trueSimpleRecipe = new Recipe("Cookie for nothing",
@@ -87,14 +86,7 @@ public class CookieFirmTest {
                 utils.mixFromName("Mixed"),
                 utils.cookingFromName("Crunchy"),
                 2.0f);
-        Recipe real = utils.randomRecipe();
-        for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
-            if (cookie.getName().equals("White Dog")) {
-                real = cookie;
-                System.out.println("Cookie found");
-                break;
-            }
-        }
+
         Assert.assertTrue(cookieFirm.getGlobalRecipes().contains(trueSimpleRecipe));
         Assert.assertFalse(cookieFirm.getGlobalRecipes().contains(falseSimpleRecipe));
         Assert.assertTrue(cookieFirm.getGlobalRecipes().contains(trueComplexRecipe));

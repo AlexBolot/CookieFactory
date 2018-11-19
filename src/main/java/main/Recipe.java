@@ -3,6 +3,7 @@ package main;
 import ingredient.*;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Recipe {
 
@@ -73,5 +74,19 @@ public class Recipe {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recipe recipe = (Recipe) o;
+        return Float.compare(recipe.price, price) == 0 &&
+                Objects.equals(name, recipe.name) &&
+                Objects.equals(dough, recipe.dough) &&
+                Objects.equals(flavor, recipe.flavor) &&
+                Objects.equals(toppings, recipe.toppings) &&
+                Objects.equals(mix, recipe.mix) &&
+                Objects.equals(cooking, recipe.cooking);
     }
 }

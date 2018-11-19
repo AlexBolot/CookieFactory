@@ -1,5 +1,7 @@
 package ingredient;
 
+import java.util.Objects;
+
 public class Cooking {
 
     private final String name;
@@ -10,5 +12,13 @@ public class Cooking {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cooking cooking = (Cooking) o;
+        return Objects.equals(name, cooking.name);
     }
 }

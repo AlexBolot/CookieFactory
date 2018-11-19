@@ -1,11 +1,10 @@
 package main;
 
-import ingredient.Topping;
-import order.Order;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import utils.TestUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,9 +15,9 @@ import static org.junit.Assert.assertFalse;
 public class CookieFirmTest {
 
     private CookieFirm cookieFirm;
-    private Guest guest = new Guest("email@email.fr");
-    private Customer customer = new Customer("","","","email@email.fr","");
-    private TestUtils utils = new TestUtils();
+    private final Guest guest = new Guest("email@email.fr");
+    private final Customer customer = new Customer("","","","email@email.fr","");
+    private final TestUtils utils = new TestUtils();
 
     @Before
     public void before() {

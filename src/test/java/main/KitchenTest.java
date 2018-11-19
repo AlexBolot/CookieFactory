@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class KitchenTest {
 
-    private Catalog catalog = new Catalog();
+    private final Catalog catalog = new Catalog();
     private List<Flavor> flavors;
     private List<Topping> toppings;
     private List<Dough> doughs;

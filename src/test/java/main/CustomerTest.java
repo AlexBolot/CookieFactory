@@ -3,6 +3,7 @@ package main;
 import order.Order;
 import org.junit.Before;
 import org.junit.Test;
+import utils.TestUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,14 +15,14 @@ import static org.junit.Assert.*;
 
 public class CustomerTest {
 
-    private double delta = 0.001;
-    private TestUtils utils = new TestUtils();
+    private final double delta = 0.001;
+    private final TestUtils utils = new TestUtils();
     private Customer customer;
     private Store store;
-    private ArrayList<Recipe> globalRecipes = new ArrayList<>();
+    private final ArrayList<Recipe> globalRecipes = new ArrayList<>();
 
-    private HashMap<Day, LocalDateTime> openingTimes = new HashMap<>();
-    private HashMap<Day, LocalDateTime> closingTimes = new HashMap<>();
+    private final HashMap<Day, LocalDateTime> openingTimes = new HashMap<>();
+    private final HashMap<Day, LocalDateTime> closingTimes = new HashMap<>();
 
     @Before
     public void before() {

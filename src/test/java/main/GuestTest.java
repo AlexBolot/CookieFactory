@@ -4,6 +4,7 @@ import order.Order;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import utils.TestUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,8 +18,8 @@ public class GuestTest {
 
     private Order order;
     private Guest guest;
-    private ArrayList<Recipe> globalRecipes = new ArrayList<>();
-    private TestUtils utils = new TestUtils();
+    private final ArrayList<Recipe> globalRecipes = new ArrayList<>();
+    private final TestUtils utils = new TestUtils();
 
     @Before
     public void before() {

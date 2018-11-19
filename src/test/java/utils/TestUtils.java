@@ -2,11 +2,17 @@ package utils;
 
 import ingredient.*;
 import main.Day;
+import main.Kitchen;
 import main.Recipe;
 import order.OrderState;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestUtils {
 
@@ -86,5 +92,26 @@ public class TestUtils {
             if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
         }
         return null;
+    }
+
+    /**
+     * Fill up the kitchen with enough ingredients for the recipe
+     *
+     * @param kitchen
+     * @param recipe
+     * @param amount
+     */
+    public static void fillKitchenForRecipe(Kitchen kitchen, Recipe recipe, int amount) {
+        kitchen.refill(recipe.getDough(), amount);
+        kitchen.refill(recipe.getFlavor(), amount);
+        recipe.getToppings().forEach(t -> kitchen.refill(t, amount));
+    }
+
+    public static Kitchen getInfiniteMockKitchen() {
+        final Kitchen kitchen = mock(Kitchen.class);
+        when(kitchen.canDo(any())).thenReturn(true);
+        when(kitchen.hasInStock(any(), anyInt())).thenReturn(true);
+        when(kitchen.recipeCapacity(any())).thenReturn(Integer.MAX_VALUE);
+        return kitchen;
     }
 }

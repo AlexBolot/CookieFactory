@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static utils.TestUtils.fillKitchenForRecipe;
 
 public class KitchenTest {
 
@@ -98,4 +99,15 @@ public class KitchenTest {
         assertEquals(20, (int) stock.get(flavor));
 
     }
+
+    @Test
+    public void recipeCapacity() {
+        Kitchen kitchen = new Kitchen();
+        CookieFirm firm = new CookieFirm(Collections.emptyList(), Collections.emptyList());
+        Recipe recipe = firm.getGlobalRecipes().get(0);
+        assertEquals(0, kitchen.recipeCapacity(recipe));
+        fillKitchenForRecipe(kitchen, recipe, 2);
+        assertEquals(2, kitchen.recipeCapacity(recipe));
+    }
+
 }

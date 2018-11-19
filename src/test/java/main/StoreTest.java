@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
+import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class StoreTest {
 
@@ -49,9 +50,12 @@ public class StoreTest {
         ArrayList<Order> orders = new ArrayList<>();
         store = new Store(oldRecipe, globalRecipes, orders, openingTimes, closingTimes, 15.5);
 
+        store.setKitchen(getInfiniteMockKitchen());
+
         Order order = new Order(store, LocalDateTime.now(), Day.TUESDAY);
         order.setGuest(guestBob);
         orders.add(order);
+
 
         order = new Order(store, LocalDateTime.now().plusHours(1), Day.FRIDAY);
         order.addCookie(globalRecipes.get(0), 1);

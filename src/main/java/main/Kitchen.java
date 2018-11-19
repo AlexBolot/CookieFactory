@@ -5,7 +5,9 @@ import ingredient.Flavor;
 import ingredient.Ingredient;
 import ingredient.Topping;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,7 +32,7 @@ public class Kitchen {
     }
 
     /**
-     * Tells if the Kitchen has all required ingredients and quantities to cook a given [recipe]
+     * Tells if the Kitchen has all required getIngredients and quantities to cook a given [recipe]
      *
      * @param recipe Recipe to check
      * @return True if stock allows to cook [recipe], False otherwise
@@ -70,7 +72,7 @@ public class Kitchen {
     /**
      * Cosumes the requiered Flavors, Toppings and Dough of the given [recipe], as many times as [amount]
      *
-     * @param recipe Recipe to cook with ingredients from the Kitchen
+     * @param recipe Recipe to cook with getIngredients from the Kitchen
      * @param amount How many times do we cook [recipe] (must be stricly positive)
      */
     public void cook(Recipe recipe, int amount) {
@@ -80,7 +82,7 @@ public class Kitchen {
         for (int i = 0; i < amount; i++) {
 
             if (!canDo(recipe))
-                throw new IllegalArgumentException("Can not prepare recipe " + recipe.getName() + " : missing ingredients");
+                throw new IllegalArgumentException("Can not prepare recipe " + recipe.getName() + " : missing getIngredients");
 
             for (Topping topping : recipe.getToppings()) {
                 stock.replace(topping, stock.get(topping) - 1);
@@ -112,4 +114,14 @@ public class Kitchen {
             stock.put(ingredient, amount);
     }
 
+    public int recipeCapacity(Recipe recipe) {
+        List<Ingredient> ingredients = recipe.getIngredients();
+        if (!ingredients.stream().allMatch(this.stock::containsKey))
+            return 0;
+
+        Map<Ingredient, Integer> required = new HashMap<>();
+        ingredients.forEach(item -> required.put(item, Collections.frequency(ingredients, item)));
+        return required.entrySet().stream()
+                .mapToInt(entry -> this.stock.get(entry.getKey()) / entry.getValue()).min().orElse(0);
+    }
 }

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represent the {@link main.CookieFirm} ingredients catalog
+ * Represent the {@link main.CookieFirm} getIngredients catalog
  */
 public class Catalog {
 

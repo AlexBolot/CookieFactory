@@ -2,6 +2,8 @@ package main;
 
 import ingredient.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -88,5 +90,11 @@ public class Recipe {
                 Objects.equals(toppings, recipe.toppings) &&
                 Objects.equals(mix, recipe.mix) &&
                 Objects.equals(cooking, recipe.cooking);
+    }
+
+    List<Ingredient> getIngredients() {
+        List<Ingredient> ingredients = new ArrayList<>(Arrays.asList(this.dough, this.flavor));
+        if (!this.getToppings().isEmpty()) ingredients.addAll(this.getToppings());
+        return ingredients;
     }
 }

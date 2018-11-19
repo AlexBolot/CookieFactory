@@ -36,4 +36,12 @@ public class CucumberContext {
         return (Customer) clients.get(customerName);
     }
 
+    public Order getOrder(String orderName) {
+        return orders.get(orderName);
+    }
+
+    public Store getStore(String storeName) {
+        return stores.get(storeName);
+    }
+
 }

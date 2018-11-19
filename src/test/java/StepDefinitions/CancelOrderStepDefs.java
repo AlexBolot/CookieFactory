@@ -27,24 +27,6 @@ public class CancelOrderStepDefs {
     private Order currentOrder;
 
 
-    private OrderState getStateFromName(String targetStateName) {
-        OrderState targetState = null;
-        switch (targetStateName) {
-            case "Draft":
-                targetState = OrderState.DRAFT;
-                break;
-            case "Ordered":
-                targetState = OrderState.ORDERED;
-                break;
-            case "Canceled":
-                targetState = OrderState.CANCELED;
-                break;
-            case "Withdrawn":
-                targetState = OrderState.WITHDRAWN;
-        }
-        return targetState;
-    }
-
     @Given("^\"([^\"]*)\" made an \"([^\"]*)\" into the \"([^\"]*)\" in (\\d+) hours, on \"([^\"]*)\"$")
     public void madeAnIntoTheInHoursOn(String sCustomer, String sOrder, String sStore, int iTime, String sDay) throws Throwable {
         Order order1 = new Order(context.stores.get(sStore),LocalDateTime.of(LocalDate.now(), LocalTime.from(LocalDateTime.now().plusHours
@@ -78,7 +60,7 @@ public class CancelOrderStepDefs {
     }
     @Then("^\"([^\"]*)\" is \"([^\"]*)\"$")
     public void is(String sOrder, String sEtat) throws Throwable {
-        Assert.assertEquals(context.orders.get(sOrder).getState(), getStateFromName(sEtat));
+        Assert.assertEquals(context.orders.get(sOrder).getState(), context.utils.stateFromName(sEtat));
     }
 
     @And("^\"([^\"]*)\" receveid a \"([^\"]*)\"$")

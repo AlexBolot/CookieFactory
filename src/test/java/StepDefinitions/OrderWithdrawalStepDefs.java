@@ -23,24 +23,6 @@ public class OrderWithdrawalStepDefs {
     private Order currentOrder;
     private Exception illegalWithdraw;
 
-    private OrderState getStateFromName(String targetStateName) {
-        OrderState targetState = null;
-        switch (targetStateName) {
-            case "Draft":
-                targetState = OrderState.DRAFT;
-                break;
-            case "Ordered":
-                targetState = OrderState.ORDERED;
-                break;
-            case "Canceled":
-                targetState = OrderState.CANCELED;
-                break;
-            case "Withdrawn":
-                targetState = OrderState.WITHDRAWN;
-        }
-        return targetState;
-    }
-
     @Given("^An order \"([^\"]*)\"$")
     public void anOrder(String name) {
         context.orders.put(name, new Order(null, LocalDateTime.now(), Day.TUESDAY));
@@ -96,13 +78,13 @@ public class OrderWithdrawalStepDefs {
 
     @Then("^The current order state is \"([^\"]*)\"$")
     public void theCurrentOrderStateIs(String targetStateName) {
-        OrderState targetState = getStateFromName(targetStateName);
+        OrderState targetState = context.utils.stateFromName(targetStateName);
         assertEquals(currentOrder.getState(), targetState);
     }
 
     @Then("^The current order state is not \"([^\"]*)\"$")
     public void theCurrentOrderStateIsnot(String targetStateName) {
-        OrderState targetState = getStateFromName(targetStateName);
+        OrderState targetState = context.utils.stateFromName(targetStateName);
         assertNotEquals(currentOrder.getState(), targetState);
         assertEquals(illegalWithdraw.getMessage(), "Trying to withdraw an unpayed order !");
     }

@@ -3,7 +3,7 @@ package main;
 public enum Day {
     MONDAY,
     TUESDAY,
-    WENESDAY,
+    WEDNESDAY,
     THURSDAY,
     FRIDAY,
     SATURDAY,

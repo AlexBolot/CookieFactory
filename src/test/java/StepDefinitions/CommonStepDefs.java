@@ -62,7 +62,7 @@ public class CommonStepDefs {
     }
 
     @Given("^The kitchen for \"([^\"]*)\" is infinite$")
-    public void theKitchenForIsInfinite(String storeName) throws Throwable {
+    public void theKitchenForIsInfinite(String storeName) {
         context.getStore(storeName).setKitchen(getInfiniteMockKitchen());
     }
 }

@@ -9,7 +9,6 @@ import main.*;
 import order.Order;
 import order.OrderLine;
 import utils.CucumberContext;
-import utils.TestUtils;
 
 import java.util.*;
 
@@ -30,8 +29,6 @@ public class AddCookieOrderStepDefs {
     private List<Topping> customToppings;
     private Mix customMix;
     private Cooking customCooking;
-
-    private TestUtils utils = new TestUtils();
 
     @Given("^The guest see the list of cookies$")
     public void theGuestSeeTheListOfCookies() {
@@ -85,30 +82,30 @@ public class AddCookieOrderStepDefs {
     }
     @And("^The guest choose the dough \"([^\"]*)\"$")
     public void theGuestChooseTheDough(String doughName) {
-        this.customdough = utils.doughFromName(doughName);
+        this.customdough = context.utils.doughFromName(doughName);
     }
 
     @And("^The guest choose the flavor \"([^\"]*)\"$")
     public void theGuestChooseTheFlavor(String flavorName) {
-        this.customFlavor = utils.flavorFromName(flavorName);
+        this.customFlavor = context.utils.flavorFromName(flavorName);
     }
 
 
     @And("^The guest choose the topping \"([^\"]*)\"$")
     public void theGuestChooseTheTopping(String toppingName) {
         List<Topping> toppings = new ArrayList<>();
-        toppings.add(utils.toppingFromName(toppingName));
+        toppings.add(context.utils.toppingFromName(toppingName));
         this.customToppings = toppings;
     }
 
     @And("^The guest choose the mix \"([^\"]*)\"$")
     public void theGuestChooseTheMix(String mixName) {
-        this.customMix = utils.mixFromName(mixName);
+        this.customMix = context.utils.mixFromName(mixName);
     }
 
     @And("^The guest choose the cooking \"([^\"]*)\"$")
     public void theGuestChooseTheCooking(String cookingName) {
-        this.customCooking = utils.cookingFromName(cookingName);
+        this.customCooking = context.utils.cookingFromName(cookingName);
     }
 
     @When("^The guest order (\\d+) custom cookie \"([^\"]*)\"$")
@@ -127,19 +124,19 @@ public class AddCookieOrderStepDefs {
     }
 
     @And("^An order \"([^\"]*)\" at the store \"([^\"]*)\"$")
-    public void anOrderAtTheStore(String orderName, String storeName) throws Throwable {
+    public void anOrderAtTheStore(String orderName, String storeName) {
         Store store = context.getStore(storeName);
         Order order = context.getOrder(orderName);
         order.setStore(store);
     }
 
     @And("^The kitchen of \"([^\"]*)\" is empty$")
-    public void theKitchenOfIsEmpty(String storeName) throws Throwable {
+    public void theKitchenOfIsEmpty(String storeName) {
         context.getStore(storeName).setKitchen(new Kitchen());
     }
 
     @And("^The kitchen of \"([^\"]*)\" can do (\\d+) \"([^\"]*)\"$")
-    public void theKitchenOfCanDo(String storeName, int recipeCount, String recipeName) throws Throwable {
+    public void theKitchenOfCanDo(String storeName, int recipeCount, String recipeName) {
         Store store = context.getStore(storeName);
         if (store.getKitchen() == null)
             store.setKitchen(new Kitchen());
@@ -158,12 +155,12 @@ public class AddCookieOrderStepDefs {
 
 
     @And("^The guest is ordering the \"([^\"]*)\"$")
-    public void theGuestIsOrderingThe(String orderName) throws Throwable {
+    public void theGuestIsOrderingThe(String orderName) {
         this.guest.setTemporaryOrder(context.getOrder(orderName));
     }
 
     @And("^The order contain (\\d+) cookie \"([^\"]*)\"$")
-    public void theOrderContainCookieRecipe(int cookieCount, String recipee) throws Throwable {
+    public void theOrderContainCookieRecipe(int cookieCount, String recipee) {
         Recipe recipe = getRecipe(recipee).orElse(null);
         Optional<OrderLine> optionalOrderLine = guest.getTemporaryOrder()
                 .getOrderLines().stream()

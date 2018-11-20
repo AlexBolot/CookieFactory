@@ -1,7 +1,10 @@
 package main;
 
-import ingredient.Catalog;
 import order.Order;
+import recipe.Recipe;
+import recipe.ingredient.Catalog;
+import store.Manager;
+import store.Store;
 
 import java.util.*;
 import java.util.stream.Collectors;

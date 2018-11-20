@@ -1,6 +1,6 @@
-package main;
+package recipe;
 
-import ingredient.*;
+import recipe.ingredient.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ public class Recipe {
     private List<Topping> toppings;
     private Mix mix;
     private Cooking cooking;
-    float price;
+    public float price;
 
     public Recipe(String name, Dough dough, Flavor flavor, List<Topping> toppings, Mix mix, Cooking cooking, float price) {
         this.name = name;
@@ -92,7 +92,7 @@ public class Recipe {
                 Objects.equals(cooking, recipe.cooking);
     }
 
-    List<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredients() {
         List<Ingredient> ingredients = new ArrayList<>(Arrays.asList(this.dough, this.flavor));
         if (!this.getToppings().isEmpty()) ingredients.addAll(this.getToppings());
         return ingredients;

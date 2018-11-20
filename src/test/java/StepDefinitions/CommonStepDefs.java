@@ -1,8 +1,13 @@
 package StepDefinitions;
 
 import cucumber.api.java.en.Given;
-import main.*;
+import main.CookieFirm;
+import main.Customer;
+import main.Day;
+import main.Guest;
 import order.Order;
+import store.Manager;
+import store.Store;
 import utils.CucumberContext;
 
 import java.time.LocalDate;

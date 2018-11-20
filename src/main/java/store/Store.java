@@ -1,6 +1,8 @@
-package main;
+package store;
 
+import main.Day;
 import order.Order;
+import recipe.Recipe;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -26,7 +28,7 @@ public class Store {
         this.tax = tax;
     }
 
-    double placeOrder(Order order) {
+    public double placeOrder(Order order) {
         if (!this.checkOrderValidity(order)) {
             throw new IllegalArgumentException("The order is not valid");
         } else {
@@ -170,9 +172,9 @@ public class Store {
 
     /**
      * Sets the new Monthly Recipe of the store
-     * Raise an exception if new ingredient is the same as the previous one
+     * Raise an exception if new recipe.ingredient is the same as the previous one
      *
-     * @param newRecipe new monthly ingredient of the store
+     * @param newRecipe new monthly recipe.ingredient of the store
      */
     void setMonthlyRecipe(Recipe newRecipe) {
         if (this.monthlyRecipe != null && this.monthlyRecipe == newRecipe) {

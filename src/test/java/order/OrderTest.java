@@ -1,9 +1,14 @@
 package order;
 
-import ingredient.Catalog;
-import main.*;
+import main.CookieFirm;
+import main.Day;
+import main.Guest;
 import org.junit.Before;
 import org.junit.Test;
+import recipe.Recipe;
+import recipe.ingredient.Catalog;
+import store.Kitchen;
+import store.Store;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

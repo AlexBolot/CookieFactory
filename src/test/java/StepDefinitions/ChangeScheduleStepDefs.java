@@ -3,8 +3,8 @@ package StepDefinitions;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import main.Day;
-import main.Manager;
 import org.junit.Assert;
+import store.Manager;
 import utils.CucumberContext;
 
 import java.time.LocalDate;

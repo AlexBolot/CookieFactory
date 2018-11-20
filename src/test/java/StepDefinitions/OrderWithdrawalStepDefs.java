@@ -6,9 +6,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import main.Day;
 import main.Guest;
-import main.Store;
 import order.Order;
 import order.OrderState;
+import store.Store;
 import utils.CucumberContext;
 
 import java.time.LocalDateTime;

@@ -1,4 +1,7 @@
-package main;
+package store;
+
+import main.Day;
+import recipe.Recipe;
 
 import java.time.LocalDateTime;
 

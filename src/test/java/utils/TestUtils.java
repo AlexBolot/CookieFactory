@@ -1,10 +1,10 @@
 package utils;
 
-import ingredient.*;
 import main.Day;
-import main.Kitchen;
-import main.Recipe;
 import order.OrderState;
+import recipe.Recipe;
+import recipe.ingredient.*;
+import store.Kitchen;
 
 import java.util.ArrayList;
 import java.util.Random;

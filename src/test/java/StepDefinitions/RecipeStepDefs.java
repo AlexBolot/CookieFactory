@@ -4,9 +4,9 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import ingredient.*;
-import main.Recipe;
 import org.junit.Assert;
+import recipe.Recipe;
+import recipe.ingredient.*;
 import utils.CucumberContext;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class RecipeStepDefs {
         if (dough!=null) {
             recipes.get(recipeName).setDough(dough);
         } else {
-            throw new IllegalArgumentException("This ingredient doesn't exists");
+            throw new IllegalArgumentException("This recipe.ingredient doesn't exists");
         }
     }
 
@@ -43,7 +43,7 @@ public class RecipeStepDefs {
         if (flavor!=null) {
             recipes.get(recipeName).setFlavor(flavor);
         } else {
-            throw new IllegalArgumentException("This ingredient doesn't exists");
+            throw new IllegalArgumentException("This recipe.ingredient doesn't exists");
         }
     }
 
@@ -55,7 +55,7 @@ public class RecipeStepDefs {
             toppings.add(topping);
             recipes.get(recipeName).setToppings(toppings);
         } else {
-            throw new IllegalArgumentException("This ingredient doesn't exists");
+            throw new IllegalArgumentException("This recipe.ingredient doesn't exists");
         }
     }
 
@@ -65,7 +65,7 @@ public class RecipeStepDefs {
         if (mix!=null) {
             recipes.get(recipeName).setMix(mix);
         } else {
-            throw new IllegalArgumentException("This ingredient doesn't exists");
+            throw new IllegalArgumentException("This recipe.ingredient doesn't exists");
         }
     }
 
@@ -75,7 +75,7 @@ public class RecipeStepDefs {
         if (cooking!=null) {
             recipes.get(recipeName).setCooking(cooking);
         } else {
-            throw new IllegalArgumentException("This ingredient doesn't exists");
+            throw new IllegalArgumentException("This recipe.ingredient doesn't exists");
         }
     }
 

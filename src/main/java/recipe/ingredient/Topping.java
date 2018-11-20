@@ -1,4 +1,4 @@
-package ingredient;
+package recipe.ingredient;
 
 public class Topping extends Ingredient {
 

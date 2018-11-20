@@ -1,4 +1,4 @@
-package ingredient;
+package recipe.ingredient;
 
 import java.util.Objects;
 

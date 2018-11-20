@@ -4,10 +4,14 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import ingredient.*;
-import main.*;
+import main.CookieFirm;
+import main.Guest;
 import order.Order;
 import order.OrderLine;
+import recipe.Recipe;
+import recipe.ingredient.*;
+import store.Kitchen;
+import store.Store;
 import utils.CucumberContext;
 
 import java.util.*;

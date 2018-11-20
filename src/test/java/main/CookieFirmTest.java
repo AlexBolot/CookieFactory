@@ -3,6 +3,7 @@ package main;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import recipe.Recipe;
 import utils.TestUtils;
 
 import java.util.ArrayList;

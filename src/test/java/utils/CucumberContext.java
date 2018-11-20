@@ -2,9 +2,9 @@ package utils;
 
 import main.Customer;
 import main.Guest;
-import main.Manager;
-import main.Store;
 import order.Order;
+import store.Manager;
+import store.Store;
 
 import java.util.HashMap;
 import java.util.Map;

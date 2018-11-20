@@ -1,9 +1,10 @@
-package main;
+package store;
 
-import ingredient.Dough;
-import ingredient.Flavor;
-import ingredient.Ingredient;
-import ingredient.Topping;
+import recipe.Recipe;
+import recipe.ingredient.Dough;
+import recipe.ingredient.Flavor;
+import recipe.ingredient.Ingredient;
+import recipe.ingredient.Topping;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,11 +58,11 @@ public class Kitchen {
     }
 
     /**
-     * Tells if the Kitchen has the given [ingredient] and if yes, if it has at least the given [amount]
+     * Tells if the Kitchen has the given [recipe.ingredient] and if yes, if it has at least the given [amount]
      *
      * @param ingredient Ingredient to find in the stock
      * @param amount     Minimal requied amount to be found in the stock (must be strictly positive)
-     * @return True if stock contains [ingredient], with amount of [amount], False otherwise
+     * @return True if stock contains [recipe.ingredient], with amount of [amount], False otherwise
      */
     public boolean hasInStock(Ingredient ingredient, int amount) {
         if (amount <= 0) throw new IllegalArgumentException("Amount must be strictly positive. Given is " + amount);
@@ -99,10 +100,10 @@ public class Kitchen {
     }
 
     /**
-     * Updates the [amount] of [ingredient] in the stock
+     * Updates the [amount] of [recipe.ingredient] in the stock
      *
      * @param ingredient Ingredient being refilled
-     * @param amount     Amount of [ingredient] to add to the stock (must be strictly positive)
+     * @param amount     Amount of [recipe.ingredient] to add to the stock (must be strictly positive)
      */
     public void refill(Ingredient ingredient, int amount) {
 

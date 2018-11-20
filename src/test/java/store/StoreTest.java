@@ -1,9 +1,12 @@
-package main;
+package store;
 
+import main.Day;
+import main.Guest;
 import order.Order;
 import order.OrderState;
 import org.junit.Before;
 import org.junit.Test;
+import recipe.Recipe;
 import utils.TestUtils;
 
 import java.time.LocalDateTime;

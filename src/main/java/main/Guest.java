@@ -1,7 +1,9 @@
 package main;
 
-import ingredient.*;
 import order.Order;
+import recipe.Recipe;
+import recipe.RecipeBuilder;
+import recipe.ingredient.*;
 
 import java.util.List;
 

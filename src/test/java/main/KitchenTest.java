@@ -1,8 +1,10 @@
 package main;
 
-import ingredient.*;
 import org.junit.Before;
 import org.junit.Test;
+import recipe.Recipe;
+import recipe.ingredient.*;
+import store.Kitchen;
 
 import java.util.*;
 

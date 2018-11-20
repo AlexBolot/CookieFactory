@@ -1,12 +1,12 @@
-package ingredient;
+package recipe.ingredient;
 
 import java.util.Objects;
 
-public abstract class Ingredient {
+public class Cooking {
 
-    private String name;
+    private final String name;
 
-    Ingredient(String name) {
+    Cooking(String name) {
         this.name = name;
     }
 
@@ -18,7 +18,7 @@ public abstract class Ingredient {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Ingredient that = (Ingredient) o;
-        return Objects.equals(name, that.name);
+        Cooking cooking = (Cooking) o;
+        return Objects.equals(name, cooking.name);
     }
 }

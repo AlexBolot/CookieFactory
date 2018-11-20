@@ -1,6 +1,6 @@
 package order;
 
-import main.Recipe;
+import recipe.Recipe;
 
 import java.util.Objects;
 

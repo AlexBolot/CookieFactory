@@ -2,7 +2,9 @@ package store;
 
 import main.Day;
 import order.Order;
+import order.OrderLine;
 import recipe.Recipe;
+import recipe.ingredient.Ingredient;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -29,16 +31,33 @@ public class Store {
     }
 
     public double placeOrder(Order order) {
-        if (!this.checkOrderValidity(order)) {
-            throw new IllegalArgumentException("The order is not valid");
-        } else {
-            orders.add(order);
-            return order.placeOrder();
+
+        if (!this.checkOrderValidity(order)) throw new IllegalArgumentException("The order is not valid");
+
+        orders.add(order);
+
+        for (OrderLine orderLine : order.getOrderLines()) {
+            kitchen.cook(orderLine.getRecipe(), orderLine.getAmount());
         }
+
+        return order.placeOrder();
     }
 
+    /**
+     * Require the given order to cancel itself, and then, for each cookie, and for each ingredient, refills the kitchen
+     * (since the order was not withdrawn, the ingredients were booked but not baked :p)
+     *
+     * @param order Order to cancel
+     */
     public void cancelOrder(Order order) {
+
         order.cancel();
+
+        for (OrderLine orderLine : order.getOrderLines()) {
+            for (Ingredient ingredient : orderLine.getRecipe().getIngredients()) {
+                kitchen.refill(ingredient, orderLine.getAmount());
+            }
+        }
     }
 
     /**
@@ -47,7 +66,7 @@ public class Store {
      * @param order Customer's order to check before sending the order
      * @return True if the order is valid, false otherwise
      */
-    boolean checkOrderValidity(Order order) {
+    public boolean checkOrderValidity(Order order) {
         return checkOrderContent(order) && checkOrderDelay(order);
     }
 
@@ -58,6 +77,10 @@ public class Store {
      * @return True is the order has oreder lines, false if order is empty
      */
     private boolean checkOrderContent(Order order) {
+        for (OrderLine orderLine : order.getOrderLines()) {
+            if (kitchen.recipeCapacity(orderLine.getRecipe()) < orderLine.getAmount()) return false;
+        }
+
         return !order.getOrderLines().isEmpty();
     }
 

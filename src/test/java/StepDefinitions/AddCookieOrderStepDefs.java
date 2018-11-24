@@ -84,6 +84,7 @@ public class AddCookieOrderStepDefs {
     public void addCookieOfTheSelectedRecipee(int cookieAmount) {
         this.guest.getTemporaryOrder().addCookie(currentRecipe, cookieAmount);
     }
+
     @And("^The guest choose the dough \"([^\"]*)\"$")
     public void theGuestChooseTheDough(String doughName) {
         this.customdough = context.utils.doughFromName(doughName);
@@ -142,15 +143,15 @@ public class AddCookieOrderStepDefs {
     @And("^The kitchen of \"([^\"]*)\" can do (\\d+) \"([^\"]*)\"$")
     public void theKitchenOfCanDo(String storeName, int recipeCount, String recipeName) {
         Store store = context.getStore(storeName);
-        if (store.getKitchen() == null)
-            store.setKitchen(new Kitchen());
-        Kitchen kitchen = store.getKitchen();
+        Kitchen kitchen = new Kitchen();
         Recipe recipe = getRecipe(recipeName).orElse(null);
         if (recipe == null)
             return;
         kitchen.refill(recipe.getDough(), recipeCount);
         kitchen.refill(recipe.getFlavor(), recipeCount);
         recipe.getToppings().forEach(t -> kitchen.refill(t, recipeCount));
+
+        store.setKitchen(kitchen);
     }
 
     private Optional<Recipe> getRecipe(String recipeName) {
@@ -166,9 +167,10 @@ public class AddCookieOrderStepDefs {
     @And("^The order contain (\\d+) cookie \"([^\"]*)\"$")
     public void theOrderContainCookieRecipe(int cookieCount, String recipee) {
         Recipe recipe = getRecipe(recipee).orElse(null);
-        Optional<OrderLine> optionalOrderLine = guest.getTemporaryOrder()
-                .getOrderLines().stream()
-                .filter(line -> line.getRecipe().equals(recipe)).findFirst();
+        Optional<OrderLine> optionalOrderLine =
+                guest.getTemporaryOrder()
+                        .getOrderLines().stream()
+                        .filter(line -> line.getRecipe().equals(recipe)).findFirst();
         assertTrue(optionalOrderLine.isPresent());
         assertEquals(optionalOrderLine.get().getAmount(), cookieCount);
     }

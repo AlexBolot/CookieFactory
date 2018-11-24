@@ -38,23 +38,26 @@ public class Kitchen {
      * @param recipe Recipe to check
      * @return True if stock allows to cook [recipe], False otherwise
      */
-    public boolean canDo(Recipe recipe) {
+    public boolean canDo(Recipe recipe, int amount) {
+
+        return recipeCapacity(recipe) >= amount;
+        /*
 
         Map<Ingredient, Integer> required = new HashMap<>();
 
         for (Topping topping : recipe.getToppings()) {
             if (required.containsKey(topping))
-                required.replace(topping, required.get(topping) + 1);
+                required.replace(topping, required.get(topping) + amount);
             else
-                required.put(topping, 1);
+                required.put(topping, amount);
         }
 
         Dough dough = recipe.getDough();
-        if (!stock.containsKey(dough) || stock.get(dough) < 1) return false;
+        if (!stock.containsKey(dough) || stock.get(dough) < amount) return false;
         Flavor flavor = recipe.getFlavor();
-        if (flavor != null && (!stock.containsKey(flavor) || stock.get(flavor) < 1)) return false;
+        if (flavor != null && (!stock.containsKey(flavor) || stock.get(flavor) < amount)) return false;
 
-        return required.entrySet().stream().allMatch(entry -> hasInStock(entry.getKey(), entry.getValue()));
+        return required.entrySet().stream().allMatch(entry -> hasInStock(entry.getKey(), entry.getValue()));*/
     }
 
     /**
@@ -80,22 +83,20 @@ public class Kitchen {
 
         if (amount <= 0) throw new IllegalArgumentException("Amount must be strictly positive. Given is " + amount);
 
-        for (int i = 0; i < amount; i++) {
 
-            if (!canDo(recipe))
-                throw new IllegalArgumentException("Can not prepare recipe " + recipe.getName() + " : missing getIngredients");
+        if (!canDo(recipe, amount))
+            throw new IllegalArgumentException("Can not prepare recipe " + recipe.getName() + " : missing getIngredients");
 
-            for (Topping topping : recipe.getToppings()) {
-                stock.replace(topping, stock.get(topping) - 1);
-            }
+        for (Topping topping : recipe.getToppings()) {
+            stock.replace(topping, stock.get(topping) - amount);
+        }
 
-            Dough dough = recipe.getDough();
-            stock.replace(dough, stock.get(dough) - 1);
+        Dough dough = recipe.getDough();
+        stock.replace(dough, stock.get(dough) - amount);
 
-            Flavor flavor = recipe.getFlavor();
-            if (flavor != null) {
-                stock.replace(flavor, stock.get(flavor) - 1);
-            }
+        Flavor flavor = recipe.getFlavor();
+        if (flavor != null) {
+            stock.replace(flavor, stock.get(flavor) - amount);
         }
     }
 
@@ -115,13 +116,21 @@ public class Kitchen {
             stock.put(ingredient, amount);
     }
 
+    /**
+     * How many cookies the kitchen can produce for a given recipe
+     *
+     * @param recipe Recipe of the expected cookie
+     * @return Amount of cookies matching [recipe] the kitchen can produce
+     */
     public int recipeCapacity(Recipe recipe) {
         List<Ingredient> ingredients = recipe.getIngredients();
+
         if (!ingredients.stream().allMatch(this.stock::containsKey))
             return 0;
 
         Map<Ingredient, Integer> required = new HashMap<>();
         ingredients.forEach(item -> required.put(item, Collections.frequency(ingredients, item)));
+
         return required.entrySet().stream()
                 .mapToInt(entry -> this.stock.get(entry.getKey()) / entry.getValue()).min().orElse(0);
     }

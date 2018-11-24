@@ -42,14 +42,14 @@ public class KitchenTest {
         Recipe notContained = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(2), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
         Recipe doubleTopping = new Recipe("", doughs.get(0), flavors.get(1), Arrays.asList(toppings.get(1), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
 
-        assertTrue(kitchen.canDo(valid));
-        assertTrue(kitchen.canDo(doubleTopping));
-        assertFalse(kitchen.canDo(notContained));
+        assertTrue(kitchen.canDo(valid, 1));
+        assertTrue(kitchen.canDo(doubleTopping, 1));
+        assertFalse(kitchen.canDo(notContained, 1));
 
         //Empty the flavors.get(1) stock
         stock.replace(toppings.get(1), 0);
 
-        assertFalse(kitchen.canDo(valid));
+        assertFalse(kitchen.canDo(valid, 1));
     }
 
     @Test

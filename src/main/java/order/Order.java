@@ -39,7 +39,8 @@ public class Order {
 
     /**
      * Adds a cookie to this order
-     *  @param recipe Recipe of the cookie to add
+     *
+     * @param recipe Recipe of the cookie to add
      * @param amount Amount of cookies of [recipe] (must be strictly positive)
      * @return boolean, true if cookies where added to the list false if the store couldn't make the recipe
      */
@@ -47,16 +48,17 @@ public class Order {
         if (amount <= 0) throw new IllegalArgumentException("Amount should be a strictly positive number");
 
         Optional<OrderLine> orderLineOptional = orderLines.stream().filter(line -> line.getRecipe().equals(recipe)).findFirst();
-        if (!store.getKitchen().canDo(recipe))
-            return false;
-        else
-            amount = min(store.getKitchen().recipeCapacity(recipe), amount);
-        if (!orderLineOptional.isPresent()) {
-            OrderLine orderLine = new OrderLine(recipe, amount);
-            orderLines.add(orderLine);
-        } else {
+
+        amount = min(store.getKitchen().recipeCapacity(recipe), amount);
+
+        if (amount == 0) return false;
+
+        if (orderLineOptional.isPresent()) {
             OrderLine orderLine = orderLineOptional.get();
             orderLine.setAmount(orderLine.getAmount() + amount);
+        } else {
+            OrderLine orderLine = new OrderLine(recipe, amount);
+            orderLines.add(orderLine);
         }
         return true;
     }
@@ -125,9 +127,16 @@ public class Order {
      */
     public double getPrice() {
         double storeTax = store.getTax();
-        double price = orderLines.stream().mapToDouble(line -> line.getAmount() * line.getRecipe().getPrice()).sum() * storeTax;
+
+        double sum = 0.0;
+        for (OrderLine line : orderLines) {
+            double v = line.getAmount() * line.getRecipe().getPrice();
+            sum += v;
+        }
+        double price = sum * storeTax;
+
         if (guest instanceof Customer && ((Customer) guest).isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()) {
-            price = (price * 0.90);
+            price *= 0.90;
         }
         return price;
     }

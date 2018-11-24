@@ -109,7 +109,7 @@ public class TestUtils {
 
     public static Kitchen getInfiniteMockKitchen() {
         final Kitchen kitchen = mock(Kitchen.class);
-        when(kitchen.canDo(any())).thenReturn(true);
+        when(kitchen.canDo(any(), anyInt())).thenReturn(true);
         when(kitchen.hasInStock(any(), anyInt())).thenReturn(true);
         when(kitchen.recipeCapacity(any())).thenReturn(Integer.MAX_VALUE);
         return kitchen;

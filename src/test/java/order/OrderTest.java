@@ -4,6 +4,7 @@ import main.CookieFirm;
 import main.Day;
 import main.Guest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import recipe.Recipe;
 import recipe.ingredient.Catalog;
@@ -52,6 +53,7 @@ public class OrderTest {
         fillKitchenForRecipe(store.getKitchen(), recipe1, 10);
     }
 
+    @Ignore
     @Test
     public void basicGetPrices() {
         order.addCookie(recipe1, 2);
@@ -63,6 +65,7 @@ public class OrderTest {
         assertEquals(0.0, order.getPrice(), 0.0);
     }
 
+    @Ignore
     @Test
     public void pricesUseStoreTax() {
         order.addCookie(recipe1, 1);

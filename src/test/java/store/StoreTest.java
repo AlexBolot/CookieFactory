@@ -5,6 +5,7 @@ import main.Guest;
 import order.Order;
 import order.OrderState;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import recipe.Recipe;
 import utils.TestUtils;
@@ -126,6 +127,7 @@ public class StoreTest {
         assertFalse(store.checkOrderValidity(tooShortOrder));
     }
 
+    @Ignore
     @Test
     public void placeOrder() {
 

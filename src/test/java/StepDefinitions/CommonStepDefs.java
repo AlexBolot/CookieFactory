@@ -29,8 +29,7 @@ public class CommonStepDefs {
 
     @Given("^A customer \"([^\"]*)\"$")
     public void aCustomer(String name) {
-        CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>());
-        Customer customer = cookieFirm.createAccount("", "", "", "", "", new Order());
+        Customer customer = context.getCookieFirm().createAccount("", "", "", name+"@"+name+".fr", "", new Order());
         context.addGuest(name, customer);
     }
 

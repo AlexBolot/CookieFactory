@@ -181,7 +181,7 @@ public class CookieFirm {
         return globalRecipes;
     }
 
-    private void addCustomerToLoyaltyProgram(Customer customer) {
+    public void addCustomerToLoyaltyProgram(Customer customer) {
         customer.addToLoyaltyProgram();
     }
 

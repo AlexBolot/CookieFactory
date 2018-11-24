@@ -1,6 +1,6 @@
 Feature: Order placing
 
-  Scenario : A connected customer places an order
+  Scenario: A connected customer places an order
     Given A "customer" identified
     And the "customer" selected 3 "monthly cookies"
     And a pickupdate has been selected

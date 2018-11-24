@@ -1,11 +1,13 @@
 package utils;
 
+import main.CookieFirm;
 import main.Customer;
 import main.Guest;
 import order.Order;
 import store.Manager;
 import store.Store;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ public class CucumberContext {
     private final Map<String, Guest> clients = new HashMap<>();
     public final Map<String, Order> orders = new HashMap<>();
     public final TestUtils utils = new TestUtils();
+    private final CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>());
 
     private static CucumberContext context;
 
@@ -42,6 +45,10 @@ public class CucumberContext {
 
     public Store getStore(String storeName) {
         return stores.get(storeName);
+    }
+
+    public CookieFirm getCookieFirm(){
+        return cookieFirm;
     }
 
 }

@@ -16,7 +16,7 @@ public class Customer extends Guest {
     private boolean haveDiscount = false;
     private String password;
 
-    Customer(String firstName, String lastName, String phoneNumber, String email, String password) {
+    public Customer(String firstName, String lastName, String phoneNumber, String email, String password) {
         super(email);
         this.firstName = firstName;
         this.lastName = lastName;

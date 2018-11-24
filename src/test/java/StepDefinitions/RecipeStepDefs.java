@@ -21,10 +21,10 @@ public class RecipeStepDefs {
     private final Map<String, Recipe> recipes = new HashMap<>();
     private final Catalog catalog = new Catalog();
 
-    @Given("^A recipe \"([^\"]*)\" is created by \"([^\"]*)\" for \"([^\"]*)\" dollars$")
-    public void aRecipeIsCreatedBy(String recipeName, String managerName, String recipePrice) {
+    @Given("^A recipe \"([^\"]*)\" is created by \"([^\"]*)\"$")
+    public void aRecipeIsCreatedBy(String recipeName, String managerName) {
         recipes.put(recipeName,new Recipe(recipeName,null,null, new ArrayList<>(),
-                null,null,Float.parseFloat(recipePrice)));
+                null,null,true));
     }
 
     @And("^The dough of \"([^\"]*)\" is \"([^\"]*)\"$")

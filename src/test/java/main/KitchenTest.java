@@ -38,9 +38,9 @@ public class KitchenTest {
 
         Kitchen kitchen = new Kitchen(stock);
 
-        Recipe valid = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(0), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
-        Recipe notContained = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(2), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
-        Recipe doubleTopping = new Recipe("", doughs.get(0), flavors.get(1), Arrays.asList(toppings.get(1), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
+        Recipe valid = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(0), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
+        Recipe notContained = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(2), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
+        Recipe doubleTopping = new Recipe("", doughs.get(0), flavors.get(1), Arrays.asList(toppings.get(1), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
 
         assertTrue(kitchen.canDo(valid));
         assertTrue(kitchen.canDo(doubleTopping));
@@ -75,7 +75,7 @@ public class KitchenTest {
 
         Kitchen kitchen = new Kitchen(stock);
 
-        Recipe valid = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(0), toppings.get(0)), catalog.getMixList().get(0), catalog.getCookingList().get(0), 2);
+        Recipe valid = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(0), toppings.get(0)), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
 
         kitchen.cook(valid, 3);
 

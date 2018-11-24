@@ -60,14 +60,14 @@ public class CookieFirmTest {
                 new ArrayList<>(),
                 utils.mixFromName("Topped"),
                 utils.cookingFromName("Chewy"),
-                0.9f);
+                false);
         Recipe falseSimpleRecipe = new Recipe("Cookie for nothing",
                 utils.doughFromName("Chocolate"),
                 null,
                 new ArrayList<>(),
                 utils.mixFromName("Topped"),
                 utils.cookingFromName("Chewy"),
-                0.8f);
+                true);
         Recipe trueComplexRecipe = new Recipe("White Dog",
                 utils.doughFromName("Peanut Butter"),
                 utils.flavorFromName("Vanilla"),
@@ -76,7 +76,7 @@ public class CookieFirmTest {
                         utils.toppingFromName("White Chocolate")),
                 utils.mixFromName("Mixed"),
                 utils.cookingFromName("Crunchy"),
-                2.0f);
+                false);
         Recipe falseComplexRecipe = new Recipe("White Doge",
                 utils.doughFromName("Peanut Butter"),
                 utils.flavorFromName("Vanilla"),
@@ -85,7 +85,7 @@ public class CookieFirmTest {
                         utils.toppingFromName("White Chocolate")),
                 utils.mixFromName("Mixed"),
                 utils.cookingFromName("Crunchy"),
-                2.0f);
+                false);
 
         Assert.assertTrue(cookieFirm.getGlobalRecipes().contains(trueSimpleRecipe));
         Assert.assertFalse(cookieFirm.getGlobalRecipes().contains(falseSimpleRecipe));

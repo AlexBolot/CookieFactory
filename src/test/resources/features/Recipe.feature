@@ -5,7 +5,7 @@ Feature: Create a Recipe
     Given "Bob" the manager of "store"
 
   Scenario: Adding a monthy recipe
-    Given A recipe "monthly" is created by "Bob" for "1.5" dollars
+    Given A recipe "monthly" is created by "Bob"
     And The dough of "monthly" is "Chocolate"
     And The flavor of "monthly" is "Vanilla"
     And The topping of "monthly" is "M&M's"

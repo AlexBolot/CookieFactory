@@ -16,15 +16,16 @@ public class Recipe {
     private Mix mix;
     private Cooking cooking;
     public float price;
+    public boolean isCustom;
 
-    public Recipe(String name, Dough dough, Flavor flavor, List<Topping> toppings, Mix mix, Cooking cooking, float price) {
+    public Recipe(String name, Dough dough, Flavor flavor, List<Topping> toppings, Mix mix, Cooking cooking, boolean custom) {
         this.name = name;
         this.dough = dough;
         this.mix = mix;
         this.cooking = cooking;
         this.flavor = flavor;
         setToppings(toppings);
-        this.price = price;
+        this.isCustom = custom;
     }
 
     public void setToppings(List<Topping> toppings) {
@@ -78,18 +79,28 @@ public class Recipe {
         return name;
     }
 
+    public boolean isCustom() {
+        return isCustom;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Recipe recipe = (Recipe) o;
         return Float.compare(recipe.price, price) == 0 &&
+                isCustom == recipe.isCustom &&
                 Objects.equals(name, recipe.name) &&
                 Objects.equals(dough, recipe.dough) &&
                 Objects.equals(flavor, recipe.flavor) &&
                 Objects.equals(toppings, recipe.toppings) &&
                 Objects.equals(mix, recipe.mix) &&
                 Objects.equals(cooking, recipe.cooking);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, dough, flavor, toppings, mix, cooking, price, isCustom);
     }
 
     public List<Ingredient> getIngredients() {

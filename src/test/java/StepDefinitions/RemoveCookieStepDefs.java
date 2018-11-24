@@ -50,7 +50,7 @@ public class RemoveCookieStepDefs {
                     kitchen.getToppingList().subList(0, 1),
                     kitchen.getMixList().get(0),
                     kitchen.getCookingList().get(0),
-                    1.0f);
+                    true);
             this.order.addCookie(
                     recipe, cookies);
         }

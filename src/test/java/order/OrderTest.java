@@ -39,10 +39,10 @@ public class OrderTest {
                 new ArrayList<>(),
                 catalog.getMixList().get(0),
                 catalog.getCookingList().get(0),
-                1.2f);
+                true);
 
         cookieFirm = new CookieFirm(Collections.singletonList(store), Collections.emptyList());
-        unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), catalog.getFlavorList().get(0), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), 3.14f);
+        unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), catalog.getFlavorList().get(0), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
         LocalDateTime pickUpTime = LocalDateTime.now();
         order = new Order(store, pickUpTime, Day.TUESDAY);
 

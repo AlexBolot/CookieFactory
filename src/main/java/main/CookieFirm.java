@@ -33,7 +33,7 @@ public class CookieFirm {
                 new ArrayList<>(),
                 catalog.getMixList().get(0),
                 catalog.getCookingList().get(0),
-                1.4f));
+                false));
 
         //Recipe 2: Oatmeal / Vanilla / White Chocolate / Mixed / Crunchy
         this.globalRecipes.add(new Recipe("I was made for lovin' this",
@@ -42,7 +42,7 @@ public class CookieFirm {
                 Collections.singletonList(catalog.getToppingList().get(0)),
                 catalog.getMixList().get(0),
                 catalog.getCookingList().get(0),
-                1.5f));
+                false));
 
         //Recipe 3: Plain / / White Chocolate, Milk Chocolate, Black Chocolate / Topped / Crunchy
         this.globalRecipes.add(new Recipe("Our generation",
@@ -53,7 +53,7 @@ public class CookieFirm {
                         catalog.getToppingList().get(2)),
                 catalog.getMixList().get(1),
                 catalog.getCookingList().get(0),
-                2.1f));
+                false));
 
         //Recipe 4: Chocolate / / Topped / Chewy
         this.globalRecipes.add(new Recipe("Cookie for nothing",
@@ -62,7 +62,7 @@ public class CookieFirm {
                 new ArrayList<>(),
                 catalog.getMixList().get(1),
                 catalog.getCookingList().get(1),
-                0.9f));
+                false));
 
         //Recipe 5: Peanut Butter / Vanille / 3 White Chocolate / Mixed / Crunchy
         this.globalRecipes.add(new Recipe("White Dog",
@@ -73,7 +73,7 @@ public class CookieFirm {
                         catalog.getToppingList().get(0)),
                 catalog.getMixList().get(0),
                 catalog.getCookingList().get(0),
-                2.0f));
+                false));
 
         //Recipe 6: Plain / Vanilla / / Mixed / Chewy
         this.globalRecipes.add(new Recipe("Simple Cookie",
@@ -82,7 +82,7 @@ public class CookieFirm {
                 new ArrayList<>(),
                 catalog.getMixList().get(0),
                 catalog.getCookingList().get(1),
-                1.0f));
+                false));
 
         //Recipe 7: Peanut Butter / Cinnamon / 2M&M's, White Chocolate / Mixed / Chewy
         this.globalRecipes.add(new Recipe("Dreams On",
@@ -93,7 +93,7 @@ public class CookieFirm {
                         catalog.getToppingList().get(3)),
                 catalog.getMixList().get(0),
                 catalog.getCookingList().get(1),
-                2.0f));
+                false));
 
         //Recipe 8: Chocolate / Chili / Black Chocolate / Topped / Crunchy
         this.globalRecipes.add(new Recipe("Cooked to be Wild",
@@ -102,7 +102,7 @@ public class CookieFirm {
                 Collections.singletonList(catalog.getToppingList().get(2)),
                 catalog.getMixList().get(1),
                 catalog.getCookingList().get(0),
-                1.8f));
+                false));
 
         //Recipe 9: Plain / Vanilla / White Chocolate, Black Chocolate / Topped / Chewy
         this.globalRecipes.add(new Recipe("You should stay",
@@ -112,7 +112,7 @@ public class CookieFirm {
                         catalog.getToppingList().get(2)),
                 catalog.getMixList().get(1),
                 catalog.getCookingList().get(1),
-                2.0f));
+                false));
 
         //Recipe 10: Oatmeal / Oyster / Reese's buttercup / Topped / Chewy
         this.globalRecipes.add(new Recipe("Don't fear this cookie",
@@ -121,7 +121,7 @@ public class CookieFirm {
                 Collections.singletonList(catalog.getToppingList().get(4)),
                 catalog.getMixList().get(1),
                 catalog.getCookingList().get(1),
-                2.5f));
+                false));
     }
 
 

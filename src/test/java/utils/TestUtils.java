@@ -30,8 +30,8 @@ public class TestUtils {
         Mix mix = catalog.getMixList().get(random.nextBoolean() ? 0 : 1);
         Cooking cooking = catalog.getCookingList().get(random.nextBoolean() ? 0 : 1);
 
-        return new Recipe("randomRecipe", catalog.getDoughList().get(1), catalog.getFlavorList().get(1), toppings, mix, cooking, random.nextFloat() *
-                10);
+        return new Recipe("randomRecipe", catalog.getDoughList().get(1), catalog.getFlavorList().get(1), toppings, mix, cooking,
+                true);
     }
 
     public Day dayFromName(String dayName) {

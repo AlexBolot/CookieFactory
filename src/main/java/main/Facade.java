@@ -23,27 +23,58 @@ public class Facade {
     }*/
 
 
-    public void addCustomerToFirm(String sName, String sLastName, String phoneNumber, String email, String password){
+    public void createACustomer(String sName, String sLastName, String phoneNumber, String email, String
+            password){
         this.cookieFirm.createAccount(sName, sLastName, phoneNumber, email, password);
     }
 
 
-    public void customerOrderCookies(String sEmail, String sStore, int nbCookies, int pickupTime, String pickUpDay,
+    public boolean addACustomerToLP(String sEmail){
+        Optional<Customer> customer = this.cookieFirm.findCustomer(sEmail);
+        if(customer.isPresent()) {
+            this.cookieFirm.addCustomerToLoyaltyProgram(customer.get());
+            return true;
+        }
+        return false;
+    }
+
+    public void customerCreateCookiesAndPlaceOrder(String sEmail, String sStore, int nbCookies, int pickupTime, String pickUpDay,
                                      Boolean payedOnline){
         Optional<Customer> opCustomer = this.cookieFirm.findCustomer(sEmail);
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
         if(opCustomer.isPresent() && opStore.isPresent()){
-            Customer customer = opCustomer.get();
-            Store store = opStore.get();
-            Order order = new Order(store, LocalDateTime.now().plusHours(pickupTime), Day.dayFromName(pickUpDay));
-            order.addCookie(store.getMonthlyRecipe(), nbCookies);
-            customer.setTemporaryOrder(order);
-            customer.placeOrder(payedOnline);
+            Order order = new Order(opStore.get(), LocalDateTime.now().plusHours(pickupTime), Day.dayFromName(pickUpDay));
+            order.addCookie(opStore.get().getMonthlyRecipe(), nbCookies);
+            opCustomer.get().setTemporaryOrder(order);
+            opCustomer.get().placeOrder(payedOnline);
         }
     }
 
+    /*
+    public void guestValidateHisOrder(String sEmail){
+
+    }*/
 
 
 
-}
+    public boolean anEmployeeMakeAnActionOnOrder(String sStore, int time, String day, String email, String action){
+        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
+
+        if(opStore.isPresent()){
+            Optional<Order> opOrder = opStore.get().findOrder(LocalDateTime.now().plusHours(time), Day.dayFromName(day), email);
+
+            if(opOrder.isPresent()) {
+                if(action.equals("cancel")) {
+                    opOrder.get().cancel();
+                    return true;
+                }
+                else if(action.equals("withdrawn")){
+                    opOrder.get().withdraw();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    }

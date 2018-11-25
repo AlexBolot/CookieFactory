@@ -1,6 +1,7 @@
 package main;
 
 import order.Order;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -171,6 +172,18 @@ public class CustomerTest {
         double unexpected = globalRecipes.get(1).price * 30 * store.getTax() * 0.9;
 
         assertNotEquals(unexpected, customer.placeOrder(true), delta);
+
+    }
+
+    @Test
+    public void areTheyInFidelityProgram() {
+        Guest guest = new Guest("Michel@michel.py");
+        Customer loyalCustomer = new Customer("","","","","");
+        loyalCustomer.addToLoyaltyProgram();
+        Customer felonCustomer = new Customer("","","","","");
+        Assert.assertFalse(guest.isInLoyaltyProgram());
+        Assert.assertTrue(loyalCustomer.isInLoyaltyProgram());
+        Assert.assertFalse(felonCustomer.isInLoyaltyProgram());
 
     }
 

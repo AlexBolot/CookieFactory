@@ -114,6 +114,7 @@ public class Customer extends Guest {
         return haveDiscount;
     }
 
+    @Override
     public boolean isInLoyaltyProgram() {
         return loyaltyProgram;
     }

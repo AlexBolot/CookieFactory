@@ -75,6 +75,8 @@ public class Guest {
         this.email = email;
     }
 
+    public boolean isInLoyaltyProgram () {return false;}
+
     /**
      * This method is just a mock method, that "would" send a refund request to the connected banking system
      * "In a perfect world where everything is connected" :)

@@ -127,16 +127,9 @@ public class Order {
      */
     public double getPrice() {
         double storeTax = store.getTax();
-
-        double sum = 0.0;
-        for (OrderLine line : orderLines) {
-            double v = line.getAmount() * line.getRecipe().getPrice();
-            sum += v;
-        }
-        double price = sum * storeTax;
-
-        if (guest instanceof Customer && ((Customer) guest).isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()) {
-            price *= 0.90;
+        double price = orderLines.stream().mapToDouble(line -> line.getAmount() * line.getRecipe().getPrice()).sum() * storeTax;
+        if (guest.isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()) {
+            price = (price * 0.90);
         }
         return price;
     }

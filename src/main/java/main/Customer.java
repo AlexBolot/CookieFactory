@@ -16,7 +16,7 @@ public class Customer extends Guest {
     private boolean haveDiscount = false;
     private String password;
 
-    public Customer(String firstName, String lastName, String phoneNumber, String email, String password) {
+    Customer(String firstName, String lastName, String phoneNumber, String email, String password) {
         super(email);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -25,7 +25,7 @@ public class Customer extends Guest {
         this.orderHistory = new ArrayList<>();
     }
 
-    public Customer(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
+    Customer(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
         super(email);
         this.firstName = firstName;
         this.lastName = lastName;

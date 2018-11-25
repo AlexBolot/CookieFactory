@@ -30,7 +30,7 @@ public class OrderTest {
     public void setUp() {
         Catalog catalog = new Catalog();
 
-        Store store = new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1);
+        Store store = new Store("", null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1);
         store.setKitchen(new Kitchen());
         recipe1 = new Recipe(
                 "real",
@@ -66,9 +66,10 @@ public class OrderTest {
     @Test
     public void pricesUseStoreTax() {
         order.addCookie(recipe1, 1);
-        order.setStore(new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1.25));
+        order.setStore(new Store("", null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(),
+                1.25));
         assertEquals(1.5, order.getPrice(), 0.0001);
-        order.setStore(new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1));
+        order.setStore(new Store("", null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1));
         assertEquals(1.2, order.getPrice(), 0.0001);
 
     }

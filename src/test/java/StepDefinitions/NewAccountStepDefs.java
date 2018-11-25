@@ -28,7 +28,7 @@ public class NewAccountStepDefs {
 
     @Given("^An order \"([^\"]*)\" with (\\d+) cookies \"([^\"]*)\"$")
     public void anOrderWithCookiesAsFollows(String orderName, int nbrCookies, String recipeName) {
-        Order order = new Order(new Store(null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(),1)
+        Order order = new Order(new Store("", null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(),1)
                 , null, null);
         order.getStore().setKitchen(getInfiniteMockKitchen());
         for (Recipe cookie : cookieFirm.getGlobalRecipes()) {

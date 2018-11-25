@@ -37,7 +37,7 @@ public class AddCookieOrderStepDefs {
     @Given("^The guest see the list of cookies$")
     public void theGuestSeeTheListOfCookies() {
         this.guest.setTemporaryOrder(new Order());
-        this.guest.getTemporaryOrder().setStore(new Store(null, Collections.emptyList(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1.0));
+        this.guest.getTemporaryOrder().setStore(new Store("", null, Collections.emptyList(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1.0));
         this.guest.getTemporaryOrder().getStore().setKitchen(getInfiniteMockKitchen());
     }
 
@@ -76,7 +76,8 @@ public class AddCookieOrderStepDefs {
     @Given("^The guest see the list of ingredients$")
     public void theGuestSeeTheListOfIngredients() {
         guest.setTemporaryOrder(new Order());
-        this.guest.getTemporaryOrder().setStore(new Store(null, Collections.emptyList(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1.0));
+        this.guest.getTemporaryOrder().setStore(new Store("", null, Collections.emptyList(), new ArrayList<>(), new
+                HashMap<>(), new HashMap<>(), 1.0));
         this.guest.getTemporaryOrder().getStore().setKitchen(getInfiniteMockKitchen());
     }
 

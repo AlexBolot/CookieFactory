@@ -7,5 +7,12 @@ public enum Day {
     THURSDAY,
     FRIDAY,
     SATURDAY,
-    SUNDAY,
+    SUNDAY;
+
+    public static Day dayFromName(String dayName) {
+        for (Day day : Day.values()) {
+            if (day.name().equalsIgnoreCase(dayName)) return day;
+        }
+        return null;
+    }
 }

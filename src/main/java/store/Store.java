@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public class Store {
 
+    private String name;
     private Recipe monthlyRecipe;
     private Collection<Recipe> globalRecipes;
     private Collection<Order> orders;
@@ -19,7 +20,8 @@ public class Store {
     private double tax;
     private Kitchen kitchen;
 
-    public Store(Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<Day, LocalDateTime> openingTimes, Map<Day, LocalDateTime> closingTimes, double tax) {
+    public Store(String name, Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<Day, LocalDateTime> openingTimes, Map<Day, LocalDateTime> closingTimes, double tax) {
+        this.name = name;
         this.monthlyRecipe = monthlyRecipe;
         this.globalRecipes = globalRecipes;
         this.orders = orders;
@@ -37,7 +39,7 @@ public class Store {
         }
     }
 
-    public void cancelOrder(Order order) {
+    void cancelOrder(Order order) {
         order.cancel();
     }
 
@@ -168,6 +170,10 @@ public class Store {
 
     public void setKitchen(Kitchen kitchen) {
         this.kitchen = kitchen;
+    }
+
+    public String getName() {
+        return name;
     }
 
     /**

@@ -51,6 +51,19 @@ public class Facade {
         }
     }
 
+    public void customerModifyHisOrder(String sEmail, String sStore, int nbCookies, boolean remove){
+        Optional<Customer> customer = this.cookieFirm.findCustomer(sEmail);
+        Optional<Store> store = this.cookieFirm.findStore(sStore);
+
+        if(customer.isPresent() && store.isPresent()){
+            if(!remove)
+                customer.get().getTemporaryOrder().addCookie(store.get().getMonthlyRecipe(), nbCookies);
+            else
+                customer.get().getTemporaryOrder().removeCookie(store.get().getMonthlyRecipe(), nbCookies);
+
+        }
+    }
+
     /*
     public void guestValidateHisOrder(String sEmail){
 

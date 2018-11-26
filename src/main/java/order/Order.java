@@ -1,7 +1,6 @@
 package order;
 
 import main.Customer;
-import main.Day;
 import main.Guest;
 import recipe.Recipe;
 import store.Store;
@@ -9,6 +8,7 @@ import store.Store;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.lang.Math.min;
@@ -19,17 +19,14 @@ public class Order {
     private Store store;
     private List<OrderLine> orderLines = new ArrayList<>();
     private LocalDateTime pickUpTime;
-    private Day pickupDay;
     private OrderState orderState = DRAFT;
 
     private boolean payed = false;
     private Guest guest;
 
-    public Order(Store store, LocalDateTime pickUpTime, Day pickupDay) {
+    public Order(Store store, LocalDateTime pickUpTime) {
         this.store = store;
         this.pickUpTime = pickUpTime;
-        this.pickupDay = pickupDay;
-
     }
 
     public Order() {
@@ -164,17 +161,13 @@ public class Order {
         return pickUpTime;
     }
 
-    public Day getPickupDay() {
-        return pickupDay;
-    }
+
 
     public void setPickUpTime(LocalDateTime pickUpTime) {
         this.pickUpTime = pickUpTime;
     }
 
-    public void setPickupDay(Day pickupDay) {
-        this.pickupDay = pickupDay;
-    }
+
 
     public void pay() {
         this.payed = true;
@@ -188,21 +181,17 @@ public class Order {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Order order = (Order) o;
-
-        if (pickUpTime != null ? !pickUpTime.equals(order.pickUpTime) : order.pickUpTime != null) return false;
-        if (pickupDay != order.pickupDay) return false;
-        return guest != null ? guest.equals(order.guest) : order.guest == null;
+        return payed == order.payed &&
+                Objects.equals(store, order.store) &&
+                Objects.equals(orderLines, order.orderLines) &&
+                Objects.equals(pickUpTime, order.pickUpTime) &&
+                orderState == order.orderState &&
+                Objects.equals(guest, order.guest);
     }
 
     @Override
     public int hashCode() {
-        int result = pickUpTime != null ? pickUpTime.hashCode() : 0;
-        result = 31 * result + (pickupDay != null ? pickupDay.hashCode() : 0);
-        result = 31 * result + (guest != null ? guest.hashCode() : 0);
-        return result;
+        return Objects.hash(store, orderLines, pickUpTime, orderState, payed, guest);
     }
-
-
 }

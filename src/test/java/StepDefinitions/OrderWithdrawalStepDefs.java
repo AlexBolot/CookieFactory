@@ -4,7 +4,6 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import main.Day;
 import main.Guest;
 import order.Order;
 import order.OrderState;
@@ -25,7 +24,7 @@ public class OrderWithdrawalStepDefs {
 
     @Given("^An order \"([^\"]*)\"$")
     public void anOrder(String name) {
-        context.orders.put(name, new Order(null, LocalDateTime.now(), Day.TUESDAY));
+        context.orders.put(name, new Order(null, LocalDateTime.now()));
     }
 
     @Given("^the customer \"([^\"]*)\" has paid for \"([^\"]*)\"$")
@@ -40,7 +39,7 @@ public class OrderWithdrawalStepDefs {
         final Order targetOrder = context.orders.get(orderName);
         final Store store = context.stores.get(storeName);
         currentOrder = store
-                .findOrder(targetOrder.getPickUpTime(), targetOrder.getPickupDay(), targetOrder.getGuest().getEmail())
+                .findOrder(targetOrder.getPickUpTime(), targetOrder.getGuest().getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Not found the order"));
     }
 

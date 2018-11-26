@@ -15,12 +15,12 @@ public class Store {
     private Recipe monthlyRecipe;
     private Collection<Recipe> globalRecipes;
     private Collection<Order> orders;
-    private Map<Day, LocalDateTime> openingTimes;
-    private Map<Day, LocalDateTime> closingTimes;
+    private Map<Day, LocalTime> openingTimes;
+    private Map<Day, LocalTime> closingTimes;
     private double tax;
     private Kitchen kitchen;
 
-    public Store(Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<Day, LocalDateTime> openingTimes, Map<Day, LocalDateTime> closingTimes, double tax) {
+    public Store(Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<Day, LocalTime> openingTimes, Map<Day, LocalTime> closingTimes, double tax) {
         this.monthlyRecipe = monthlyRecipe;
         this.globalRecipes = globalRecipes;
         this.orders = orders;
@@ -135,19 +135,19 @@ public class Store {
         return recipes;
     }
 
-    public Map<Day, LocalDateTime> openingTimes() {
+    public Map<Day, LocalTime> openingTimes() {
         return openingTimes;
     }
 
-    public LocalDateTime openingTime(Day day) {
+    public LocalTime openingTime(Day day) {
         return openingTimes.get(day);
     }
 
-    public Map<Day, LocalDateTime> closingTimes() {
+    public Map<Day, LocalTime> closingTimes() {
         return closingTimes;
     }
 
-    public LocalDateTime closingTime(Day day) {
+    public LocalTime closingTime(Day day) {
         return closingTimes.get(day);
     }
 
@@ -185,20 +185,20 @@ public class Store {
         this.monthlyRecipe = newRecipe;
     }
 
-    public void setOpeningTime(Day day, LocalDateTime localDateTime) {
+    public void setOpeningTime(Day day, LocalTime localTime) {
         // Check if store has a closing time for the [day], to ensure no time crossing
-        if (closingTimes.containsKey(day) && localDateTime.isAfter(closingTimes.get(day)))
+        if (closingTimes.containsKey(day) && localTime.isAfter(closingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set opening time after closing time for " + day);
 
-        this.openingTimes.put(day, localDateTime);
+        this.openingTimes.put(day, localTime);
     }
 
-    public void setClosingTime(Day day, LocalDateTime localDateTime) {
+    public void setClosingTime(Day day, LocalTime localTime) {
         // Check if store has a opening time for the [day], to ensure no time crossing
-        if (openingTimes.containsKey(day) && localDateTime.isBefore(openingTimes.get(day)))
+        if (openingTimes.containsKey(day) && localTime.isBefore(openingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set closing time before opening time for " + day);
 
-        this.closingTimes.put(day, localDateTime);
+        this.closingTimes.put(day, localTime);
     }
 
 }

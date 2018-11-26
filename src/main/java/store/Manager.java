@@ -3,7 +3,7 @@ package store;
 import main.Day;
 import recipe.Recipe;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Manager {
 
@@ -13,11 +13,11 @@ public class Manager {
         this.store = store;
     }
 
-    public void changeOpeningTime(Day day, LocalDateTime time) {
+    public void changeOpeningTime(Day day, LocalTime time) {
         store.setOpeningTime(day, time);
     }
 
-    public void changeClosingTime(Day day, LocalDateTime time) {
+    public void changeClosingTime(Day day, LocalTime time) {
         store.setClosingTime(day, time);
     }
 

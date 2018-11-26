@@ -9,6 +9,7 @@ import store.Store;
 import utils.TestUtils;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,8 +34,8 @@ public class GuestTest {
 
         Store store = new Store(utils.randomRecipe(), globalRecipes, new ArrayList<>(), new HashMap<>(), new HashMap<>(),14);
 
-        store.setOpeningTime(MONDAY, LocalDateTime.now().minusHours(6));
-        store.setClosingTime(MONDAY, LocalDateTime.now().plusHours(6));
+        store.setOpeningTime(MONDAY, LocalTime.now().minusHours(6));
+        store.setClosingTime(MONDAY, LocalTime.now().plusHours(6));
 
         order = new Order(store, LocalDateTime.now().plusHours(3));
         order.getStore().setKitchen(getInfiniteMockKitchen());

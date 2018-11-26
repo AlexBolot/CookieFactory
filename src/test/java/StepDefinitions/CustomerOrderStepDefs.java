@@ -10,7 +10,11 @@ import order.Order;
 import store.Store;
 import utils.CucumberContext;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 
 import static org.junit.Assert.assertEquals;
 import static utils.TestUtils.getInfiniteMockKitchen;
@@ -29,7 +33,9 @@ public class CustomerOrderStepDefs {
     @Given("^An order \"([^\"]*)\" at the store \"([^\"]*)\", to pickup \"([^\"]*)\" (\\d+) hour before closing time$")
     public void anOrderAtTheStoreToPickupHourBeforeClosingTime(String orderName, String storeName, String dayName, int hoursBeforeEnd) {
         Store store = context.stores.get(storeName);
-        LocalDateTime pickTime = store.closingTime(dayFromName(dayName)).minusHours(hoursBeforeEnd);
+        LocalDateTime pickTime =
+                LocalDateTime.of(LocalDate.now(), store.closingTime(dayFromName(dayName)).minusHours(hoursBeforeEnd))
+                        .with(TemporalAdjusters.next(DayOfWeek.valueOf(dayName.toUpperCase())));
         Order order = new Order(store, pickTime);
         order.getStore().setKitchen(getInfiniteMockKitchen());
         order.addCookie(context.utils.randomRecipe(), 5);
@@ -67,8 +73,8 @@ public class CustomerOrderStepDefs {
 
         Day day = context.utils.dayFromName(dayName);
 
-        LocalDateTime opTime = LocalDateTime.now().minusHours(behindHours);
-        LocalDateTime clTime = LocalDateTime.now().plusHours(aheadHours);
+        LocalTime opTime = LocalTime.now().minusHours(behindHours);
+        LocalTime clTime = LocalTime.now().plusHours(aheadHours);
 
         Store store = context.stores.get(storeName);
 

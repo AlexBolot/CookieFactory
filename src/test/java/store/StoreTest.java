@@ -11,6 +11,7 @@ import recipe.Recipe;
 import utils.TestUtils;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,8 +29,8 @@ public class StoreTest {
     private final Guest guestBob = new Guest("");
     private final Guest guestAlice = new Guest("");
 
-    private final HashMap<Day, LocalDateTime> openingTimes = new HashMap<>();
-    private final HashMap<Day, LocalDateTime> closingTimes = new HashMap<>();
+    private final HashMap<Day, LocalTime> openingTimes = new HashMap<>();
+    private final HashMap<Day, LocalTime> closingTimes = new HashMap<>();
 
     private final ArrayList<Recipe> globalRecipes = new ArrayList<>();
 
@@ -45,8 +46,8 @@ public class StoreTest {
 
         // Each day the store opens 5h before now and closes 5h after now (for easier testing purposes)
         for (Day day : Day.values()) {
-            openingTimes.put(day, LocalDateTime.now().minusHours(5));
-            closingTimes.put(day, LocalDateTime.now().plusHours(5));
+            openingTimes.put(day, LocalTime.now().minusHours(5));
+            closingTimes.put(day, LocalTime.now().plusHours(5));
         }
         guestAlice.setEmail("Alice");
         guestBob.setEmail("Bob");

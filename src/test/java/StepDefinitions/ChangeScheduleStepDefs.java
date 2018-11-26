@@ -7,8 +7,6 @@ import org.junit.Assert;
 import store.Manager;
 import utils.CucumberContext;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class ChangeScheduleStepDefs {
@@ -34,7 +32,7 @@ public class ChangeScheduleStepDefs {
 
         Day day = dayFromName(dayName);
 
-        LocalDateTime opTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(opHour, opMinutes));
+        LocalTime opTime = LocalTime.of(opHour, opMinutes);
 
         Manager manager = context.managers.get(managerName);
 
@@ -58,7 +56,7 @@ public class ChangeScheduleStepDefs {
 
         Day day = dayFromName(dayName);
 
-        LocalDateTime expectedOpTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(opHour, opMinutes));
+        LocalTime expectedOpTime = LocalTime.of(opHour, opMinutes);
 
         Assert.assertEquals(expectedOpTime, context.stores.get(storeName).openingTime(day));
     }
@@ -71,7 +69,7 @@ public class ChangeScheduleStepDefs {
 
         Day day = dayFromName(dayName);
 
-        LocalDateTime clTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(opHour, opMinutes));
+        LocalTime clTime = LocalTime.of(opHour, opMinutes);
 
         Manager manager = context.managers.get(managerName);
 
@@ -95,7 +93,7 @@ public class ChangeScheduleStepDefs {
 
         Day day = dayFromName(dayName);
 
-        LocalDateTime expectedClTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(clHour, clMinutes));
+        LocalTime expectedClTime = LocalTime.of(clHour, clMinutes);
 
         Assert.assertEquals(expectedClTime, context.stores.get(storeName).closingTime(day));
     }

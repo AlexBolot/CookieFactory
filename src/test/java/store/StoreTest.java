@@ -1,6 +1,5 @@
 package store;
 
-import main.Day;
 import main.Guest;
 import order.Order;
 import order.OrderState;
@@ -10,6 +9,7 @@ import org.junit.Test;
 import recipe.Recipe;
 import utils.TestUtils;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -29,8 +29,8 @@ public class StoreTest {
     private final Guest guestBob = new Guest("");
     private final Guest guestAlice = new Guest("");
 
-    private final HashMap<Day, LocalTime> openingTimes = new HashMap<>();
-    private final HashMap<Day, LocalTime> closingTimes = new HashMap<>();
+    private final HashMap<DayOfWeek, LocalTime> openingTimes = new HashMap<>();
+    private final HashMap<DayOfWeek, LocalTime> closingTimes = new HashMap<>();
 
     private final ArrayList<Recipe> globalRecipes = new ArrayList<>();
 
@@ -45,7 +45,7 @@ public class StoreTest {
         }
 
         // Each day the store opens 5h before now and closes 5h after now (for easier testing purposes)
-        for (Day day : Day.values()) {
+        for (DayOfWeek day : DayOfWeek.values()) {
             openingTimes.put(day, LocalTime.now().minusHours(5));
             closingTimes.put(day, LocalTime.now().plusHours(5));
         }
@@ -80,14 +80,14 @@ public class StoreTest {
 
     @Test
     public void openingTime() {
-        for (Day day : Day.values()) {
+        for (DayOfWeek day : DayOfWeek.values()) {
             assertEquals(openingTimes.get(day), store.openingTime(day));
         }
     }
 
     @Test
     public void closingTime() {
-        for (Day day : Day.values()) {
+        for (DayOfWeek day : DayOfWeek.values()) {
             assertEquals(closingTimes.get(day), store.closingTime(day));
         }
     }
@@ -161,13 +161,13 @@ public class StoreTest {
         normalOrder.setGuest(guestAlice);
         store.placeOrder(normalOrder);
         assertFalse(normalOrder.isPayed());
-        store.setStatusPaymentOrder(Day.TUESDAY, now.plusHours(3), "Alice");
+        store.setStatusPaymentOrder(DayOfWeek.TUESDAY, now.plusHours(3), "Alice");
         assertTrue(normalOrder.isPayed());
     }
 
     @Test
     public void findOrderFromDayTimeAndEmail() {
-        Day pickUpDay = Day.TUESDAY;
+        DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
         Guest guest = new Guest("");
         guest.setEmail("email");
@@ -179,7 +179,7 @@ public class StoreTest {
 
     @Test
     public void findOrderWithDuplicateCriterias() {
-        Day pickUpDay = Day.TUESDAY;
+        DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
         final Order order = new Order(store, pickUpTime);
         store.getOrders().add(order);
@@ -189,7 +189,7 @@ public class StoreTest {
 
     @Test
     public void returnsEmptyOptionalOnEmptyOrderList() {
-        Day pickUpDay = Day.TUESDAY;
+        DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
         store = new Store(utils.randomRecipe(), new ArrayList<>(),new ArrayList<>(), new HashMap<>(),new HashMap<>(),1.0);
         assertFalse(store.findOrder(pickUpTime, guestAlice.getEmail()).isPresent());
@@ -197,14 +197,14 @@ public class StoreTest {
 
     @Test
     public void emptyWhenOrderNotFound() {
-        Day pickUpDay = Day.TUESDAY;
+        DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
         assertFalse(store.findOrder(pickUpTime, guestAlice.getEmail()).isPresent());
     }
 
     @Test
     public void cancelOrder(){
-        Day pickUpDay = Day.TUESDAY;
+        DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now().plusHours(3);
         final Order order = new Order(store, pickUpTime);
         order.addCookie(utils.randomRecipe(), 2);

@@ -1,9 +1,10 @@
 package store;
 
-import main.Day;
+
 import order.Order;
 import recipe.Recipe;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
@@ -15,12 +16,12 @@ public class Store {
     private Recipe monthlyRecipe;
     private Collection<Recipe> globalRecipes;
     private Collection<Order> orders;
-    private Map<Day, LocalTime> openingTimes;
-    private Map<Day, LocalTime> closingTimes;
+    private Map<DayOfWeek, LocalTime> openingTimes;
+    private Map<DayOfWeek, LocalTime> closingTimes;
     private double tax;
     private Kitchen kitchen;
 
-    public Store(Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<Day, LocalTime> openingTimes, Map<Day, LocalTime> closingTimes, double tax) {
+    public Store(Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<DayOfWeek, LocalTime> openingTimes, Map<DayOfWeek, LocalTime> closingTimes, double tax) {
         this.monthlyRecipe = monthlyRecipe;
         this.globalRecipes = globalRecipes;
         this.orders = orders;
@@ -79,7 +80,7 @@ public class Store {
             return false;
 
         LocalTime pickupTime = LocalTime.from(pickUpDate);
-        Day pickupDay = Day.fromDayOfWeek(pickUpDate.getDayOfWeek());
+        DayOfWeek pickupDay = pickUpDate.getDayOfWeek();
 
         // Selected time is earlier than opening time of selected day -> forbidden
         if (pickupTime.compareTo(LocalTime.from(this.openingTime(pickupDay))) < 0)
@@ -96,12 +97,11 @@ public class Store {
 
     /**
      * Set the order to payed
-     *
-     * @param day        to pick up the order
+     *  @param day        to pick up the order
      * @param pickUpTime time to pick up the order
      * @param email      the current customer
      */
-    void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, String email) {
+    void setStatusPaymentOrder(DayOfWeek day, LocalDateTime pickUpTime, String email) {
         Optional<Order> order = findOrder(pickUpTime, email);
 
         order.ifPresent(Order::setPayed);
@@ -135,19 +135,19 @@ public class Store {
         return recipes;
     }
 
-    public Map<Day, LocalTime> openingTimes() {
+    public Map<DayOfWeek, LocalTime> openingTimes() {
         return openingTimes;
     }
 
-    public LocalTime openingTime(Day day) {
+    public LocalTime openingTime(DayOfWeek day) {
         return openingTimes.get(day);
     }
 
-    public Map<Day, LocalTime> closingTimes() {
+    public Map<DayOfWeek, LocalTime> closingTimes() {
         return closingTimes;
     }
 
-    public LocalTime closingTime(Day day) {
+    public LocalTime closingTime(DayOfWeek day) {
         return closingTimes.get(day);
     }
 
@@ -185,7 +185,7 @@ public class Store {
         this.monthlyRecipe = newRecipe;
     }
 
-    public void setOpeningTime(Day day, LocalTime localTime) {
+    public void setOpeningTime(DayOfWeek day, LocalTime localTime) {
         // Check if store has a closing time for the [day], to ensure no time crossing
         if (closingTimes.containsKey(day) && localTime.isAfter(closingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set opening time after closing time for " + day);
@@ -193,7 +193,7 @@ public class Store {
         this.openingTimes.put(day, localTime);
     }
 
-    public void setClosingTime(Day day, LocalTime localTime) {
+    public void setClosingTime(DayOfWeek day, LocalTime localTime) {
         // Check if store has a opening time for the [day], to ensure no time crossing
         if (openingTimes.containsKey(day) && localTime.isBefore(openingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set closing time before opening time for " + day);

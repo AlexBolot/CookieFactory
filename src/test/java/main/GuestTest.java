@@ -13,7 +13,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static main.Day.MONDAY;
+import static java.time.DayOfWeek.MONDAY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static utils.TestUtils.getInfiniteMockKitchen;

@@ -5,6 +5,7 @@ import order.Order;
 import recipe.Recipe;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -69,20 +70,23 @@ public class Store {
      */
     @SuppressWarnings("RedundantIfStatement")
     private boolean checkOrderDelay(Order order) {
-        Day pickupDay = order.getPickupDay();
-        LocalDateTime pickupTime = order.getPickUpTime();
+
+        LocalDateTime pickUpDate = order.getPickUpTime();
 
 
         // Selected time is in less than two hours -> forbidden
-        if (LocalDateTime.now().compareTo(pickupTime.minusHours(2)) > 0)
+        if (LocalDateTime.now().compareTo(pickUpDate.minusHours(2)) > 0)
             return false;
 
+        LocalTime pickupTime = LocalTime.from(pickUpDate);
+        Day pickupDay = Day.fromDayOfWeek(pickUpDate.getDayOfWeek());
+
         // Selected time is earlier than opening time of selected day -> forbidden
-        if (pickupTime.compareTo(this.openingTime(pickupDay)) < 0)
+        if (pickupTime.compareTo(LocalTime.from(this.openingTime(pickupDay))) < 0)
             return false;
 
         // Selected time is later than closing time of selected day -> forbidden
-        if (pickupTime.compareTo(this.closingTime(pickupDay)) > 0)
+        if (pickupTime.compareTo(LocalTime.from(this.closingTime(pickupDay))) > 0)
             return false;
 
         // Else -> no problem :)
@@ -98,7 +102,7 @@ public class Store {
      * @param email      the current customer
      */
     void setStatusPaymentOrder(Day day, LocalDateTime pickUpTime, String email) {
-        Optional<Order> order = findOrder(pickUpTime, day, email);
+        Optional<Order> order = findOrder(pickUpTime, email);
 
         order.ifPresent(Order::setPayed);
     }
@@ -107,15 +111,12 @@ public class Store {
      * Tries to find an order matching the passed values
      *
      * @param pickUpTime {@link LocalDateTime } the required pick up time
-     * @param pickupDay  {@link Day} the required day
      * @param email      {@link String} the guest email
      * @return {@link Optional<Order>}Optional containing the found order if exists
      */
-    public Optional<Order> findOrder(LocalDateTime pickUpTime, Day pickupDay, String email) {
+    public Optional<Order> findOrder(LocalDateTime pickUpTime, String email) {
         return orders.stream()
-                .filter(order ->
-                        pickupDay.equals(order.getPickupDay()) &&
-                                pickUpTime.equals(order.getPickUpTime()) &&
+                .filter(order -> pickUpTime.equals(order.getPickUpTime()) &&
                                 email.equals(order.getGuest().getEmail())
                 )
                 .findFirst();

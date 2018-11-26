@@ -36,7 +36,7 @@ public class GuestTest {
         store.setOpeningTime(MONDAY, LocalDateTime.now().minusHours(6));
         store.setClosingTime(MONDAY, LocalDateTime.now().plusHours(6));
 
-        order = new Order(store, LocalDateTime.now().plusHours(3), MONDAY);
+        order = new Order(store, LocalDateTime.now().plusHours(3));
         order.getStore().setKitchen(getInfiniteMockKitchen());
 
         order.addCookie(globalRecipes.get(0), 5);

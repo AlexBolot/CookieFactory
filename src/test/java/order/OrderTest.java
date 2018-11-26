@@ -1,7 +1,6 @@
 package order;
 
 import main.CookieFirm;
-import main.Day;
 import main.Guest;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -45,7 +44,7 @@ public class OrderTest {
         cookieFirm = new CookieFirm(Collections.singletonList(store), Collections.emptyList());
         unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), catalog.getFlavorList().get(0), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
         LocalDateTime pickUpTime = LocalDateTime.now();
-        order = new Order(store, pickUpTime, Day.TUESDAY);
+        order = new Order(store, pickUpTime);
 
         Guest guest = new Guest("Bob");
         order.setGuest(guest);

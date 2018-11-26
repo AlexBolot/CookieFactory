@@ -1,5 +1,7 @@
 package main;
 
+import java.time.DayOfWeek;
+
 public enum Day {
     MONDAY,
     TUESDAY,
@@ -8,4 +10,10 @@ public enum Day {
     FRIDAY,
     SATURDAY,
     SUNDAY,
+    ;
+
+    public static Day fromDayOfWeek(DayOfWeek dayOfWeek) {
+        //
+        return Day.values()[dayOfWeek.getValue() - 1];
+    }
 }

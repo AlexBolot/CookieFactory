@@ -28,8 +28,8 @@ public class StatTest {
 
     @Test
     public void cookieRatioOnValidOrders() {
-        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3),Day.MONDAY);
-        Order order2 = new Order(this.store, LocalDateTime.now().plusHours(3),Day.MONDAY);
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        Order order2 = new Order(this.store, LocalDateTime.now().plusHours(3));
         order1.setGuest(new Guest(""));
         order2.setGuest(new Guest(""));
         order1.addCookie(utils.recipeFromName("White Dog"),
@@ -57,7 +57,7 @@ public class StatTest {
 
     @Test
     public void cookieRatioWithOneBigOrderLine() {
-        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3),Day.MONDAY);
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
         order1.setGuest(new Guest(""));
         order1.addCookie(utils.recipeFromName("White Dog"),
                 50);

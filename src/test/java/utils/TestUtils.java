@@ -8,6 +8,7 @@ import recipe.ingredient.*;
 import store.Kitchen;
 import store.Store;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -37,8 +38,8 @@ public class TestUtils {
                 true);
     }
 
-    public Day dayFromName(String dayName) {
-        for (Day day : Day.values()) {
+    public DayOfWeek dayFromName(String dayName) {
+        for (DayOfWeek day : DayOfWeek.values()) {
             if (day.name().equalsIgnoreCase(dayName)) return day;
         }
         return null;

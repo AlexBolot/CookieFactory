@@ -12,10 +12,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static main.Day.MONDAY;
+import static java.time.DayOfWeek.MONDAY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static utils.TestUtils.getInfiniteMockKitchen;
@@ -36,8 +37,8 @@ public class GuestTest {
 
         Store store = new Store("",utils.randomRecipe(), globalRecipes, new ArrayList<>(), new HashMap<>(), new HashMap<>(),14);
 
-        store.setOpeningTime(MONDAY, LocalDateTime.now().minusHours(6));
-        store.setClosingTime(MONDAY, LocalDateTime.now().plusHours(6));
+        store.setOpeningTime(MONDAY, LocalTime.now().minusHours(6));
+        store.setClosingTime(MONDAY, LocalTime.now().plusHours(6));
 
         order = new Order(store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek.MONDAY)));
         order.getStore().setKitchen(getInfiniteMockKitchen());

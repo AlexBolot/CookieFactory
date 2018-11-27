@@ -9,7 +9,9 @@ import recipe.Recipe;
 import store.Store;
 import utils.TestUtils;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,8 +28,8 @@ public class CustomerTest {
     private Store store;
     private final ArrayList<Recipe> globalRecipes = new ArrayList<>();
 
-    private final HashMap<Day, LocalDateTime> openingTimes = new HashMap<>();
-    private final HashMap<Day, LocalDateTime> closingTimes = new HashMap<>();
+    private final HashMap<DayOfWeek, LocalTime> openingTimes = new HashMap<>();
+    private final HashMap<DayOfWeek, LocalTime> closingTimes = new HashMap<>();
 
     @Before
     public void before() {
@@ -41,9 +43,9 @@ public class CustomerTest {
         }
 
         // Each day the store opens 5h before now and closes 5h after now (for easier testing purposes)
-        for (Day day : Day.values()) {
-            openingTimes.put(day, LocalDateTime.now().minusHours(5));
-            closingTimes.put(day, LocalDateTime.now().plusHours(5));
+        for (DayOfWeek day : DayOfWeek.values()) {
+            openingTimes.put(day, LocalTime.now().minusHours(5));
+            closingTimes.put(day, LocalTime.now().plusHours(5));
         }
 
         store = new Store("",utils.randomRecipe(), globalRecipes, orders, openingTimes, closingTimes, 15.5);

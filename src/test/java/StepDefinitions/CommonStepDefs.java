@@ -2,15 +2,13 @@ package StepDefinitions;
 
 import cucumber.api.java.en.Given;
 import main.Customer;
-import main.Day;
 import main.Guest;
 import order.Order;
 import store.Manager;
 import store.Store;
 import utils.CucumberContext;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,10 +55,10 @@ public class CommonStepDefs {
         int clHour = Integer.parseInt(closingTime.split(":")[0]);
         int clMinutes = Integer.parseInt(closingTime.split(":")[1]);
 
-        Day day = context.utils.dayFromName(dayName);
+        DayOfWeek day = context.utils.dayFromName(dayName);
 
-        LocalDateTime opTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(opHour, opMinutes));
-        LocalDateTime clTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(clHour, clMinutes));
+        LocalTime opTime = LocalTime.of(opHour, opMinutes);
+        LocalTime clTime = LocalTime.of(clHour, clMinutes);
 
         Store store = context.stores.get(storeName);
 

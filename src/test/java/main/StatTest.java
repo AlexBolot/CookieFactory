@@ -9,7 +9,9 @@ import recipe.ingredient.Catalog;
 import store.Store;
 import utils.TestUtils;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,8 +30,10 @@ public class StatTest {
 
     @Test
     public void cookieRatioOnValidOrders() {
-        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
-        Order order2 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
+                .MONDAY)));
+        Order order2 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
+                .MONDAY)));
         order1.setGuest(new Guest(""));
         order2.setGuest(new Guest(""));
         order1.addCookie(utils.recipeFromName("White Dog"),
@@ -57,7 +61,8 @@ public class StatTest {
 
     @Test
     public void cookieRatioWithOneBigOrderLine() {
-        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
+                .MONDAY)));
         order1.setGuest(new Guest(""));
         order1.addCookie(utils.recipeFromName("White Dog"),
                 50);

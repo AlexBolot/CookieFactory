@@ -17,19 +17,32 @@ import java.util.Map;
 public class Kitchen {
 
     private Map<Ingredient, Integer> stock;
+    private Map<Ingredient, Double> supplierPrices;
+    private Map<Ingredient, Double> margins;
 
     public Kitchen() {
-        stock = new HashMap<>();
+        this(new HashMap<>(), new HashMap<>(), new HashMap<>());
     }
 
-    public Kitchen(Map<Ingredient, Integer> stock) {
-
+    public Kitchen(Map<Ingredient, Integer> stock, Map<Ingredient, Double> supplierPrices, Map<Ingredient, Double> margins) {
         stock.forEach((key, value) -> {
             if (value <= 0)
                 throw new IllegalArgumentException("Amount of " + key.getName() + " must be strictly positive. Given is " + value);
         });
 
+        supplierPrices.forEach((key, value) -> {
+            if (value <= 0)
+                throw new IllegalArgumentException("Supplier price for " + key.getName() + " must be strictly positive. Given is " + value);
+        });
+
+        margins.forEach((key, value) -> {
+            if (value <= 0)
+                throw new IllegalArgumentException("Margin for " + key.getName() + " must be strictly positive. Given is " + value);
+        });
+
         this.stock = stock;
+        this.supplierPrices = supplierPrices;
+        this.margins = margins;
     }
 
     /**
@@ -38,23 +51,8 @@ public class Kitchen {
      * @param recipe Recipe to check
      * @return True if stock allows to cook [recipe], False otherwise
      */
-    public boolean canDo(Recipe recipe) {
-
-        Map<Ingredient, Integer> required = new HashMap<>();
-
-        for (Topping topping : recipe.getToppings()) {
-            if (required.containsKey(topping))
-                required.replace(topping, required.get(topping) + 1);
-            else
-                required.put(topping, 1);
-        }
-
-        Dough dough = recipe.getDough();
-        if (!stock.containsKey(dough) || stock.get(dough) < 1) return false;
-        Flavor flavor = recipe.getFlavor();
-        if (flavor != null && (!stock.containsKey(flavor) || stock.get(flavor) < 1)) return false;
-
-        return required.entrySet().stream().allMatch(entry -> hasInStock(entry.getKey(), entry.getValue()));
+    public boolean canDo(Recipe recipe, int amount) {
+        return recipeCapacity(recipe) >= amount;
     }
 
     /**
@@ -77,25 +75,21 @@ public class Kitchen {
      * @param amount How many times do we cook [recipe] (must be stricly positive)
      */
     public void cook(Recipe recipe, int amount) {
-
         if (amount <= 0) throw new IllegalArgumentException("Amount must be strictly positive. Given is " + amount);
 
-        for (int i = 0; i < amount; i++) {
+        if (!canDo(recipe, amount))
+            throw new IllegalArgumentException("Can not prepare recipe " + recipe.getName() + " : missing getIngredients");
 
-            if (!canDo(recipe))
-                throw new IllegalArgumentException("Can not prepare recipe " + recipe.getName() + " : missing getIngredients");
+        for (Topping topping : recipe.getToppings()) {
+            stock.replace(topping, stock.get(topping) - amount);
+        }
 
-            for (Topping topping : recipe.getToppings()) {
-                stock.replace(topping, stock.get(topping) - 1);
-            }
+        Dough dough = recipe.getDough();
+        stock.replace(dough, stock.get(dough) - amount);
 
-            Dough dough = recipe.getDough();
-            stock.replace(dough, stock.get(dough) - 1);
-
-            Flavor flavor = recipe.getFlavor();
-            if (flavor != null) {
-                stock.replace(flavor, stock.get(flavor) - 1);
-            }
+        Flavor flavor = recipe.getFlavor();
+        if (flavor != null) {
+            stock.replace(flavor, stock.get(flavor) - amount);
         }
     }
 
@@ -106,7 +100,6 @@ public class Kitchen {
      * @param amount     Amount of [recipe.ingredient] to add to the stock (must be strictly positive)
      */
     public void refill(Ingredient ingredient, int amount) {
-
         if (amount <= 0) throw new IllegalArgumentException("Amount must be strictly positive. Given is " + amount);
 
         if (stock.containsKey(ingredient))
@@ -115,14 +108,54 @@ public class Kitchen {
             stock.put(ingredient, amount);
     }
 
+    /**
+     * How many cookies the kitchen can produce for a given recipe
+     *
+     * @param recipe Recipe of the expected cookie
+     * @return Amount of cookies matching [recipe] the kitchen can produce
+     */
     public int recipeCapacity(Recipe recipe) {
         List<Ingredient> ingredients = recipe.getIngredients();
+
         if (!ingredients.stream().allMatch(this.stock::containsKey))
             return 0;
 
         Map<Ingredient, Integer> required = new HashMap<>();
         ingredients.forEach(item -> required.put(item, Collections.frequency(ingredients, item)));
+
         return required.entrySet().stream()
                 .mapToInt(entry -> this.stock.get(entry.getKey()) / entry.getValue()).min().orElse(0);
+    }
+
+    /**
+     * The price of a given [ingredient], calculated from the supplier's price + the margin
+     *
+     * @param ingredient Ingredient to look for
+     * @return The price of a given [ingredient], calculated from the supplier's price + the margin
+     */
+    public double vendingPriceOf(Ingredient ingredient) {
+
+        if(!supplierPrices.containsKey(ingredient)) throw new IllegalArgumentException("Unknown supplier price for " + ingredient.getName());
+        if(!margins.containsKey(ingredient)) throw new IllegalArgumentException("Unknown margin for " + ingredient.getName());
+
+        double supplierPrice = supplierPrices.get(ingredient);
+        double marginPercent = margins.get(ingredient);
+
+        double marginValue = supplierPrice * (marginPercent / 100);
+        return supplierPrice + marginValue;
+    }
+
+    public void setSupplierPriceOf(Ingredient ingredient, double price) {
+        supplierPrices.put(ingredient, price);
+    }
+
+    /**
+     * Sets the margin amount for a given [ingredient]
+     *
+     * @param ingredient Ingredient to put margin onto
+     * @param margin Percent of the supplierPrice to add, to obtain vendingPrice
+     */
+    public void setMarginOf(Ingredient ingredient, double margin) {
+        margins.put(ingredient, margin);
     }
 }

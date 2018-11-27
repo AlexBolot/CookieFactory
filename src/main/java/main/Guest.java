@@ -1,5 +1,6 @@
 package main;
 
+import api.BankingData;
 import order.Order;
 import recipe.Recipe;
 import recipe.RecipeBuilder;
@@ -12,6 +13,7 @@ public class Guest {
 
     private Order temporaryOrder;
     private String email;
+    private BankingData bankingData;
 
     public Guest(String email) {
         this.temporaryOrder = initOrder();
@@ -75,14 +77,14 @@ public class Guest {
         this.email = email;
     }
 
-    public boolean isInLoyaltyProgram () {return false;}
-
-    /**
-     * This method is just a mock method, that "would" send a refund request to the connected banking system
-     * "In a perfect world where everything is connected" :)
-     */
-    public void refund() {
-        // Does nothing :D
+    public BankingData getBankingData() {
+        return bankingData;
     }
+
+    public void setBankingData(BankingData bankingData) {
+        this.bankingData = bankingData;
+    }
+
+    public boolean isInLoyaltyProgram () {return false;}
 
 }

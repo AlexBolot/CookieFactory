@@ -7,7 +7,6 @@ import order.Order;
 import store.Manager;
 import store.Store;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +17,7 @@ public class CucumberContext {
     private final Map<String, Guest> clients = new HashMap<>();
     public final Map<String, Order> orders = new HashMap<>();
     public final TestUtils utils = new TestUtils();
-    private final CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>());
+    private final CookieFirm cookieFirm = CookieFirm.instance();
 
     private static CucumberContext context;
 

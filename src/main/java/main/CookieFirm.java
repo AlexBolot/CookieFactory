@@ -1,5 +1,6 @@
 package main;
 
+import api.BankAPI;
 import order.Order;
 import recipe.Recipe;
 import recipe.ingredient.Catalog;
@@ -11,18 +12,21 @@ import java.util.stream.Collectors;
 
 public class CookieFirm {
 
-    private Set<Guest> guests;
-    private Set<Customer> accounts;
-    private List<Store> stores;
-    private List<Manager> managers;
-    private List<Recipe> globalRecipes;
+    private Set<Guest> guests = new HashSet<>();
+    private Set<Customer> accounts = new HashSet<>();
+    private List<Store> stores = new ArrayList<>();
+    private List<Manager> managers = new ArrayList<>();
+    private List<Recipe> globalRecipes = new ArrayList<>();
+    private BankAPI bankAPI = new BankAPI();
 
-    public CookieFirm(List<Store> stores, List<Manager> managers) {
-        this.guests = new HashSet<>();
-        this.accounts = new HashSet<>();
-        this.stores = stores;
-        this.managers = managers;
-        this.globalRecipes = new ArrayList<>();
+    private static boolean inflated = false;
+    private static CookieFirm cookieFirm = new CookieFirm();
+
+    public static CookieFirm instance() {
+        return cookieFirm;
+    }
+
+    private CookieFirm() {
 
         Catalog catalog = new Catalog();
 
@@ -161,7 +165,7 @@ public class CookieFirm {
         return true;
     }
 
-    Optional<Customer> findCustomer(String email){
+    Optional<Customer> findCustomer(String email) {
         Customer customer = null;
         for (Customer account : this.accounts) {
             if (account.getEmail().equals(email)) {
@@ -171,13 +175,20 @@ public class CookieFirm {
         return Optional.ofNullable(customer);
     }
 
-    Optional<Store> findStore(String name){
+    Optional<Store> findStore(String name) {
         Store store = null;
-        for(Store s : this.stores){
-            if(s.getName().equals(name))
+        for (Store s : this.stores) {
+            if (s.getName().equals(name))
                 store = s;
         }
         return Optional.ofNullable(store);
+    }
+
+    public void inflate(List<Store> stores, List<Manager> managers){
+        this.managers = managers;
+        this.stores = stores;
+
+        CookieFirm.inflated = true;
     }
 
     void addGuest(Guest guest) {
@@ -188,8 +199,16 @@ public class CookieFirm {
         return stores;
     }
 
-    public void addStore(Store s){
+    public void addStore(Store s) {
         stores.add(s);
+    }
+
+    public void addManager(Manager manager) {
+        managers.add(manager);
+    }
+
+    public void setBankAPI(BankAPI bankAPI) {
+        this.bankAPI = bankAPI;
     }
 
     Set<Guest> getGuests() {
@@ -202,6 +221,10 @@ public class CookieFirm {
 
     public List<Recipe> getGlobalRecipes() {
         return globalRecipes;
+    }
+
+    public BankAPI getBankAPI() {
+        return bankAPI;
     }
 
     public void addCustomerToLoyaltyProgram(Customer customer) {

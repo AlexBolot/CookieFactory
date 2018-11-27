@@ -1,6 +1,5 @@
 package StepDefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -25,7 +24,7 @@ import static utils.TestUtils.getInfiniteMockKitchen;
 public class AddCookieOrderStepDefs {
 
     private final Map<String, Recipe> recipes = new HashMap<>();
-    private final CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>());
+    private final CookieFirm cookieFirm = CookieFirm.instance();
     private final CucumberContext context = CucumberContext.getContext();
     private final Guest guest = new Guest("guest");
     private Recipe currentRecipe;
@@ -44,7 +43,6 @@ public class AddCookieOrderStepDefs {
 
     @When("^The guest select the recipee \"([^\"]*)\"$")
     public void theGuestSelectTheRecipee(String recipee) {
-        final Catalog catalog = new Catalog();
         for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
             if (cookie.getName().equals(recipee)) {
                 this.currentRecipe = cookie;
@@ -85,6 +83,7 @@ public class AddCookieOrderStepDefs {
     public void addCookieOfTheSelectedRecipee(int cookieAmount) {
         this.guest.getTemporaryOrder().addCookie(currentRecipe, cookieAmount);
     }
+
     @And("^The guest choose the dough \"([^\"]*)\"$")
     public void theGuestChooseTheDough(String doughName) {
         this.customDough = context.utils.doughFromName(doughName);
@@ -143,15 +142,15 @@ public class AddCookieOrderStepDefs {
     @And("^The kitchen of \"([^\"]*)\" can do (\\d+) \"([^\"]*)\"$")
     public void theKitchenOfCanDo(String storeName, int recipeCount, String recipeName) {
         Store store = context.getStore(storeName);
-        if (store.getKitchen() == null)
-            store.setKitchen(new Kitchen());
-        Kitchen kitchen = store.getKitchen();
+        Kitchen kitchen = new Kitchen();
         Recipe recipe = getRecipe(recipeName).orElse(null);
         if (recipe == null)
             return;
         kitchen.refill(recipe.getDough(), recipeCount);
         kitchen.refill(recipe.getFlavor(), recipeCount);
         recipe.getToppings().forEach(t -> kitchen.refill(t, recipeCount));
+
+        store.setKitchen(kitchen);
     }
 
     private Optional<Recipe> getRecipe(String recipeName) {
@@ -167,9 +166,10 @@ public class AddCookieOrderStepDefs {
     @And("^The order contain (\\d+) cookie \"([^\"]*)\"$")
     public void theOrderContainCookieRecipe(int cookieCount, String recipee) {
         Recipe recipe = getRecipe(recipee).orElse(null);
-        Optional<OrderLine> optionalOrderLine = guest.getTemporaryOrder()
-                .getOrderLines().stream()
-                .filter(line -> line.getRecipe().equals(recipe)).findFirst();
+        Optional<OrderLine> optionalOrderLine =
+                guest.getTemporaryOrder()
+                        .getOrderLines().stream()
+                        .filter(line -> line.getRecipe().equals(recipe)).findFirst();
         assertTrue(optionalOrderLine.isPresent());
         assertEquals(optionalOrderLine.get().getAmount(), cookieCount);
     }

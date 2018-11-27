@@ -20,6 +20,7 @@ public class Guest {
 
     Order initOrder() {
         this.temporaryOrder = new Order();
+        this.temporaryOrder.setGuest(this);
         return this.temporaryOrder;
     }
 
@@ -27,8 +28,6 @@ public class Guest {
 
         if (temporaryOrder.isPayed())
             throw new IllegalStateException("The order you are trying to place has already been paid");
-
-        temporaryOrder.setGuest(this);
 
         double price = temporaryOrder.getStore().placeOrder(temporaryOrder);
 
@@ -61,6 +60,7 @@ public class Guest {
 
     protected void setTemporaryOrder(Order order) {
         this.temporaryOrder = order;
+        this.temporaryOrder.setGuest(this);
     }
 
     public Order getTemporaryOrder() {

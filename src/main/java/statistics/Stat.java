@@ -1,4 +1,4 @@
-package main;
+package statistics;
 
 public class Stat<T> {
     String title;

@@ -2,6 +2,7 @@ package utils;
 
 import main.CookieFirm;
 import main.Customer;
+import main.Facade;
 import main.Guest;
 import order.Order;
 import store.Manager;
@@ -17,9 +18,12 @@ public class CucumberContext {
     private final Map<String, Guest> clients = new HashMap<>();
     public final Map<String, Order> orders = new HashMap<>();
     public final TestUtils utils = new TestUtils();
-    private final CookieFirm cookieFirm = CookieFirm.instance();
+
+
+    private final Facade facade = new Facade();
 
     private static CucumberContext context;
+
 
     public static CucumberContext getContext() {
         if (context == null) context = new CucumberContext();
@@ -46,8 +50,12 @@ public class CucumberContext {
         return stores.get(storeName);
     }
 
-    public CookieFirm getCookieFirm(){
-        return cookieFirm;
+    public Facade getFacade(){
+        return facade;
+    }
+
+    public CookieFirm cookieFirm(){
+        return CookieFirm.instance();
     }
 
 }

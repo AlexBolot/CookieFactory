@@ -118,6 +118,19 @@ public class Customer extends Guest {
         return orderHistory;
     }
 
+
+    String getFirstName() {
+        return firstName;
+    }
+
+    String getLastName() {
+        return lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

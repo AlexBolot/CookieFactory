@@ -2,7 +2,7 @@ Feature: Anonymous order
   Background:
     Given A store "store"
     Given The kitchen for "store" is infinite
-    Given The store "store" opens "Monday" 5 hours ago and closes in 4 hours
+    Given The "store" opens "Monday" 5 hours ago and closes in 4 hours
 
 
   Scenario: A customer put an order anonymously

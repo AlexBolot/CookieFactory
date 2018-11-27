@@ -137,4 +137,17 @@ public class TestUtils {
 
         return bankAPI;
     }
+
+
+    public String createEmail(String name){
+        return name+"@"+name+".fr";
+    }
+
+
+    public boolean payOnline(String pay){
+        if(pay.equals("online"))
+            return true;
+        else
+            return false;
+    }
 }

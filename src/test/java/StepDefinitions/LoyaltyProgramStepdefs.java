@@ -12,6 +12,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 
+import static org.junit.Assert.assertEquals;
+
 public class LoyaltyProgramStepdefs {
 
     private final CucumberContext context = CucumberContext.getContext();
@@ -22,7 +24,7 @@ public class LoyaltyProgramStepdefs {
     @Given("^\"([^\"]*)\" is in the loyaltyProgram$")
     public void isInTheLoyaltyProgram(String sCustomer) {
         Customer frank = context.getCustomer(sCustomer);
-        CookieFirm cookieFirm = context.getCookieFirm();
+        CookieFirm cookieFirm = context.cookieFirm();
         cookieFirm.addCustomerToLoyaltyProgram(frank);
     }
 
@@ -43,7 +45,7 @@ public class LoyaltyProgramStepdefs {
     public void seeThePriceOfHisWithCookiesItHaveADiscountOfPourcent(String sCustomer, String sOrder, int numberCookie) {
         Order order = context.orders.get(sOrder);
         double orderLinePrices = order.getOrderLines().stream().mapToDouble(line -> line.getAmount() * order.getStore().getRecipePrice(line.getRecipe())).sum();
-        Assert.assertEquals(orderLinePrices * 0.9, price, 0);
+        assertEquals(orderLinePrices * 0.9, price, 0);
 
     }
 }

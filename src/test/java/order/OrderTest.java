@@ -18,8 +18,7 @@ import static order.OrderState.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
-import static utils.TestUtils.fillKitchenForRecipe;
-import static utils.TestUtils.getInfiniteMockKitchen;
+import static utils.TestUtils.*;
 
 public class OrderTest {
 
@@ -169,11 +168,11 @@ public class OrderTest {
 
     @Test
     public void withdrawPayedOrder() {
-
+        cookieFirm.setBankAPI(lenientBankAPI());
         order.placeOrder();
         order.pay();
 
-        // No exception should thow
+        // No exception should throw
         order.withdraw();
 
         assertEquals(WITHDRAWN, order.getState());
@@ -218,6 +217,7 @@ public class OrderTest {
 
     @Test
     public void cancelOrdered() {
+        cookieFirm.setBankAPI(lenientBankAPI());
         order.placeOrder();
 
         order.cancel();
@@ -237,6 +237,7 @@ public class OrderTest {
 
     @Test(expected = IllegalStateException.class)
     public void cancelCanceled() {
+        cookieFirm.setBankAPI(lenientBankAPI());
         order.placeOrder();
         order.cancel();
 

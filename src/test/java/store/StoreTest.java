@@ -138,7 +138,7 @@ public class StoreTest {
     @Test
     public void placeOrder() {
         Order normalOrder = new Order(store, now.plusHours(3));
-        normalOrder.setGuest(new Guest("bob@bob.fr"));
+        normalOrder.setGuest(new Guest());
         for (int i = 1; i < 4; i++) {
             normalOrder.addCookie(utils.randomRecipe(), i);
         }
@@ -201,6 +201,7 @@ public class StoreTest {
         LocalDateTime pickUpTime = LocalDateTime.now();
         assertFalse(store.findOrder(pickUpTime, guestAlice.getEmail()).isPresent());
     }
+
 
     @Test
     public void cancelOrder() {

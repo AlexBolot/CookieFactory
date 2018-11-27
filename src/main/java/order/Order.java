@@ -1,7 +1,6 @@
 package order;
 
 import main.CookieFirm;
-import main.Customer;
 import main.Guest;
 import recipe.Recipe;
 import store.Store;
@@ -126,20 +125,12 @@ public class Order {
     public double getPrice() {
         double storeTax = store.getTax();
 
-        double sum = 0.0;
-        for (OrderLine line : orderLines) {
-            sum += line.getAmount() * 15.0; //line.getRecipe().getPrice();
-        }
-        double price2 = sum * storeTax;
-
-        if (guest.isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()) {
-            price2 *= 0.9;
         double price = orderLines.stream().mapToDouble(line -> line.getAmount() * store.getRecipePrice(line.getRecipe())).sum() * storeTax;
         if (guest.isInLoyaltyProgram() && guest.canHaveDiscount()) {
             price = (price * 0.90);
         }
 
-        return price2;
+        return price;
     }
 
     public Store getStore() {

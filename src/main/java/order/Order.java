@@ -1,5 +1,6 @@
 package order;
 
+import main.CookieFirm;
 import main.Customer;
 import main.Guest;
 import recipe.Recipe;
@@ -113,7 +114,7 @@ public class Order {
     public void cancel() {
         if (this.orderState == ORDERED) {
             this.orderState = CANCELED;
-            guest.refund();
+            CookieFirm.instance().getBankAPI().refund(guest.getBankingData(), this.getPrice());
         } else throw new IllegalStateException("Order has already been Canceled or Withdrawn and can not be canceled");
     }
 
@@ -124,11 +125,18 @@ public class Order {
      */
     public double getPrice() {
         double storeTax = store.getTax();
-        double price = orderLines.stream().mapToDouble(line -> line.getAmount() * line.getRecipe().getPrice()).sum() * storeTax;
-        if (guest.isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()) {
-            price = (price * 0.90);
+
+        double sum = 0.0;
+        for (OrderLine line : orderLines) {
+            sum += line.getAmount() * 15.0; //line.getRecipe().getPrice();
         }
-        return price;
+        double price2 = sum * storeTax;
+
+        if (guest.isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()) {
+            price2 *= 0.9;
+        }
+
+        return price2;
     }
 
     public Store getStore() {
@@ -163,15 +171,12 @@ public class Order {
         return pickUpTime;
     }
 
-
-
     public void setPickUpTime(LocalDateTime pickUpTime) {
         this.pickUpTime = pickUpTime;
     }
 
-
-
     public void pay() {
+        CookieFirm.instance().getBankAPI().pay(guest.getBankingData(), this.getPrice());
         this.payed = true;
     }
 

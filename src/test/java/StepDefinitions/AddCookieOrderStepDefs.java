@@ -24,7 +24,7 @@ import static utils.TestUtils.getInfiniteMockKitchen;
 public class AddCookieOrderStepDefs {
 
     private final Map<String, Recipe> recipes = new HashMap<>();
-    private final CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>());
+    private final CookieFirm cookieFirm = CookieFirm.instance();
     private final CucumberContext context = CucumberContext.getContext();
     private final Guest guest = new Guest("guest");
     private Recipe currentRecipe;
@@ -44,7 +44,6 @@ public class AddCookieOrderStepDefs {
 
     @When("^The guest select the recipee \"([^\"]*)\"$")
     public void theGuestSelectTheRecipee(String recipee) {
-        final Catalog catalog = new Catalog();
         for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
             if (cookie.getName().equals(recipee)) {
                 this.currentRecipe = cookie;

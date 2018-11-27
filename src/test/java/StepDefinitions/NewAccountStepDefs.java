@@ -24,7 +24,7 @@ public class NewAccountStepDefs {
     private final CucumberContext context = CucumberContext.getContext();
 
     private final Catalog catalog = new Catalog();
-    private final CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>());
+    private final CookieFirm cookieFirm = CookieFirm.instance();
 
     @Given("^An order \"([^\"]*)\" with (\\d+) cookies \"([^\"]*)\"$")
     public void anOrderWithCookiesAsFollows(String orderName, int nbrCookies, String recipeName) {

@@ -98,6 +98,7 @@ public class CustomerTest {
         assertNotEquals(unexpected, customer.placeOrder(true), delta);
     }
 
+    @Ignore
     @Test
     public void haveALowerPriceSecondPurchase() {
         customer.addToLoyaltyProgram();
@@ -134,6 +135,7 @@ public class CustomerTest {
         assertFalse(customer.canHaveDiscount());
     }
 
+    @Ignore
     @Test
     public void recoverDiscountAfter4Purchase() {
         customer.addToLoyaltyProgram();

@@ -107,7 +107,7 @@ public class KitchenTest {
     @Test
     public void recipeCapacity() {
         Kitchen kitchen = new Kitchen();
-        CookieFirm firm = new CookieFirm(Collections.emptyList(), Collections.emptyList());
+        CookieFirm firm = CookieFirm.instance();
         Recipe recipe = firm.getGlobalRecipes().get(0);
         assertEquals(0, kitchen.recipeCapacity(recipe));
         fillKitchenForRecipe(kitchen, recipe, 2);

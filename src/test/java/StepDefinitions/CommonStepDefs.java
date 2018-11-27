@@ -1,5 +1,6 @@
 package StepDefinitions;
 
+import api.BankingData;
 import cucumber.api.java.en.Given;
 import main.Customer;
 import main.Guest;
@@ -30,7 +31,10 @@ public class CommonStepDefs {
 
     @Given("^A customer \"([^\"]*)\"$")
     public void aCustomer(String name) {
-        Customer customer = context.getCookieFirm().createAccount("", "", "", name+"@"+name+".fr", "", new Order());
+        BankingData bankingData = new BankingData(name, name, "58493849583");
+
+        Customer customer = context.getCookieFirm().createAccount(name, name, "0638493756", name+"@"+name+".fr", name+"1234", new Order());
+        customer.setBankingData(bankingData);
         context.addGuest(name, customer);
     }
 

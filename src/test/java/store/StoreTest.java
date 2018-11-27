@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 import static utils.TestUtils.getInfiniteMockKitchen;
@@ -33,6 +34,7 @@ public class StoreTest {
     private final HashMap<DayOfWeek, LocalTime> closingTimes = new HashMap<>();
 
     private final ArrayList<Recipe> globalRecipes = new ArrayList<>();
+    private final LocalDateTime now = LocalDateTime.now();
 
     @Before
     public void before() {
@@ -106,34 +108,34 @@ public class StoreTest {
 
     @Test
     public void checkOrderValidity() {
-
-        LocalDateTime now = LocalDateTime.now();
-
-        Order emptyOrder = new Order(store, now.plusHours(3));
         Order normalOrder = new Order(store, now.plusHours(3));
-        Order tooEarlyOrder = new Order(store, now.minusHours(6));
-        Order tooLateOrder = new Order(store, now.plusHours(6));
-        Order tooShortOrder = new Order(store, now.plusHours(1));
-
-        for (int i = 1; i < 4; i++) {
-            normalOrder.addCookie(utils.randomRecipe(), i);
-            tooEarlyOrder.addCookie(utils.randomRecipe(), i);
-            tooLateOrder.addCookie(utils.randomRecipe(), i);
-        }
-
+        IntStream.range(1, 4).forEach(i -> normalOrder.addCookie(utils.randomRecipe(), i));
         assertTrue(store.checkOrderValidity(normalOrder));
-        assertFalse(store.checkOrderValidity(emptyOrder));
-        assertFalse(store.checkOrderValidity(tooEarlyOrder));
-        assertFalse(store.checkOrderValidity(tooLateOrder));
-        assertFalse(store.checkOrderValidity(tooShortOrder));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void checkOrderValidityEmpty(){
+        Order emptyOrder = new Order(store, now.plusHours(3));
+        store.checkOrderValidity(emptyOrder);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checkOrderValidityTooEarly(){
+        Order tooEarlyOrder = new Order(store, now.minusHours(6));
+        IntStream.range(1, 4).forEach(i -> tooEarlyOrder.addCookie(utils.randomRecipe(), i));
+        store.checkOrderValidity(tooEarlyOrder);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checkOrderValidityTooLate(){
+        Order tooLateOrder = new Order(store, now.plusHours(6));
+        IntStream.range(1, 4).forEach(i -> tooLateOrder.addCookie(utils.randomRecipe(), i));
+        store.checkOrderValidity(tooLateOrder);
     }
 
     @Ignore
     @Test
     public void placeOrder() {
-
-        LocalDateTime now = LocalDateTime.now();
-
         Order normalOrder = new Order(store, now.plusHours(3));
 
         for (int i = 1; i < 4; i++) {
@@ -145,8 +147,6 @@ public class StoreTest {
 
     @Test (expected = IllegalArgumentException.class)
     public void placeOrderEmpty(){
-        LocalDateTime now = LocalDateTime.now();
-
         Order emptyOrder = new Order(store, now.plusHours(3));
 
         store.placeOrder(emptyOrder);
@@ -154,8 +154,6 @@ public class StoreTest {
 
     @Test
     public void payingAnOrder(){
-        LocalDateTime now = LocalDateTime.now();
-
         Order normalOrder = new Order(store, now.plusHours(3));
         normalOrder.addCookie(utils.randomRecipe(), 10);
         normalOrder.setGuest(guestAlice);

@@ -22,15 +22,12 @@ public class CancelOrderStepDefs {
     private Collection<Order> ordersStore = new ArrayList<>();
     private Order currentOrder;
 
-
     @Given("^\"([^\"]*)\" made an \"([^\"]*)\" into the \"([^\"]*)\" in (\\d+) hours, on \"([^\"]*)\"$")
     public void madeAnIntoTheInHoursOn(String sCustomer, String sOrder, String sStore, int iTime, String sDay) {
         Order order1 = new Order(context.stores.get(sStore),
                 LocalDateTime.now().plusHours(iTime)
                         .with(TemporalAdjusters.next(DayOfWeek.valueOf(sDay.toUpperCase()))));
         order1.addCookie(context.utils.randomRecipe(), 10);
-
-
         Customer jack = context.getCustomer(sCustomer);
         context.orders.put(sOrder, order1);
         jack.setTemporaryOrder(order1);

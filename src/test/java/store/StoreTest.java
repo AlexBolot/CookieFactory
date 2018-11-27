@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import recipe.Recipe;
+import recipe.ingredient.Catalog;
 import utils.TestUtils;
 
 import java.time.DayOfWeek;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class StoreTest {
@@ -140,11 +143,11 @@ public class StoreTest {
             normalOrder.addCookie(utils.randomRecipe(), i);
         }
 
-        assertTrue(0 <store.placeOrder(normalOrder));
+        assertTrue(0 < store.placeOrder(normalOrder));
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void placeOrderEmpty(){
+    @Test(expected = IllegalArgumentException.class)
+    public void placeOrderEmpty() {
         LocalDateTime now = LocalDateTime.now();
 
         Order emptyOrder = new Order(store, now.plusHours(3));
@@ -153,7 +156,7 @@ public class StoreTest {
     }
 
     @Test
-    public void payingAnOrder(){
+    public void payingAnOrder() {
         LocalDateTime now = LocalDateTime.now();
 
         Order normalOrder = new Order(store, now.plusHours(3));
@@ -191,8 +194,8 @@ public class StoreTest {
     public void returnsEmptyOptionalOnEmptyOrderList() {
         DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
-        store = new Store("",utils.randomRecipe(), new ArrayList<>(),new ArrayList<>(), new HashMap<>(),new HashMap<>
-                (),1.0);
+        store = new Store("", utils.randomRecipe(), new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>
+                (), 1.0);
         assertFalse(store.findOrder(pickUpTime, guestAlice.getEmail()).isPresent());
     }
 
@@ -204,7 +207,7 @@ public class StoreTest {
     }
 
     @Test
-    public void cancelOrder(){
+    public void cancelOrder() {
         DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now().plusHours(3);
         final Order order = new Order(store, pickUpTime);
@@ -221,6 +224,42 @@ public class StoreTest {
         store.cancelOrder(order);
 
         assertEquals(OrderState.CANCELED, order.getState());
+    }
 
+    @Test
+    public void computeRecipeeBasedOnIngredients() {
+        Catalog catalog = new Catalog();
+        Recipe recipe = new Recipe("plain",
+                catalog.getDoughList().get(0),
+                catalog.getFlavorList().get(0),
+                catalog.getToppingList().subList(0, 1),
+                catalog.getMixList().get(0),
+                catalog.getCookingList().get(0),
+                false);
+        Kitchen kitchen = store.getKitchen();
+        when(kitchen.vendingPriceOf(any())).thenReturn(1.0);
+        assertEquals(3.0, store.getRecipePrice(recipe), 0.0001);
+        when(kitchen.vendingPriceOf(any())).thenReturn(3.0);
+        assertEquals(9.0, store.getRecipePrice(recipe), 0.0001);
+    }
+
+    @Test
+    public void applyCurstomRecipeePrice() {
+        Catalog catalog = new Catalog();
+        Recipe recipe = new Recipe("plain",
+                catalog.getDoughList().get(0),
+                catalog.getFlavorList().get(0),
+                catalog.getToppingList().subList(0, 1),
+                catalog.getMixList().get(0),
+                catalog.getCookingList().get(0),
+                true);
+        Kitchen kitchen = store.getKitchen();
+        store.setCustomRecipeeMargin(1.0);
+        when(kitchen.vendingPriceOf(any())).thenReturn(1.0);
+        assertEquals(4.0, store.getRecipePrice(recipe), 0.0001);
+        when(kitchen.vendingPriceOf(any())).thenReturn(3.0);
+        assertEquals(10.0, store.getRecipePrice(recipe), 0.0001);
+        store.setCustomRecipeeMargin(21.12);
+        assertEquals(30.12, store.getRecipePrice(recipe), 0.0001);
     }
 }

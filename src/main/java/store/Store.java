@@ -22,8 +22,8 @@ public class Store {
     private Map<DayOfWeek, LocalTime> openingTimes;
     private Map<DayOfWeek, LocalTime> closingTimes;
     private double tax;
+    private double customRecipeeMargin;
     private Kitchen kitchen;
-
     public Store(String name, Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<DayOfWeek, LocalTime> openingTimes, Map<DayOfWeek, LocalTime> closingTimes, double tax) {
         this.name = name;
         this.monthlyRecipe = monthlyRecipe;
@@ -230,4 +230,16 @@ public class Store {
         this.closingTimes.put(day, localTime);
     }
 
+    public double getRecipePrice(Recipe recipe) {
+        return recipe.getIngredients().stream().mapToDouble(kitchen::vendingPriceOf).sum()
+                + (recipe.isCustom() ? customRecipeeMargin : 0.0);
+    }
+
+    public double getCustomRecipeeMargin() {
+        return customRecipeeMargin;
+    }
+
+    public void setCustomRecipeeMargin(double customRecipeeMargin) {
+        this.customRecipeeMargin = customRecipeeMargin;
+    }
 }

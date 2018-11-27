@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static java.time.DayOfWeek.MONDAY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class GuestTest {
@@ -44,7 +43,7 @@ public class GuestTest {
 
         order.addCookie(globalRecipes.get(0), 5);
 
-        guest = new Guest("");
+        guest = new Guest();
         guest.setTemporaryOrder(order);
     }
 
@@ -63,9 +62,17 @@ public class GuestTest {
         assertEquals(guest, order.getGuest());
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void placeOrder_AlreadyPaid() {
         order.setPayed();
         guest.placeOrder(true);
+    }
+
+    @Test
+    public void guestIDIncrement() {
+        Guest guest1 = new Guest();
+        Guest guest2 = new Guest();
+
+        assertEquals(guest1.getId(), guest2.getId() - 1);
     }
 }

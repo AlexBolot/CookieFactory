@@ -4,12 +4,16 @@ Feature: Add cookie to order
     Given A store "emptyStore"
     And An order "emptyOrder"
 
+
+
   Scenario: Add 1 existing cookie in the order
     Given The guest see the list of cookies
     When The guest select the recipee "White Dog"
     And add 1 cookie of the selected recipee
     Then The order contain 1 orderLines
 
+
+  @Ignore
   Scenario: Add no cookie if cannot do the recipe
     And The kitchen of "emptyStore" is empty
     And An order "emptyOrder" at the store "emptyStore"
@@ -30,6 +34,8 @@ Feature: Add cookie to order
     When The guest order 4 custom cookie "Custom"
     Then The order contains 4 cookie "Custom"
 
+
+  @Ignore
   Scenario: Add too much cookie
     And The kitchen of "emptyStore" can do 2 "White Dog"
     And An order "emptyOrder" at the store "emptyStore"

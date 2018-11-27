@@ -43,7 +43,8 @@ public class Store {
 
     public double placeOrder(Order order) {
 
-        if (!this.checkOrderValidity(order)) throw new IllegalArgumentException("The order is not valid");
+        // Throws exception if order not valid
+        this.checkOrderValidity(order);
 
         orders.add(order);
 
@@ -89,10 +90,15 @@ public class Store {
      */
     private boolean checkOrderContent(Order order) {
         for (OrderLine orderLine : order.getOrderLines()) {
-            if (kitchen.recipeCapacity(orderLine.getRecipe()) < orderLine.getAmount()) return false;
+            if (kitchen.recipeCapacity(orderLine.getRecipe()) < orderLine.getAmount())
+                throw new IllegalArgumentException("The store's kitchen is unable to cook a recipe of the order");
         }
 
-        return !order.getOrderLines().isEmpty();
+        if(order.getOrderLines().isEmpty()){
+            throw new IllegalArgumentException("The order given is empty !");
+        }
+
+        return true;
     }
 
     /**
@@ -106,21 +112,20 @@ public class Store {
 
         LocalDateTime pickUpDate = order.getPickUpTime();
 
-
         // Selected time is in less than two hours -> forbidden
-        if (LocalDateTime.now().compareTo(pickUpDate.minusHours(2)) > 0)
-            return false;
+        if (LocalDateTime.now().isAfter(pickUpDate.minusHours(2)))
+            throw new IllegalArgumentException("The pickup time is in less than 2h");
 
         LocalTime pickupTime = LocalTime.from(pickUpDate);
         DayOfWeek pickupDay = pickUpDate.getDayOfWeek();
 
         // Selected time is earlier than opening time of selected day -> forbidden
-        if (pickupTime.compareTo(LocalTime.from(this.openingTime(pickupDay))) < 0)
-            return false;
+        if(pickupTime.isBefore(LocalTime.from(this.openingTime(pickupDay))))
+            throw new IllegalArgumentException("The pickup time is earlier than opening time of the store");
 
         // Selected time is later than closing time of selected day -> forbidden
-        if (pickupTime.compareTo(LocalTime.from(this.closingTime(pickupDay))) > 0)
-            return false;
+        if(pickupTime.isAfter(LocalTime.from(this.closingTime(pickupDay))))
+            throw new IllegalArgumentException("The pickup time is later than closing time of the store");
 
         // Else -> no problem :)
         return true;
@@ -135,7 +140,6 @@ public class Store {
      */
     void setStatusPaymentOrder(DayOfWeek day, LocalDateTime pickUpTime, String email) {
         Optional<Order> order = findOrder(pickUpTime, email);
-
         order.ifPresent(Order::setPayed);
     }
 

@@ -43,12 +43,15 @@ public class OrderTest {
                 catalog.getCookingList().get(0),
                 true);
 
-        cookieFirm = new CookieFirm(Collections.singletonList(store), Collections.emptyList());
+        cookieFirm = CookieFirm.instance();
+
+        cookieFirm.inflate(Collections.singletonList(store), Collections.emptyList());
         unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), catalog.getFlavorList().get(0), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
         LocalDateTime pickUpTime = LocalDateTime.now();
         order = new Order(store, pickUpTime);
 
-        Guest guest = new Guest("Bob");
+        Guest guest = new Guest();
+
         order.setGuest(guest);
 
         fillKitchenForRecipe(store.getKitchen(), recipe1, 10);

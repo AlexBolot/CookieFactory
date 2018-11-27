@@ -24,9 +24,9 @@ import static utils.TestUtils.getInfiniteMockKitchen;
 public class AddCookieOrderStepDefs {
 
     private final Map<String, Recipe> recipes = new HashMap<>();
-    private final CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(), new ArrayList<>());
+    private final CookieFirm cookieFirm = CookieFirm.instance();
     private final CucumberContext context = CucumberContext.getContext();
-    private final Guest guest = new Guest("guest");
+    private final Guest guest = new Guest();
     private Recipe currentRecipe;
 
     private Dough customDough;
@@ -37,14 +37,12 @@ public class AddCookieOrderStepDefs {
 
     @Given("^The guest see the list of cookies$")
     public void theGuestSeeTheListOfCookies() {
-        this.guest.setTemporaryOrder(new Order());
         this.guest.getTemporaryOrder().setStore(new Store("", null, Collections.emptyList(), new HashMap<>(), new HashMap<>(), 1.0, 1));
         this.guest.getTemporaryOrder().getStore().setKitchen(getInfiniteMockKitchen());
     }
 
     @When("^The guest select the recipee \"([^\"]*)\"$")
     public void theGuestSelectTheRecipee(String recipee) {
-        final Catalog catalog = new Catalog();
         for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
             if (cookie.getName().equals(recipee)) {
                 this.currentRecipe = cookie;
@@ -76,7 +74,6 @@ public class AddCookieOrderStepDefs {
 
     @Given("^The guest see the list of ingredients$")
     public void theGuestSeeTheListOfIngredients() {
-        guest.setTemporaryOrder(new Order());
         this.guest.getTemporaryOrder().setStore(new Store("", null, Collections.emptyList(), new
                 HashMap<>(), new HashMap<>(), 1.0, 1));
         this.guest.getTemporaryOrder().getStore().setKitchen(getInfiniteMockKitchen());
@@ -163,7 +160,7 @@ public class AddCookieOrderStepDefs {
 
     @And("^The guest is ordering the \"([^\"]*)\"$")
     public void theGuestIsOrderingThe(String orderName) {
-        this.guest.setTemporaryOrder(context.getOrder(orderName));
+      //  this.guest.setTemporaryOrder(context.getOrder(orderName));
     }
 
     @And("^The order contain (\\d+) cookie \"([^\"]*)\"$")

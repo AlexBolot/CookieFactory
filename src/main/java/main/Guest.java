@@ -1,25 +1,31 @@
 package main;
 
+import api.BankingData;
 import order.Order;
 import recipe.Recipe;
 import recipe.RecipeBuilder;
 import recipe.ingredient.*;
 
 import java.util.List;
-
+import java.util.Objects;
 
 public class Guest {
 
+    private int id;
     private Order temporaryOrder;
     private String email;
+    private BankingData bankingData;
 
-    public Guest(String email) {
+    private static int IdCount = 0;
+
+    public Guest() {
         this.temporaryOrder = initOrder();
-        this.email = email;
+        this.id = IdCount++;
     }
 
     Order initOrder() {
         this.temporaryOrder = new Order();
+        this.temporaryOrder.setGuest(this);
         return this.temporaryOrder;
     }
 
@@ -27,8 +33,6 @@ public class Guest {
 
         if (temporaryOrder.isPayed())
             throw new IllegalStateException("The order you are trying to place has already been paid");
-
-        temporaryOrder.setGuest(this);
 
         double price = temporaryOrder.getStore().placeOrder(temporaryOrder);
 
@@ -44,7 +48,7 @@ public class Guest {
     /**
      * Order a custom recipe by giving the ingrdients to a recipe Factory
      *
-      * @param quantity of cookie ordered
+     * @param quantity of cookie ordered
      * @param dough
      * @param flavor
      * @param topping
@@ -59,8 +63,9 @@ public class Guest {
         return customRecipe;
     }
 
-    public void setTemporaryOrder(Order order) {
+    protected void setTemporaryOrder(Order order) {
         this.temporaryOrder = order;
+        this.temporaryOrder.setGuest(this);
     }
 
     public Order getTemporaryOrder() {
@@ -71,22 +76,42 @@ public class Guest {
         return email;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    protected void setId(int id) {
+        this.id = id;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public boolean isInLoyaltyProgram () {return false;}
+    public BankingData getBankingData() {
+        return bankingData;
+    }
+
+    public void setBankingData(BankingData bankingData) {
+        this.bankingData = bankingData;
+    }
+
+    public boolean isInLoyaltyProgram() {
+        return false;
+    }
 
     public boolean canHaveDiscount() {
         return false;
     }
 
-    /**
-     * This method is just a mock method, that "would" send a refund request to the connected banking system
-     * "In a perfect world where everything is connected" :)
-     */
-    public void refund() {
-        // Does nothing :D
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Guest)) return false;
+        Guest guest = (Guest) o;
+        return id == guest.id &&
+                Objects.equals(temporaryOrder, guest.temporaryOrder) &&
+                Objects.equals(email, guest.email) &&
+                Objects.equals(bankingData, guest.bankingData);
     }
-
 }

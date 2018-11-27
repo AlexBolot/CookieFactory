@@ -4,6 +4,7 @@ Feature: Customer order
     Given A store "store"
     Given The store "store" opens "Monday" 5 hours ago and closes in 4 hours
 
+@Ignore
   Scenario: A customer places an order
     Given A customer "Bob"
     Given An order "425" at the store "store", to pickup "Monday" 1 hour before closing time

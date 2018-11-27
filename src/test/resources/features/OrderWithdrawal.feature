@@ -12,7 +12,8 @@ Feature: Order Withdrawal
     When the employee delivers the current order
     Then The current order state is "Withdrawn"
 
-  @Ignore
+
+    @Ignore
   Scenario: A customer wants to withdraw an unpaid order without paying
     Given the customer "Boby2" has the order "order"
     And the employee of "store" scans "order"

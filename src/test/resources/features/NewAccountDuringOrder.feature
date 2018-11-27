@@ -3,6 +3,7 @@ Feature: Account creation while ordering
   Background:
     Given A guest "guest"
 
+@Ignore
   Scenario: Account creation while ordering
     Given An order "Order1" with 2 cookies "Dreams On"
     And A guest "guest" is ordering the order "Order1"

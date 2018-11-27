@@ -23,7 +23,7 @@ public class RemoveCookieStepDefs {
 
     @Given("^The customer checks his order$")
     public void theChecksHisOrder() {
-        guest.setTemporaryOrder(order);
+        order = guest.getTemporaryOrder();
         order.setGuest(guest);
     }
 

@@ -23,10 +23,10 @@ public class AnonymousOrderStepDefs {
     public void aGuestHaveSelectedCookiesInThe(String sName, int iCookies, String sStore) {
 
         context.addGuest(sName, new Guest(""));
-        Order order = new Order();
+        Guest guest = context.getGuest(sName);
+        Order order = guest.getTemporaryOrder();
         order.setStore(context.getStore(sStore));
         order.addCookie(context.utils.randomRecipe(), iCookies);
-        context.getGuest(sName).setTemporaryOrder(order);
     }
 
     @And("^\"([^\"]*)\" choose to pickup her \"([^\"]*)\" in (\\d+) hours in the \"([^\"]*)\" on \"([^\"]*)\" and want to pay \"([^\"]*)\"$")

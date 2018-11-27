@@ -206,10 +206,11 @@ public class StoreTest {
     public void cancelOrder(){
         Day pickUpDay = Day.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now().plusHours(3);
-        final Order order = new Order(store, pickUpTime);
-        order.addCookie(utils.randomRecipe(), 2);
         Guest guest = new Guest("");
-        guest.setTemporaryOrder(order);
+        Order order  = guest.getTemporaryOrder();
+        order.setPickUpTime(pickUpTime);
+        order.setStore(store);
+        order.addCookie(utils.randomRecipe(), 2);
 
         assertEquals(OrderState.DRAFT, order.getState());
 

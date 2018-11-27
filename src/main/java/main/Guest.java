@@ -59,7 +59,7 @@ public class Guest {
         return customRecipe;
     }
 
-    public void setTemporaryOrder(Order order) {
+    protected void setTemporaryOrder(Order order) {
         this.temporaryOrder = order;
     }
 

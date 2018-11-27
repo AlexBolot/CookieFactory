@@ -41,15 +41,35 @@ public class Facade {
         return false;
     }
 
+    public void customerAddStoreToOrder(String sEmail, String sStore){
+        Optional<Customer> opCustomer = this.cookieFirm.findCustomer(sEmail);
+        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
+
+        if(opCustomer.isPresent() && opStore.isPresent()){
+            Order order = opCustomer.get().getTemporaryOrder();
+            order.setStore(opStore.get());
+        }
+    }
+
+    public void customerAddPickTimeToOrder(String sEmail, int time, String pickupDay){
+        Optional<Customer> opCustomer = this.cookieFirm.findCustomer(sEmail);
+
+        if(opCustomer.isPresent()){
+            opCustomer.get().getTemporaryOrder().setPickUpTime(generateTime(time, pickupDay));
+        }
+    }
+
     public void customerPlaceOrderWithCookies(String sEmail, String sStore, int nbCookies, int
             pickupTime, String pickUpDay, Boolean payedOnline) {
         Optional<Customer> opCustomer = this.cookieFirm.findCustomer(sEmail);
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
         if (opCustomer.isPresent() && opStore.isPresent()) {
-            Order order = new Order(opStore.get(), generateTime(pickupTime, pickUpDay));
+            Order order = opCustomer.get().getTemporaryOrder();
             order.addCookie(opStore.get().getMonthlyRecipe(), nbCookies);
-            opCustomer.get().setTemporaryOrder(order);
+            order.setStore(opStore.get());
+            order.setPickUpTime(generateTime(pickupTime, pickUpDay));
+
             opCustomer.get().placeOrder(payedOnline);
         }
     }

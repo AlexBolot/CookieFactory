@@ -42,7 +42,7 @@ public class NewAccountStepDefs {
 
     @And("^A guest \"([^\"]*)\" is ordering the order \"([^\"]*)\"$")
     public void aGuestOrderingTheOrder(String guestName, String orderName) {
-        context.getGuest(guestName).setTemporaryOrder(context.orders.get(orderName));
+     //   context.getGuest(guestName).setTemporaryOrder(context.orders.get(orderName));
     }
 
     @And("^The guest \"([^\"]*)\" gives \"([^\"]*)\" as email$")

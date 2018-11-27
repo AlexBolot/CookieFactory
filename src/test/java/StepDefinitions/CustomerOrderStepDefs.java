@@ -31,10 +31,10 @@ public class CustomerOrderStepDefs {
     @Given("^An order \"([^\"]*)\" at the store \"([^\"]*)\", to pickup \"([^\"]*)\" (\\d+) hour before closing time$")
     public void anOrderAtTheStoreToPickupHourBeforeClosingTime(String orderName, String storeName, String dayName, int hoursBeforeEnd) {
         Store store = context.stores.get(storeName);
+        store.setKitchen(getInfiniteMockKitchen());
         LocalDateTime pickTime = store.closingTime(dayFromName(dayName)).minusHours(hoursBeforeEnd)
                 .with(TemporalAdjusters.next(DayOfWeek.valueOf(dayName.toUpperCase())));
         Order order = new Order(store, pickTime);
-        order.getStore().setKitchen(getInfiniteMockKitchen());
         order.addCookie(context.utils.randomRecipe(), 5);
 
         context.orders.put(orderName, order);
@@ -47,7 +47,7 @@ public class CustomerOrderStepDefs {
         Customer customer = context.getCustomer(name);
         Order order = context.orders.get(orderName);
 
-        customer.setTemporaryOrder(order);
+       // customer.setTemporaryOrder(order);
         customer.placeOrder(true);
     }
 

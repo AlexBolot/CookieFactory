@@ -23,6 +23,7 @@ public class Customer extends Guest {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.orderHistory = new ArrayList<>();
+        initOrder();
     }
 
     Customer(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {

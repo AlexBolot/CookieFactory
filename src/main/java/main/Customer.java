@@ -29,7 +29,15 @@ public class Customer extends Guest {
     Customer(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
         this(email, firstName, lastName, phoneNumber, password);
         this.setTemporaryOrder(temporaryOrder);
+    }
 
+    public static Customer from(Guest guest, String firstName, String lastName, String phoneNumber, String password) {
+        Customer customer = new Customer(firstName, lastName, phoneNumber, guest.getEmail(), password);
+        customer.setId(guest.getId());
+        customer.setBankingData(guest.getBankingData());
+        customer.setTemporaryOrder(guest.getTemporaryOrder());
+
+        return customer;
     }
 
     /**

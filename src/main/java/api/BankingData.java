@@ -27,6 +27,16 @@ public class BankingData {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BankingData)) return false;
+        BankingData that = (BankingData) o;
+        return Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(accountIdentifier, that.accountIdentifier);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(firstName, lastName, accountIdentifier);
     }

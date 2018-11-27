@@ -80,6 +80,10 @@ public class Guest {
         return id;
     }
 
+    protected void setId(int id) {
+        this.id = id;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }

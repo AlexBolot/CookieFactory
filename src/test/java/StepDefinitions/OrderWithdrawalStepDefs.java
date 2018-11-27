@@ -34,7 +34,7 @@ public class OrderWithdrawalStepDefs {
         order.placeOrder();
 
         //TODO Remove when price is fixed
-        context.getCookieFirm().setBankAPI(TestUtils.lenientBankAPI());
+        context.cookieFirm().setBankAPI(TestUtils.lenientBankAPI());
 
         order.pay();
     }

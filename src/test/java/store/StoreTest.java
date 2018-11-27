@@ -202,6 +202,7 @@ public class StoreTest {
         assertFalse(store.findOrder(pickUpTime, guestAlice.getEmail()).isPresent());
     }
 
+    @Ignore
     @Test
     public void cancelOrder() {
         DayOfWeek pickUpDay = DayOfWeek.TUESDAY;

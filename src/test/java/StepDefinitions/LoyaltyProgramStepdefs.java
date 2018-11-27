@@ -22,7 +22,7 @@ public class LoyaltyProgramStepdefs {
     @Given("^\"([^\"]*)\" is in the loyaltyProgram$")
     public void isInTheLoyaltyProgram(String sCustomer) {
         Customer frank = context.getCustomer(sCustomer);
-        CookieFirm cookieFirm = context.getCookieFirm();
+        CookieFirm cookieFirm = context.cookieFirm();
         cookieFirm.addCustomerToLoyaltyProgram(frank);
     }
 

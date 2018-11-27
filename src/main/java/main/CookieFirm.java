@@ -165,7 +165,7 @@ public class CookieFirm {
         return true;
     }
 
-    Optional<Customer> findCustomer(String email) {
+    public Optional<Customer> findCustomer(String email) {
         Customer customer = null;
         for (Customer account : this.accounts) {
             if (account.getEmail().equals(email)) {

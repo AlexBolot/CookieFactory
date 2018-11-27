@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import recipe.Recipe;
+import recipe.ingredient.Catalog;
 import store.Store;
 import utils.TestUtils;
 
@@ -78,7 +79,8 @@ public class StatTest {
 
     @Test
     public void weightedIngredientStatTest1Cookie() {
-        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
+                .MONDAY)));
         order1.setGuest(new Guest(""));
         order1.addCookie(new Recipe("Created recipe",
                         catalog.getDoughList().get(0),
@@ -107,7 +109,8 @@ public class StatTest {
     }
     @Test
     public void weightedStatWithNonCustom() {
-        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
+                .MONDAY)));
         order1.setGuest(new Guest(""));
         order1.addCookie(new Recipe("Created recipe",
                         catalog.getDoughList().get(1),
@@ -145,7 +148,8 @@ public class StatTest {
     }
     @Test
     public void unweightedStatWithMultipleCookies() {
-        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
+                .MONDAY)));
         order1.setGuest(new Guest(""));
         order1.addCookie(new Recipe("Created recipe",
                         catalog.getDoughList().get(0),
@@ -188,7 +192,8 @@ public class StatTest {
 
     @Test
     public void weightedStatWithMultipleCookies() {
-        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
+                .MONDAY)));
         order1.setGuest(new Guest(""));
         order1.addCookie(new Recipe("Created recipe",
                         catalog.getDoughList().get(0),
@@ -218,12 +223,12 @@ public class StatTest {
         Assert.assertEquals(1,value.getMixRatio().size());
         Assert.assertEquals(2,value.getCookingRatio().size());
         Assert.assertEquals(1.0,value.getDoughRatio().get(catalog.getDoughList().get(0)),0.0);
-        Assert.assertEquals(0.25,value.getFlavorRatio().get(catalog.getFlavorList().get(0)),0.0);
-        Assert.assertEquals(0.75,value.getFlavorRatio().get(catalog.getFlavorList().get(1)),0.0);
-        Assert.assertEquals(0.125,value.getToppingRatio().get(catalog.getToppingList().get(0)),0.0);
-        Assert.assertEquals(0.125,value.getToppingRatio().get(catalog.getToppingList().get(1)),0.0);
-        Assert.assertEquals(0.425,value.getToppingRatio().get(catalog.getToppingList().get(2)),0.0);
-        Assert.assertEquals(0.425,value.getToppingRatio().get(catalog.getToppingList().get(3)),0.0);
+        Assert.assertEquals(0.75,value.getFlavorRatio().get(catalog.getFlavorList().get(0)),0.0);
+        Assert.assertEquals(0.25,value.getFlavorRatio().get(catalog.getFlavorList().get(1)),0.0);
+        Assert.assertEquals(0.375,value.getToppingRatio().get(catalog.getToppingList().get(0)),0.0);
+        Assert.assertEquals(0.375,value.getToppingRatio().get(catalog.getToppingList().get(1)),0.0);
+        Assert.assertEquals(0.125,value.getToppingRatio().get(catalog.getToppingList().get(2)),0.0);
+        Assert.assertEquals(0.125,value.getToppingRatio().get(catalog.getToppingList().get(3)),0.0);
         Assert.assertEquals(1.0,value.getMixRatio().get(catalog.getMixList().get(1)),0.0);
         Assert.assertEquals(0.75,value.getCookingRatio().get(catalog.getCookingList().get(0)),0.0);
         Assert.assertEquals(0.25,value.getCookingRatio().get(catalog.getCookingList().get(1)),0.0);

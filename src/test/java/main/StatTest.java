@@ -6,6 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 import recipe.Recipe;
 import recipe.ingredient.Catalog;
+import statistics.CookieRatioStat;
+import statistics.IngredientRatio;
+import statistics.UnweightedIngredientCustomStat;
+import statistics.WeightedIngredientCustomStat;
 import store.Store;
 import utils.TestUtils;
 

@@ -1,16 +1,15 @@
-package main;
+package statistics;
 
 import order.Order;
 import order.OrderLine;
 import recipe.Recipe;
-import recipe.ingredient.Topping;
 import store.Store;
 
-public class WeightedIngredientCustomStat {
+public class UnweightedIngredientCustomStat {
     private Store store;
     private IngredientRatio value;
 
-    public WeightedIngredientCustomStat(Store store) {
+    public UnweightedIngredientCustomStat(Store store) {
         this.store = store;
         this.value = new IngredientRatio();
     }
@@ -21,11 +20,11 @@ public class WeightedIngredientCustomStat {
             for(OrderLine orderline : order.getOrderLines()) {
                 recipe = orderline.getRecipe();
                 if(recipe.isCustom()) {
-                    value.addDough(recipe.getDough(), orderline.getAmount());
-                    value.addFlavor(recipe.getFlavor(), orderline.getAmount());
-                    recipe.getToppings().forEach(topping -> value.addTopping(topping, orderline.getAmount()));
-                    value.addMix(recipe.getMix(), orderline.getAmount());
-                    value.addCooking(recipe.getCooking(), orderline.getAmount());
+                    value.addDough(recipe.getDough(), 1);
+                    value.addFlavor(recipe.getFlavor(), 1);
+                    recipe.getToppings().forEach(topping -> value.addTopping(topping, 1));
+                    value.addMix(recipe.getMix(), 1);
+                    value.addCooking(recipe.getCooking(), 1);
                 }
             }
         }

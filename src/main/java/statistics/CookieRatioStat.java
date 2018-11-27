@@ -1,4 +1,4 @@
-package main;
+package statistics;
 
 import order.Order;
 import order.OrderLine;

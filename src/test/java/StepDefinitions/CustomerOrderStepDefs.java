@@ -33,7 +33,7 @@ public class CustomerOrderStepDefs {
     public void anOrderAtTheStoreToPickupHourBeforeClosingTime(String orderName, String storeName, String dayName, int hoursBeforeEnd) {
         Store store = context.stores.get(storeName);
         store.setKitchen(getInfiniteMockKitchen());
-        LocalDateTime pickTime = store.closingTime(dayFromName(dayName)).minusHours(hoursBeforeEnd)
+        LocalDateTime pickTime =LocalDateTime.of(LocalDate.now(), store.closingTime(dayFromName(dayName)).minusHours(hoursBeforeEnd))
                 .with(TemporalAdjusters.next(DayOfWeek.valueOf(dayName.toUpperCase())));
         Order order = new Order(store, pickTime);
         order.addCookie(context.utils.randomRecipe(), 5);
@@ -41,6 +41,7 @@ public class CustomerOrderStepDefs {
         context.orders.put(orderName, order);
 
     }
+
 
     @When("^\"([^\"]*)\" validates the order \"([^\"]*)\"$")
     public void validatesTheOrder(String name, String orderName) {

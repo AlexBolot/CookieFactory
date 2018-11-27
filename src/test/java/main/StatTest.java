@@ -5,12 +5,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import recipe.Recipe;
-import recipe.ingredient.Catalog;
 import store.Store;
 import utils.TestUtils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,8 +24,8 @@ public class StatTest {
     public void setUp() {
         this.store = new Store("", null,new ArrayList<>(), new ArrayList<>(),new HashMap<>(), new HashMap<>(),0f);
         this.store.setKitchen(utils.getInfiniteMockKitchen());
-        this.store.setClosingTime(Day.MONDAY,LocalDateTime.now().plusHours(4));
-        this.store.setOpeningTime(Day.MONDAY,LocalDateTime.now().minusHours(4));
+        this.store.setClosingTime(DayOfWeek.MONDAY, LocalTime.now().plusHours(4));
+        this.store.setOpeningTime(DayOfWeek.MONDAY, LocalTime.now().minusHours(4));
     }
 
     @Test

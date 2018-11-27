@@ -1,12 +1,10 @@
 package utils;
 
 import main.CookieFirm;
-import main.Day;
 import order.OrderState;
 import recipe.Recipe;
 import recipe.ingredient.*;
 import store.Kitchen;
-import store.Store;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;

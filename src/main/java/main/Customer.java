@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class Customer extends Guest {
 
-    private Collection<Order> orderHistory = new ArrayList<>();
+    private Collection<Order> orderHistory;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -23,17 +23,14 @@ public class Customer extends Guest {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.orderHistory = new ArrayList<>();
+        initOrder();
     }
 
     Customer(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
-        super(email);
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.password = password;
+        this(email, firstName, lastName, phoneNumber, password);
         this.setTemporaryOrder(temporaryOrder);
-    }
 
+    }
 
     /**
      * Check if the order has been place and return the price
@@ -46,24 +43,13 @@ public class Customer extends Guest {
 
         Order order = getTemporaryOrder();
 
-        if (order.isPayed())
-            throw new IllegalStateException("The order you are trying to place has already been paid");
-
-        order.setGuest(this);
-
-        double price = order.getStore().placeOrder(order);
-
-        if (onlinePayment) {
-            order.setPayed();
-        }
+        double price = super.placeOrder(onlinePayment);
 
         if (loyaltyProgram && haveDiscount) {
             useDiscount();
         }
 
         addToOrderHistory(order);
-
-        setTemporaryOrder(initOrder());
 
         return price;
     }

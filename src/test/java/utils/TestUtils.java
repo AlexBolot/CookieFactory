@@ -1,25 +1,25 @@
 package utils;
 
+import api.BankAPI;
 import main.CookieFirm;
-import main.Day;
 import order.OrderState;
 import recipe.Recipe;
 import recipe.ingredient.*;
 import store.Kitchen;
-import store.Store;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class TestUtils {
 
     private final Catalog catalog = new Catalog();
-    private final CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(),new ArrayList<>());
+    private final CookieFirm cookieFirm = CookieFirm.instance();
 
     public Recipe randomRecipe() {
         Random random = new Random();
@@ -37,8 +37,12 @@ public class TestUtils {
                 true);
     }
 
-    public Day dayFromName(String dayName) {
-        for (Day day : Day.values()) {
+    public String randomString() {
+        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 7);
+    }
+
+    public DayOfWeek dayFromName(String dayName) {
+        for (DayOfWeek day : DayOfWeek.values()) {
             if (day.name().equalsIgnoreCase(dayName)) return day;
         }
         return null;
@@ -121,9 +125,16 @@ public class TestUtils {
 
     public static Kitchen getInfiniteMockKitchen() {
         final Kitchen kitchen = mock(Kitchen.class);
-        when(kitchen.canDo(any())).thenReturn(true);
+        when(kitchen.canDo(any(), anyInt())).thenReturn(true);
         when(kitchen.hasInStock(any(), anyInt())).thenReturn(true);
         when(kitchen.recipeCapacity(any())).thenReturn(Integer.MAX_VALUE);
         return kitchen;
+    }
+
+    public static BankAPI lenientBankAPI(){
+        final BankAPI bankAPI = mock(BankAPI.class);
+        doNothing().when(bankAPI).pay(any(), anyInt());
+
+        return bankAPI;
     }
 }

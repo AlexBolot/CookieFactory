@@ -5,6 +5,7 @@ import org.junit.Test;
 import recipe.Recipe;
 import recipe.ingredient.*;
 import store.Kitchen;
+import utils.TestUtils;
 
 import java.util.*;
 
@@ -13,6 +14,7 @@ import static utils.TestUtils.fillKitchenForRecipe;
 
 public class KitchenTest {
 
+    private final TestUtils utils = new TestUtils();
     private final Catalog catalog = new Catalog();
     private List<Flavor> flavors;
     private List<Topping> toppings;
@@ -36,27 +38,27 @@ public class KitchenTest {
             put(doughs.get(0), 10);
         }};
 
-        Kitchen kitchen = new Kitchen(stock);
+        Kitchen kitchen = new Kitchen(stock, new HashMap<>(), new HashMap<>());
 
         Recipe valid = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(0), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
         Recipe notContained = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(2), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
         Recipe doubleTopping = new Recipe("", doughs.get(0), flavors.get(1), Arrays.asList(toppings.get(1), toppings.get(1)), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
 
-        assertTrue(kitchen.canDo(valid));
-        assertTrue(kitchen.canDo(doubleTopping));
-        assertFalse(kitchen.canDo(notContained));
+        assertTrue(kitchen.canDo(valid, 1));
+        assertTrue(kitchen.canDo(doubleTopping, 1));
+        assertFalse(kitchen.canDo(notContained, 1));
 
         //Empty the flavors.get(1) stock
         stock.replace(toppings.get(1), 0);
 
-        assertFalse(kitchen.canDo(valid));
+        assertFalse(kitchen.canDo(valid, 1));
     }
 
     @Test
     public void hasInStock() {
         Kitchen kitchen = new Kitchen(new HashMap<Ingredient, Integer>() {{
             put(flavors.get(0), 6);
-        }});
+        }}, new HashMap<>(), new HashMap<>());
 
         assertTrue(kitchen.hasInStock(flavors.get(0), 5));
         assertFalse(kitchen.hasInStock(flavors.get(0), 10));
@@ -73,7 +75,7 @@ public class KitchenTest {
             put(doughs.get(0), 10);
         }};
 
-        Kitchen kitchen = new Kitchen(stock);
+        Kitchen kitchen = new Kitchen(stock, new HashMap<>(), new HashMap<>());
 
         Recipe valid = new Recipe("", doughs.get(0), flavors.get(0), Arrays.asList(toppings.get(0), toppings.get(0)), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
 
@@ -92,7 +94,7 @@ public class KitchenTest {
             put(flavor, 10);
         }};
 
-        Kitchen kitchen = new Kitchen(stock);
+        Kitchen kitchen = new Kitchen(stock, new HashMap<>(), new HashMap<>());
 
         assertEquals(10, (int) stock.get(flavor));
 
@@ -105,11 +107,47 @@ public class KitchenTest {
     @Test
     public void recipeCapacity() {
         Kitchen kitchen = new Kitchen();
-        CookieFirm firm = new CookieFirm(Collections.emptyList(), Collections.emptyList());
+        CookieFirm firm = CookieFirm.instance();
         Recipe recipe = firm.getGlobalRecipes().get(0);
         assertEquals(0, kitchen.recipeCapacity(recipe));
         fillKitchenForRecipe(kitchen, recipe, 2);
         assertEquals(2, kitchen.recipeCapacity(recipe));
     }
 
+    @Test
+    public void vendingPriceOf() {
+        Kitchen kitchen = new Kitchen();
+
+        Ingredient ingredient = utils.flavorFromName("Vanilla");
+
+        kitchen.setMarginOf(ingredient, 10);
+        kitchen.setSupplierPriceOf(ingredient, 2);
+
+        double expectedPrice = 2.2;
+        double actualPrice = kitchen.vendingPriceOf(ingredient);
+
+        assertEquals(expectedPrice, actualPrice, 0.001);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void vendingPriceOf_UnkownMargin() {
+        Kitchen kitchen = new Kitchen();
+
+        Ingredient ingredient = utils.flavorFromName("Vanilla");
+
+        kitchen.setSupplierPriceOf(ingredient, 2);
+
+        kitchen.vendingPriceOf(ingredient);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void vendingPriceOf_UnkownSupplierPrice() {
+        Kitchen kitchen = new Kitchen();
+
+        Ingredient ingredient = utils.flavorFromName("Vanilla");
+
+        kitchen.setMarginOf(ingredient, 2);
+
+        kitchen.vendingPriceOf(ingredient);
+    }
 }

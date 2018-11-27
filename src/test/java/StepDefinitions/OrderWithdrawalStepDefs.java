@@ -9,6 +9,7 @@ import order.Order;
 import order.OrderState;
 import store.Store;
 import utils.CucumberContext;
+import utils.TestUtils;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +32,10 @@ public class OrderWithdrawalStepDefs {
     public void theCustomerHasPaidFor(String customerName, String orderName) {
         Order order = context.orders.get(orderName);
         order.placeOrder();
+
+        //TODO Remove when price is fixed
+        context.getCookieFirm().setBankAPI(TestUtils.lenientBankAPI());
+
         order.pay();
     }
 

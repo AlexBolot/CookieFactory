@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static java.time.DayOfWeek.MONDAY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class GuestTest {
@@ -34,7 +33,7 @@ public class GuestTest {
             globalRecipes.add(utils.randomRecipe());
         }
 
-        Store store = new Store("",utils.randomRecipe(), globalRecipes, new ArrayList<>(), new HashMap<>(), new HashMap<>(),14);
+        Store store = new Store("", utils.randomRecipe(), globalRecipes, new ArrayList<>(), new HashMap<>(), new HashMap<>(), 14);
 
         store.setOpeningTime(MONDAY, LocalTime.now().minusHours(6));
         store.setClosingTime(MONDAY, LocalTime.now().plusHours(6));
@@ -63,9 +62,17 @@ public class GuestTest {
         assertEquals(guest, order.getGuest());
     }
 
-    @Test (expected = IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void placeOrder_AlreadyPaid() {
         order.setPayed();
         guest.placeOrder(true);
+    }
+
+    @Test
+    public void guestIDIncrement() {
+        Guest guest1 = new Guest("email1@email.fr");
+        Guest guest2 = new Guest("email2@email.fr");
+
+        assertEquals(guest1.getId(), guest2.getId() - 1);
     }
 }

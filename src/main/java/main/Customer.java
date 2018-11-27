@@ -17,7 +17,7 @@ public class Customer extends Guest {
     private String password;
 
     Customer(String firstName, String lastName, String phoneNumber, String email, String password) {
-        super(email);
+        setEmail(email);
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;

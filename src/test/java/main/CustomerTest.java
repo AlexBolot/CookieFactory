@@ -181,7 +181,8 @@ public class CustomerTest {
 
     @Test
     public void areTheyInFidelityProgram() {
-        Guest guest = new Guest("Michel@michel.py");
+        Guest guest = new Guest();
+        guest.setEmail("Michel@michel.py");
         Customer loyalCustomer = new Customer("","","","","");
         loyalCustomer.addToLoyaltyProgram();
         Customer felonCustomer = new Customer("","","","","");

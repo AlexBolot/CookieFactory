@@ -26,7 +26,7 @@ public class AddCookieOrderStepDefs {
     private final Map<String, Recipe> recipes = new HashMap<>();
     private final CookieFirm cookieFirm = CookieFirm.instance();
     private final CucumberContext context = CucumberContext.getContext();
-    private final Guest guest = new Guest("guest");
+    private final Guest guest = new Guest();
     private Recipe currentRecipe;
 
     private Dough customDough;

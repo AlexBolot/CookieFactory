@@ -18,9 +18,8 @@ public class Guest {
 
     private static int IdCount = 0;
 
-    public Guest(String email) {
+    public Guest() {
         this.temporaryOrder = initOrder();
-        this.email = email;
         this.id = IdCount++;
     }
 
@@ -106,10 +105,5 @@ public class Guest {
                 Objects.equals(temporaryOrder, guest.temporaryOrder) &&
                 Objects.equals(email, guest.email) &&
                 Objects.equals(bankingData, guest.bankingData);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, temporaryOrder, email, bankingData);
     }
 }

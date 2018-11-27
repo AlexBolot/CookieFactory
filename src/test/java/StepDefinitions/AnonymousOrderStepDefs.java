@@ -22,7 +22,7 @@ public class AnonymousOrderStepDefs {
     @Given("^A guest \"([^\"]*)\" have selected (\\d+) cookies in the \"([^\"]*)\"$")
     public void aGuestHaveSelectedCookiesInThe(String sName, int iCookies, String sStore) {
 
-        context.addGuest(sName, new Guest(""));
+        context.addGuest(sName, new Guest());
         Guest guest = context.getGuest(sName);
         Order order = guest.getTemporaryOrder();
         order.setStore(context.getStore(sStore));

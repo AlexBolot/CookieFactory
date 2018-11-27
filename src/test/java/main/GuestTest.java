@@ -43,7 +43,7 @@ public class GuestTest {
 
         order.addCookie(globalRecipes.get(0), 5);
 
-        guest = new Guest("");
+        guest = new Guest();
         guest.setTemporaryOrder(order);
     }
 
@@ -70,8 +70,8 @@ public class GuestTest {
 
     @Test
     public void guestIDIncrement() {
-        Guest guest1 = new Guest("email1@email.fr");
-        Guest guest2 = new Guest("email2@email.fr");
+        Guest guest1 = new Guest();
+        Guest guest2 = new Guest();
 
         assertEquals(guest1.getId(), guest2.getId() - 1);
     }

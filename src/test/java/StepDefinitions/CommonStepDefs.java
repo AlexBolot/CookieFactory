@@ -40,7 +40,7 @@ public class CommonStepDefs {
 
     @Given("^A guest \"([^\"]*)\"$")
     public void aGuest(String name) {
-        context.addGuest(name, new Guest(name));
+        context.addGuest(name, new Guest());
     }
 
     @Given("^\"([^\"]*)\" the manager of \"([^\"]*)\"$")

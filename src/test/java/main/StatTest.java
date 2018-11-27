@@ -34,8 +34,8 @@ public class StatTest {
                 .MONDAY)));
         Order order2 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
                 .MONDAY)));
-        order1.setGuest(new Guest(""));
-        order2.setGuest(new Guest(""));
+        order1.setGuest(new Guest());
+        order2.setGuest(new Guest());
         order1.addCookie(utils.recipeFromName("White Dog"),
                 1);
         order1.addCookie(utils.recipeFromName("Cookie for nothing"),
@@ -63,7 +63,7 @@ public class StatTest {
     public void cookieRatioWithOneBigOrderLine() {
         Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
                 .MONDAY)));
-        order1.setGuest(new Guest(""));
+        order1.setGuest(new Guest());
         order1.addCookie(utils.recipeFromName("White Dog"),
                 50);
         this.store.placeOrder(order1);

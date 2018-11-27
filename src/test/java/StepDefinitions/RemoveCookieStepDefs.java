@@ -34,7 +34,7 @@ public class RemoveCookieStepDefs {
 
     @Given("^A guest$")
     public void aGuest() {
-        this.guest = new Guest("guest");
+        this.guest = new Guest();
     }
 
     @Given("^An order with (\\d+) recipe of (\\d+) cookie$")

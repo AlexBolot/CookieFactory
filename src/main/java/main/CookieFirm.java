@@ -161,12 +161,35 @@ public class CookieFirm {
         return true;
     }
 
+    Optional<Customer> findCustomer(String email){
+        Customer customer = null;
+        for (Customer account : this.accounts) {
+            if (account.getEmail().equals(email)) {
+                customer = account;
+            }
+        }
+        return Optional.ofNullable(customer);
+    }
+
+    Optional<Store> findStore(String name){
+        Store store = null;
+        for(Store s : this.stores){
+            if(s.getName().equals(name))
+                store = s;
+        }
+        return Optional.ofNullable(store);
+    }
+
     void addGuest(Guest guest) {
         guests.add(guest);
     }
 
     public List<Store> getStores() {
         return stores;
+    }
+
+    public void addStore(Store s){
+        stores.add(s);
     }
 
     Set<Guest> getGuests() {

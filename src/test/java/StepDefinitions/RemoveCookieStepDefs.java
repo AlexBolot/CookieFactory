@@ -9,7 +9,6 @@ import recipe.Recipe;
 import recipe.ingredient.Catalog;
 import store.Store;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -40,7 +39,7 @@ public class RemoveCookieStepDefs {
     @Given("^An order with (\\d+) recipe of (\\d+) cookie$")
     public void anOrderWithRecipeOfCookie(int recipies, int cookies) {
         this.order = new Order();
-        this.order.setStore(new Store("",null, Collections.emptyList(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1.0));
+        this.order.setStore(new Store("", null, Collections.emptyList(), new HashMap<>(), new HashMap<>(), 1.0, 1));
         this.order.getStore().setKitchen(getInfiniteMockKitchen());
         final Catalog kitchen = new Catalog();
         for (int i = 0; i < recipies; i++) {

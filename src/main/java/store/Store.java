@@ -9,6 +9,7 @@ import recipe.ingredient.Ingredient;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -18,20 +19,26 @@ public class Store {
     private String name;
     private Recipe monthlyRecipe;
     private Collection<Recipe> globalRecipes;
-    private Collection<Order> orders;
+    private Collection<Order> orders = new ArrayList<>();
     private Map<DayOfWeek, LocalTime> openingTimes;
     private Map<DayOfWeek, LocalTime> closingTimes;
     private double tax;
     private double customRecipeeMargin;
     private Kitchen kitchen;
-    public Store(String name, Recipe monthlyRecipe, Collection<Recipe> globalRecipes, Collection<Order> orders, Map<DayOfWeek, LocalTime> openingTimes, Map<DayOfWeek, LocalTime> closingTimes, double tax) {
+
+    public Store(String name,
+                 Recipe monthlyRecipe,
+                 Collection<Recipe> globalRecipes,
+                 Map<DayOfWeek, LocalTime> openingTimes,
+                 Map<DayOfWeek, LocalTime> closingTimes,
+                 double tax, double customeRecipeeMargin) {
         this.name = name;
         this.monthlyRecipe = monthlyRecipe;
         this.globalRecipes = globalRecipes;
-        this.orders = orders;
         this.openingTimes = openingTimes;
         this.closingTimes = closingTimes;
         this.tax = tax;
+        this.customRecipeeMargin = customeRecipeeMargin;
     }
 
     public double placeOrder(Order order) {

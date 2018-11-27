@@ -22,7 +22,7 @@ public class StatTest {
 
     @Before
     public void setUp() {
-        this.store = new Store("", null,new ArrayList<>(), new ArrayList<>(),new HashMap<>(), new HashMap<>(),0f);
+        this.store = new Store("", null, new ArrayList<>(), new HashMap<>(), new HashMap<>(), 0f, 1);
         this.store.setKitchen(utils.getInfiniteMockKitchen());
         this.store.setClosingTime(DayOfWeek.MONDAY, LocalTime.now().plusHours(4));
         this.store.setOpeningTime(DayOfWeek.MONDAY, LocalTime.now().minusHours(4));

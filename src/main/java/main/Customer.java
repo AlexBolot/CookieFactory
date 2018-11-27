@@ -110,6 +110,7 @@ public class Customer extends Guest {
         loyaltyProgram = true;
     }
 
+    @Override
     public boolean canHaveDiscount() {
         return haveDiscount;
     }

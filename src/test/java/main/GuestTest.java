@@ -34,7 +34,7 @@ public class GuestTest {
             globalRecipes.add(utils.randomRecipe());
         }
 
-        Store store = new Store("",utils.randomRecipe(), globalRecipes, new ArrayList<>(), new HashMap<>(), new HashMap<>(),14);
+        Store store = new Store("", utils.randomRecipe(), globalRecipes, new HashMap<>(), new HashMap<>(), 14, 1);
 
         store.setOpeningTime(MONDAY, LocalTime.now().minusHours(6));
         store.setClosingTime(MONDAY, LocalTime.now().plusHours(6));

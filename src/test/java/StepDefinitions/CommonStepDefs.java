@@ -21,8 +21,8 @@ public class CommonStepDefs {
 
     @Given("^A store \"([^\"]*)\"$")
     public void aStore(String storeName) {
-        Store store = new Store("", null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(),
-                new HashMap<>(), 1);
+        Store store = new Store("", null, new ArrayList<>(), new HashMap<>(),
+                new HashMap<>(), 1, 1);
         store.setKitchen(getInfiniteMockKitchen());
 
         context.stores.put(storeName, store);

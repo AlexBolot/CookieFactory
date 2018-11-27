@@ -3,7 +3,6 @@ package order;
 import main.CookieFirm;
 import main.Guest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import recipe.Recipe;
 import recipe.ingredient.Catalog;
@@ -17,7 +16,10 @@ import java.util.HashMap;
 
 import static order.OrderState.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 import static utils.TestUtils.fillKitchenForRecipe;
+import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class OrderTest {
 
@@ -30,7 +32,7 @@ public class OrderTest {
     public void setUp() {
         Catalog catalog = new Catalog();
 
-        Store store = new Store("", null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1);
+        Store store = new Store("", null, new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1, 1);
         store.setKitchen(new Kitchen());
         recipe1 = new Recipe(
                 "real",
@@ -52,11 +54,15 @@ public class OrderTest {
         fillKitchenForRecipe(store.getKitchen(), recipe1, 10);
     }
 
-    @Ignore
+
     @Test
     public void basicGetPrices() {
         order.addCookie(recipe1, 2);
-        assertEquals(2.4, order.getPrice(), 0.0001);
+        order.getStore().setKitchen(getInfiniteMockKitchen());
+        Kitchen kitchen = order.getStore().getKitchen();
+        when(kitchen.vendingPriceOf(any())).thenReturn(1.0);
+
+        assertEquals(6, order.getPrice(), 0.0001);
     }
 
     @Test
@@ -64,15 +70,22 @@ public class OrderTest {
         assertEquals(0.0, order.getPrice(), 0.0);
     }
 
-    @Ignore
+
     @Test
     public void pricesUseStoreTax() {
         order.addCookie(recipe1, 1);
-        order.setStore(new Store("", null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(),
-                1.25));
-        assertEquals(1.5, order.getPrice(), 0.0001);
-        order.setStore(new Store("", null, new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1));
-        assertEquals(1.2, order.getPrice(), 0.0001);
+        Store store = new Store("", null, new ArrayList<>(), new HashMap<>(), new HashMap<>(),
+                1.25, 1.0);
+        Kitchen mockKitchen = getInfiniteMockKitchen();
+        store.setKitchen(mockKitchen);
+        when(mockKitchen.vendingPriceOf(any())).thenReturn(1.0);
+        order.setStore(store);
+
+        assertEquals(3.75, order.getPrice(), 0.0001);
+        Store store2 = new Store("", null, new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1, 1);
+        order.setStore(store2);
+        store2.setKitchen(mockKitchen);
+        assertEquals(3.0, order.getPrice(), 0.0001);
 
     }
 

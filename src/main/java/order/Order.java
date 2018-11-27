@@ -1,6 +1,5 @@
 package order;
 
-import main.Customer;
 import main.Guest;
 import recipe.Recipe;
 import store.Store;
@@ -124,8 +123,8 @@ public class Order {
      */
     public double getPrice() {
         double storeTax = store.getTax();
-        double price = orderLines.stream().mapToDouble(line -> line.getAmount() * line.getRecipe().getPrice()).sum() * storeTax;
-        if (guest.isInLoyaltyProgram() && ((Customer) guest).canHaveDiscount()) {
+        double price = orderLines.stream().mapToDouble(line -> line.getAmount() * store.getRecipePrice(line.getRecipe())).sum() * storeTax;
+        if (guest.isInLoyaltyProgram() && guest.canHaveDiscount()) {
             price = (price * 0.90);
         }
         return price;

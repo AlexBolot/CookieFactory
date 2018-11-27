@@ -77,6 +77,10 @@ public class Guest {
 
     public boolean isInLoyaltyProgram () {return false;}
 
+    public boolean canHaveDiscount() {
+        return false;
+    }
+
     /**
      * This method is just a mock method, that "would" send a refund request to the connected banking system
      * "In a perfect world where everything is connected" :)

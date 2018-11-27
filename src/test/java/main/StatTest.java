@@ -11,11 +11,13 @@ import utils.TestUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class StatTest {
 
     private final TestUtils utils = new TestUtils();
+    private final Catalog catalog = new Catalog();
     private Store store;
 
     @Before
@@ -69,5 +71,156 @@ public class StatTest {
         Assert.assertEquals(1.0,stat.getStat().get("White Dog"),0.0);
     }
 
+    @Test
+    public void weightedIngredientStatTest1Cookie() {
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        order1.setGuest(new Guest(""));
+        order1.addCookie(new Recipe("Created recipe",
+                        catalog.getDoughList().get(0),
+                        catalog.getFlavorList().get(0),
+                        Arrays.asList(catalog.getToppingList().get(0),
+                                catalog.getToppingList().get(1)),
+                        catalog.getMixList().get(0),
+                        catalog.getCookingList().get(0),
+                        true),
+                1);
+        this.store.placeOrder(order1);
+        WeightedIngredientCustomStat stat = new WeightedIngredientCustomStat(this.store);
+        IngredientRatio value = stat.computeValue();
 
+        Assert.assertEquals(1,value.getDoughRatio().size());
+        Assert.assertEquals(1,value.getFlavorRatio().size());
+        Assert.assertEquals(2,value.getToppingRatio().size());
+        Assert.assertEquals(1,value.getMixRatio().size());
+        Assert.assertEquals(1,value.getCookingRatio().size());
+        Assert.assertEquals(1.0,value.getDoughRatio().get(catalog.getDoughList().get(0)),0.0);
+        Assert.assertEquals(1.0,value.getFlavorRatio().get(catalog.getFlavorList().get(0)),0.0);
+        Assert.assertEquals(0.5,value.getToppingRatio().get(catalog.getToppingList().get(0)),0.0);
+        Assert.assertEquals(0.5,value.getToppingRatio().get(catalog.getToppingList().get(1)),0.0);
+        Assert.assertEquals(1.0,value.getMixRatio().get(catalog.getMixList().get(0)),0.0);
+        Assert.assertEquals(1.0,value.getCookingRatio().get(catalog.getCookingList().get(0)),0.0);
+    }
+    @Test
+    public void weightedStatWithNonCustom() {
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        order1.setGuest(new Guest(""));
+        order1.addCookie(new Recipe("Created recipe",
+                        catalog.getDoughList().get(1),
+                        catalog.getFlavorList().get(1),
+                        Arrays.asList(catalog.getToppingList().get(2),
+                                catalog.getToppingList().get(3)),
+                        catalog.getMixList().get(1),
+                        catalog.getCookingList().get(1),
+                        true),
+                1);
+        order1.addCookie(new Recipe("Created recipe",
+                        catalog.getDoughList().get(0),
+                        catalog.getFlavorList().get(0),
+                        Arrays.asList(catalog.getToppingList().get(0),
+                                catalog.getToppingList().get(1)),
+                        catalog.getMixList().get(0),
+                        catalog.getCookingList().get(0),
+                        false),
+                1);
+        this.store.placeOrder(order1);
+        WeightedIngredientCustomStat stat = new WeightedIngredientCustomStat(this.store);
+        IngredientRatio value = stat.computeValue();
+
+        Assert.assertEquals(1,value.getDoughRatio().size());
+        Assert.assertEquals(1,value.getFlavorRatio().size());
+        Assert.assertEquals(2,value.getToppingRatio().size());
+        Assert.assertEquals(1,value.getMixRatio().size());
+        Assert.assertEquals(1,value.getCookingRatio().size());
+        Assert.assertEquals(1.0,value.getDoughRatio().get(catalog.getDoughList().get(1)),0.0);
+        Assert.assertEquals(1.0,value.getFlavorRatio().get(catalog.getFlavorList().get(1)),0.0);
+        Assert.assertEquals(0.5,value.getToppingRatio().get(catalog.getToppingList().get(2)),0.0);
+        Assert.assertEquals(0.5,value.getToppingRatio().get(catalog.getToppingList().get(3)),0.0);
+        Assert.assertEquals(1.0,value.getMixRatio().get(catalog.getMixList().get(1)),0.0);
+        Assert.assertEquals(1.0,value.getCookingRatio().get(catalog.getCookingList().get(1)),0.0);
+    }
+    @Test
+    public void unweightedStatWithMultipleCookies() {
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        order1.setGuest(new Guest(""));
+        order1.addCookie(new Recipe("Created recipe",
+                        catalog.getDoughList().get(0),
+                        catalog.getFlavorList().get(1),
+                        Arrays.asList(catalog.getToppingList().get(2),
+                                catalog.getToppingList().get(3)),
+                        catalog.getMixList().get(1),
+                        catalog.getCookingList().get(1),
+                        true),
+                1);
+        order1.addCookie(new Recipe("Created recipe",
+                        catalog.getDoughList().get(0),
+                        catalog.getFlavorList().get(0),
+                        Arrays.asList(catalog.getToppingList().get(0),
+                                catalog.getToppingList().get(1)),
+                        catalog.getMixList().get(1),
+                        catalog.getCookingList().get(0),
+                        true),
+                1);
+        this.store.placeOrder(order1);
+        UnweightedIngredientCustomStat stat = new UnweightedIngredientCustomStat(this.store);
+        IngredientRatio value = stat.computeValue();
+
+        Assert.assertEquals(1,value.getDoughRatio().size());
+        Assert.assertEquals(2,value.getFlavorRatio().size());
+        Assert.assertEquals(4,value.getToppingRatio().size());
+        Assert.assertEquals(1,value.getMixRatio().size());
+        Assert.assertEquals(2,value.getCookingRatio().size());
+        Assert.assertEquals(1.0,value.getDoughRatio().get(catalog.getDoughList().get(0)),0.0);
+        Assert.assertEquals(0.5,value.getFlavorRatio().get(catalog.getFlavorList().get(0)),0.0);
+        Assert.assertEquals(0.5,value.getFlavorRatio().get(catalog.getFlavorList().get(1)),0.0);
+        Assert.assertEquals(0.25,value.getToppingRatio().get(catalog.getToppingList().get(0)),0.0);
+        Assert.assertEquals(0.25,value.getToppingRatio().get(catalog.getToppingList().get(1)),0.0);
+        Assert.assertEquals(0.25,value.getToppingRatio().get(catalog.getToppingList().get(2)),0.0);
+        Assert.assertEquals(0.25,value.getToppingRatio().get(catalog.getToppingList().get(3)),0.0);
+        Assert.assertEquals(1.0,value.getMixRatio().get(catalog.getMixList().get(1)),0.0);
+        Assert.assertEquals(0.5,value.getCookingRatio().get(catalog.getCookingList().get(0)),0.0);
+        Assert.assertEquals(0.5,value.getCookingRatio().get(catalog.getCookingList().get(1)),0.0);
+    }
+
+    @Test
+    public void weightedStatWithMultipleCookies() {
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        order1.setGuest(new Guest(""));
+        order1.addCookie(new Recipe("Created recipe",
+                        catalog.getDoughList().get(0),
+                        catalog.getFlavorList().get(1),
+                        Arrays.asList(catalog.getToppingList().get(2),
+                                catalog.getToppingList().get(3)),
+                        catalog.getMixList().get(1),
+                        catalog.getCookingList().get(1),
+                        true),
+                1);
+        order1.addCookie(new Recipe("Created recipe",
+                        catalog.getDoughList().get(0),
+                        catalog.getFlavorList().get(0),
+                        Arrays.asList(catalog.getToppingList().get(0),
+                                catalog.getToppingList().get(1)),
+                        catalog.getMixList().get(1),
+                        catalog.getCookingList().get(0),
+                        true),
+                3);
+        this.store.placeOrder(order1);
+        WeightedIngredientCustomStat stat = new WeightedIngredientCustomStat(this.store);
+        IngredientRatio value = stat.computeValue();
+
+        Assert.assertEquals(1,value.getDoughRatio().size());
+        Assert.assertEquals(2,value.getFlavorRatio().size());
+        Assert.assertEquals(4,value.getToppingRatio().size());
+        Assert.assertEquals(1,value.getMixRatio().size());
+        Assert.assertEquals(2,value.getCookingRatio().size());
+        Assert.assertEquals(1.0,value.getDoughRatio().get(catalog.getDoughList().get(0)),0.0);
+        Assert.assertEquals(0.25,value.getFlavorRatio().get(catalog.getFlavorList().get(0)),0.0);
+        Assert.assertEquals(0.75,value.getFlavorRatio().get(catalog.getFlavorList().get(1)),0.0);
+        Assert.assertEquals(0.125,value.getToppingRatio().get(catalog.getToppingList().get(0)),0.0);
+        Assert.assertEquals(0.125,value.getToppingRatio().get(catalog.getToppingList().get(1)),0.0);
+        Assert.assertEquals(0.425,value.getToppingRatio().get(catalog.getToppingList().get(2)),0.0);
+        Assert.assertEquals(0.425,value.getToppingRatio().get(catalog.getToppingList().get(3)),0.0);
+        Assert.assertEquals(1.0,value.getMixRatio().get(catalog.getMixList().get(1)),0.0);
+        Assert.assertEquals(0.75,value.getCookingRatio().get(catalog.getCookingList().get(0)),0.0);
+        Assert.assertEquals(0.25,value.getCookingRatio().get(catalog.getCookingList().get(1)),0.0);
+    }
 }

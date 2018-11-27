@@ -7,17 +7,20 @@ import recipe.RecipeBuilder;
 import recipe.ingredient.*;
 
 import java.util.List;
-
+import java.util.Objects;
 
 public class Guest {
 
+    private int id;
     private Order temporaryOrder;
     private String email;
     private BankingData bankingData;
 
-    public Guest(String email) {
+    private static int IdCount = 0;
+
+    public Guest() {
         this.temporaryOrder = initOrder();
-        this.email = email;
+        this.id = IdCount++;
     }
 
     Order initOrder() {
@@ -45,7 +48,7 @@ public class Guest {
     /**
      * Order a custom recipe by giving the ingrdients to a recipe Factory
      *
-      * @param quantity of cookie ordered
+     * @param quantity of cookie ordered
      * @param dough
      * @param flavor
      * @param topping
@@ -73,6 +76,14 @@ public class Guest {
         return email;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    protected void setId(int id) {
+        this.id = id;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -85,6 +96,18 @@ public class Guest {
         this.bankingData = bankingData;
     }
 
-    public boolean isInLoyaltyProgram () {return false;}
+    public boolean isInLoyaltyProgram() {
+        return false;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Guest)) return false;
+        Guest guest = (Guest) o;
+        return id == guest.id &&
+                Objects.equals(temporaryOrder, guest.temporaryOrder) &&
+                Objects.equals(email, guest.email) &&
+                Objects.equals(bankingData, guest.bankingData);
+    }
 }

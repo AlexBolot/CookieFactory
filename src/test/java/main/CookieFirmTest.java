@@ -17,12 +17,13 @@ public class CookieFirmTest {
 
     private CookieFirm cookieFirm =CookieFirm.instance();
     private final String guestEmail = new TestUtils().randomString();
-    private final Guest guest = new Guest(guestEmail);
+    private final Guest guest = new Guest();
     private final Customer customer = new Customer("", "", "", "email@email.fr", "");
     private final TestUtils utils = new TestUtils();
 
     @Before
     public void before() {
+        guest.setEmail(guestEmail);
         cookieFirm.addGuest(guest);
     }
 
@@ -50,8 +51,16 @@ public class CookieFirmTest {
 
     @Test
     public void createAccount_deletingOneAccount() {
-        cookieFirm.addGuest(new Guest("email2@email.fr"));
-        cookieFirm.addGuest(new Guest("email3@email.fr"));
+
+        Guest guest2 = new Guest();
+        guest2.setEmail("email2@email.fr");
+
+        Guest guest3 = new Guest();
+        guest3.setEmail("email3@email.fr");
+
+        cookieFirm.addGuest(guest2);
+        cookieFirm.addGuest(guest3);
+
         assertEquals("Guests incorrectly initialzed", 3, cookieFirm.getGuests().size());
         Customer createdAccount = cookieFirm.createAccount("", "", "", guestEmail, "");
         assertEquals("Guest badly deleted", 2, cookieFirm.getGuests().size());

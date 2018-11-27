@@ -27,8 +27,8 @@ public class StoreTest {
     private Recipe oldRecipe;
     private Recipe newRecipe;
 
-    private final Guest guestBob = new Guest("");
-    private final Guest guestAlice = new Guest("");
+    private final Guest guestBob = new Guest();
+    private final Guest guestAlice = new Guest();
 
     private final HashMap<DayOfWeek, LocalTime> openingTimes = new HashMap<>();
     private final HashMap<DayOfWeek, LocalTime> closingTimes = new HashMap<>();
@@ -167,7 +167,7 @@ public class StoreTest {
     public void findOrderFromDayTimeAndEmail() {
         DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
-        Guest guest = new Guest("");
+        Guest guest = new Guest();
         guest.setEmail("email");
         final Order order = new Order(store, pickUpTime);
         order.setGuest(guest);
@@ -206,7 +206,7 @@ public class StoreTest {
     public void cancelOrder(){
         DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now().plusHours(3);
-        Guest guest = new Guest("");
+        Guest guest = new Guest();
         Order order  = guest.getTemporaryOrder();
         order.setPickUpTime(pickUpTime);
         order.setStore(store);

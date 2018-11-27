@@ -1,7 +1,7 @@
 package main;
 
+import api.BankingData;
 import order.Order;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class CustomerTest {
             closingTimes.put(day, LocalTime.now().plusHours(5));
         }
 
-        store = new Store("",utils.randomRecipe(), globalRecipes, orders, openingTimes, closingTimes, 15.5);
+        store = new Store("", utils.randomRecipe(), globalRecipes, orders, openingTimes, closingTimes, 15.5);
 
         store.setKitchen(getInfiniteMockKitchen());
 
@@ -181,14 +181,30 @@ public class CustomerTest {
 
     @Test
     public void areTheyInFidelityProgram() {
-        Guest guest = new Guest("Michel@michel.py");
-        Customer loyalCustomer = new Customer("","","","","");
+        Guest guest = new Guest();
+        guest.setEmail("Michel@michel.py");
+        Customer loyalCustomer = new Customer("", "", "", "", "");
         loyalCustomer.addToLoyaltyProgram();
-        Customer felonCustomer = new Customer("","","","","");
-        Assert.assertFalse(guest.isInLoyaltyProgram());
-        Assert.assertTrue(loyalCustomer.isInLoyaltyProgram());
-        Assert.assertFalse(felonCustomer.isInLoyaltyProgram());
+        Customer felonCustomer = new Customer("", "", "", "", "");
+        assertFalse(guest.isInLoyaltyProgram());
+        assertTrue(loyalCustomer.isInLoyaltyProgram());
+        assertFalse(felonCustomer.isInLoyaltyProgram());
 
     }
 
+    @Test
+    public void customerFromGuest() {
+        BankingData bankingData = new BankingData("Bob", "Rasvoski", "384739574");
+
+        Guest guest = new Guest();
+        guest.setBankingData(bankingData);
+        guest.setEmail("bob.rasovski@gmail.com");
+
+        Customer customer = Customer.from(guest, "Bob", "Rasovski", "0648593823", "password");
+
+        assertEquals(guest.getId(), customer.getId());
+        assertEquals(guest.getBankingData(), customer.getBankingData());
+        assertEquals(guest.getEmail(), customer.getEmail());
+        assertEquals(guest.getTemporaryOrder(), customer.getTemporaryOrder());
+    }
 }

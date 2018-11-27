@@ -49,7 +49,8 @@ public class OrderTest {
         LocalDateTime pickUpTime = LocalDateTime.now();
         order = new Order(store, pickUpTime);
 
-        Guest guest = new Guest("Bob");
+        Guest guest = new Guest();
+
         order.setGuest(guest);
 
         fillKitchenForRecipe(store.getKitchen(), recipe1, 10);

@@ -8,7 +8,10 @@ import recipe.Recipe;
 import store.Store;
 import utils.TestUtils;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,7 +39,7 @@ public class GuestTest {
         store.setOpeningTime(MONDAY, LocalDateTime.now().minusHours(6));
         store.setClosingTime(MONDAY, LocalDateTime.now().plusHours(6));
 
-        order = new Order(store, LocalDateTime.now().plusHours(3));
+        order = new Order(store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek.MONDAY)));
         order.getStore().setKitchen(getInfiniteMockKitchen());
 
         order.addCookie(globalRecipes.get(0), 5);

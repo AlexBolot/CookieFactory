@@ -46,7 +46,7 @@ public class CustomerTest {
             closingTimes.put(day, LocalDateTime.now().plusHours(5));
         }
 
-        store = new Store(utils.randomRecipe(), globalRecipes, orders, openingTimes, closingTimes, 15.5);
+        store = new Store("",utils.randomRecipe(), globalRecipes, orders, openingTimes, closingTimes, 15.5);
 
         store.setKitchen(getInfiniteMockKitchen());
 

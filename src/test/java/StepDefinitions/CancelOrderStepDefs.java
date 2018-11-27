@@ -12,6 +12,7 @@ import utils.CucumberContext;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 public class CancelOrderStepDefs {
 
@@ -25,10 +26,13 @@ public class CancelOrderStepDefs {
     public void madeAnIntoTheInHoursOn(String sCustomer, String sOrder, String sStore, int iTime, String sDay) {
         Order order1 = new Order(context.stores.get(sStore), LocalDateTime.now().plusHours(iTime));
         order1.addCookie(context.utils.randomRecipe(), 10);
-        Customer customer1 = new Customer("Jack", "Jack", "", "jack@jack.com", "", order1);
-        context.getCustomer(sCustomer);
+
+
+        Customer jack = context.getCustomer(sCustomer);
         context.orders.put(sOrder, order1);
-        customer1.placeOrder(true);
+        jack.setTemporaryOrder(order1);
+        jack.placeOrder(true);
+
     }
 
     @And("^An employee see the \"([^\"]*)\"'s orders$")

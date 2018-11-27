@@ -52,7 +52,7 @@ public class StoreTest {
         guestBob.setEmail("Bob");
 
         ArrayList<Order> orders = new ArrayList<>();
-        store = new Store(oldRecipe, globalRecipes, orders, openingTimes, closingTimes, 15.5);
+        store = new Store("", oldRecipe, globalRecipes, orders, openingTimes, closingTimes, 15.5);
 
         store.setKitchen(getInfiniteMockKitchen());
 
@@ -190,7 +190,8 @@ public class StoreTest {
     public void returnsEmptyOptionalOnEmptyOrderList() {
         Day pickUpDay = Day.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
-        store = new Store(utils.randomRecipe(), new ArrayList<>(),new ArrayList<>(), new HashMap<>(),new HashMap<>(),1.0);
+        store = new Store("",utils.randomRecipe(), new ArrayList<>(),new ArrayList<>(), new HashMap<>(),new HashMap<>
+                (),1.0);
         assertFalse(store.findOrder(pickUpTime, guestAlice.getEmail()).isPresent());
     }
 

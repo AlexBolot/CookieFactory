@@ -4,7 +4,6 @@ import main.Guest;
 import order.Order;
 import order.OrderState;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import recipe.Recipe;
 import recipe.ingredient.Catalog;
@@ -131,14 +130,13 @@ public class StoreTest {
         assertFalse(store.checkOrderValidity(tooShortOrder));
     }
 
-    @Ignore
     @Test
     public void placeOrder() {
 
         LocalDateTime now = LocalDateTime.now();
 
         Order normalOrder = new Order(store, now.plusHours(3));
-
+        normalOrder.setGuest(new Guest("bob@bob.fr"));
         for (int i = 1; i < 4; i++) {
             normalOrder.addCookie(utils.randomRecipe(), i);
         }

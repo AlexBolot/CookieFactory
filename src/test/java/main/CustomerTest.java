@@ -3,7 +3,6 @@ package main;
 import order.Order;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import recipe.Recipe;
 import store.Store;
@@ -85,7 +84,6 @@ public class CustomerTest {
         assertTrue(customer.canHaveDiscount());
     }
 
-    @Ignore
     @Test
     public void notHaveALowerPriceFirstPurchase() {
         customer.addToLoyaltyProgram();
@@ -164,7 +162,6 @@ public class CustomerTest {
         assertFalse(customer.canHaveDiscount());
     }
 
-    @Ignore
     @Test
     public void doNothaveALowerPrice() {
         Order order = new Order(store, LocalDateTime.now().plusHours(3));

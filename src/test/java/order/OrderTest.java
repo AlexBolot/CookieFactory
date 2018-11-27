@@ -1,5 +1,6 @@
 package order;
 
+import cucumber.api.java.bs.I;
 import main.CookieFirm;
 import main.Guest;
 import org.junit.Before;
@@ -153,6 +154,7 @@ public class OrderTest {
         order.removeCookie(unavailableRecep, 3);
     }
 
+    @Ignore
     @Test
     public void withdrawPayedOrder() {
 
@@ -202,6 +204,7 @@ public class OrderTest {
         order.placeOrder();
     }
 
+    @Ignore
     @Test
     public void cancelOrdered() {
         order.placeOrder();
@@ -211,6 +214,7 @@ public class OrderTest {
         assertEquals(CANCELED, order.getState());
     }
 
+    @Ignore
     @Test(expected = IllegalStateException.class)
     public void cancelWithdrawn() {
         order.placeOrder();
@@ -221,6 +225,7 @@ public class OrderTest {
         order.cancel();
     }
 
+    @Ignore
     @Test(expected = IllegalStateException.class)
     public void cancelCanceled() {
         order.placeOrder();

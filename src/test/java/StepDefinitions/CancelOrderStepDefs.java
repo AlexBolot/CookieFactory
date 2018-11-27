@@ -23,7 +23,7 @@ public class CancelOrderStepDefs {
 
     @Given("^\"([^\"]*)\" made an \"([^\"]*)\" into the \"([^\"]*)\" in (\\d+) hours, on \"([^\"]*)\"$")
     public void madeAnIntoTheInHoursOn(String sCustomer, String sOrder, String sStore, int iTime, String sDay) {
-        Order order1 = new Order(context.stores.get(sStore), LocalDateTime.now().plusHours(iTime), context.utils.dayFromName(sDay));
+        Order order1 = new Order(context.stores.get(sStore), LocalDateTime.now().plusHours(iTime));
         order1.addCookie(context.utils.randomRecipe(), 10);
         Customer customer1 = new Customer("Jack", "Jack", "", "jack@jack.com", "", order1);
         context.getCustomer(sCustomer);
@@ -41,7 +41,7 @@ public class CancelOrderStepDefs {
     public void anEmployeeOfCancelThe(String sStore, String sNameOrder) {
         Order targetOrder = context.orders.get(sNameOrder);
         currentOrder = context.stores.get(sStore)
-                .findOrder(targetOrder.getPickUpTime(), targetOrder.getPickupDay(), targetOrder.getGuest().getEmail())
+                .findOrder(targetOrder.getPickUpTime(), targetOrder.getGuest().getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Not found the order"));
         currentOrder.cancel();
     }

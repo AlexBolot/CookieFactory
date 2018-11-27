@@ -1,6 +1,5 @@
 package StepDefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import main.CookieFirm;
@@ -10,7 +9,9 @@ import org.junit.Assert;
 import recipe.Recipe;
 import utils.CucumberContext;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 
 public class LoyaltyProgramStepdefs {
 
@@ -28,7 +29,8 @@ public class LoyaltyProgramStepdefs {
 
     @Given("^\"([^\"]*)\" made an \"([^\"]*)\" into the \"([^\"]*)\" in (\\d+) hours, on \"([^\"]*)\", with (\\d+) cookies$")
     public void madeAnIntoTheInHoursOnWithCookies(String sCustomer, String sOrder, String sStore, int time, String day, int numberCookies) throws Throwable {
-        Order order1 = new Order(context.stores.get(sStore), LocalDateTime.now().plusHours(time), context.utils.dayFromName(day));
+
+        Order order1 = new Order(context.stores.get(sStore), LocalDateTime.now().plusHours(time).with(TemporalAdjusters.next(DayOfWeek.valueOf(day.toUpperCase()))));
 
         recipe = context.utils.randomRecipe();
         order1.addCookie(recipe, numberCookies);

@@ -55,7 +55,7 @@ public class CustomerTest {
 
     @Test
     public void cannotHaveDiscountfideltyP() {
-        Order order = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order = new Order(store, LocalDateTime.now().plusHours(3));
 
         order.addCookie(globalRecipes.get(1), 10);
         customer.addToLoyaltyProgram();
@@ -66,7 +66,7 @@ public class CustomerTest {
 
     @Test
     public void cannotHaveDiscountNotInfideltyP() {
-        Order order = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order = new Order(store, LocalDateTime.now().plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.addToOrderHistory(order);
 
@@ -75,7 +75,7 @@ public class CustomerTest {
 
     @Test
     public void canHaveDiscountfideltyP() {
-        Order order = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order = new Order(store, LocalDateTime.now().plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.addToLoyaltyProgram();
         customer.addToOrderHistory(order);
@@ -87,7 +87,7 @@ public class CustomerTest {
     @Test
     public void notHaveALowerPriceFirstPurchase() {
         customer.addToLoyaltyProgram();
-        Order order = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order = new Order(store, LocalDateTime.now().plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
 
@@ -99,12 +99,12 @@ public class CustomerTest {
     @Test
     public void haveALowerPriceSecondPurchase() {
         customer.addToLoyaltyProgram();
-        Order order = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order = new Order(store, LocalDateTime.now().plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
         customer.placeOrder(true);
 
-        Order order2 = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order2 = new Order(store, LocalDateTime.now().plusHours(3));
         order2.addCookie(globalRecipes.get(2), 2);
 
         customer.setTemporaryOrder(order2);
@@ -117,14 +117,14 @@ public class CustomerTest {
     @Test
     public void loseDiscountAfterSecondPurchase() {
         customer.addToLoyaltyProgram();
-        Order order = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order = new Order(store, LocalDateTime.now().plusHours(3));
 //        fillKitchenForRecipe(store.getKitchen(),globalRecipes.get(1),30);
 //        fillKitchenForRecipe(store.getKitchen(),globalRecipes.get(2),3);
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
         customer.placeOrder(true);
 
-        Order order2 = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order2 = new Order(store, LocalDateTime.now().plusHours(3));
         order2.addCookie(globalRecipes.get(2), 2);
         customer.setTemporaryOrder(order2);
         customer.placeOrder(true);
@@ -137,25 +137,25 @@ public class CustomerTest {
         customer.addToLoyaltyProgram();
 
         //First order, no discount
-        Order order = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order = new Order(store, LocalDateTime.now().plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
         assertEquals(globalRecipes.get(1).price * 30 * store.getTax(), customer.placeOrder(true), delta);
 
         //Second order, first Discount :
-        Order order2 = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order2 = new Order(store, LocalDateTime.now().plusHours(3));
         order2.addCookie(globalRecipes.get(2), 2);
         customer.setTemporaryOrder(order2);
         assertEquals(globalRecipes.get(2).price * 2 * store.getTax() * 0.9, customer.placeOrder(true), delta);
 
         //Third order, no discount
-        Order order3 = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order3 = new Order(store, LocalDateTime.now().plusHours(3));
         order3.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order3);
         assertEquals(globalRecipes.get(1).price * 30 * store.getTax(), customer.placeOrder(true), delta);
 
         //Forth order,second discount :
-        Order order4 = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order4 = new Order(store, LocalDateTime.now().plusHours(3));
         order4.addCookie(globalRecipes.get(2), 2);
         customer.setTemporaryOrder(order4);
         assertEquals(globalRecipes.get(2).price * 2 * store.getTax() * 0.9, customer.placeOrder(true), delta);
@@ -165,7 +165,7 @@ public class CustomerTest {
     @Ignore
     @Test
     public void doNothaveALowerPrice() {
-        Order order = new Order(store, LocalDateTime.now().plusHours(3), Day.TUESDAY);
+        Order order = new Order(store, LocalDateTime.now().plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
 

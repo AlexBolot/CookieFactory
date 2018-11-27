@@ -1,10 +1,12 @@
 package utils;
 
+import main.CookieFirm;
 import main.Day;
 import order.OrderState;
 import recipe.Recipe;
 import recipe.ingredient.*;
 import store.Kitchen;
+import store.Store;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,6 +19,7 @@ import static org.mockito.Mockito.when;
 public class TestUtils {
 
     private final Catalog catalog = new Catalog();
+    private final CookieFirm cookieFirm = new CookieFirm(new ArrayList<>(),new ArrayList<>());
 
     public Recipe randomRecipe() {
         Random random = new Random();
@@ -90,6 +93,15 @@ public class TestUtils {
     public Flavor flavorFromName(String flavorName) {
         for (Flavor flavor : catalog.getFlavorList()) {
             if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
+        }
+        return null;
+    }
+
+    public Recipe recipeFromName(String recipeName) {
+        for (Recipe recipe : cookieFirm.getGlobalRecipes()) {
+            if(recipe.getName().equals(recipeName)) {
+                return recipe;
+            }
         }
         return null;
     }

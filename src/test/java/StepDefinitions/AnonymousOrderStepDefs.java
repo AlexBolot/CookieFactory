@@ -7,7 +7,9 @@ import main.Guest;
 import order.Order;
 import utils.CucumberContext;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 
 import static org.junit.Assert.assertEquals;
 
@@ -31,11 +33,10 @@ public class AnonymousOrderStepDefs {
     public void chooseToPickupHerInHoursInTheOnAndWantToPayInThe(String sName, String sOrderName, int hours, String
             sStore, String sDay, String payment) {
         Guest guest  = context.getGuest(sName);
-
-        LocalDateTime pickTime = LocalDateTime.now().plusHours(hours);
+        DayOfWeek dayOfWeek = DayOfWeek.valueOf(sDay.toUpperCase());
+        LocalDateTime pickTime = LocalDateTime.now().plusHours(hours).with(TemporalAdjusters.next(dayOfWeek));
 
         guest.getTemporaryOrder().setStore(context.stores.get(sStore));
-        guest.getTemporaryOrder().setPickupDay(context.utils.dayFromName(sDay));
         guest.getTemporaryOrder().setPickUpTime(pickTime);
         context.orders.put(sOrderName, context.getGuest(sName).getTemporaryOrder());
 
@@ -54,7 +55,7 @@ public class AnonymousOrderStepDefs {
     public void thePurchaseIsScanInThe(String sOrderName, String sStore) {
         final Order targetOrder = context.orders.get(sOrderName);
         currentOrder = context.stores.get(sStore)
-                .findOrder(targetOrder.getPickUpTime(), targetOrder.getPickupDay(), targetOrder.getGuest().getEmail())
+                .findOrder(targetOrder.getPickUpTime(), targetOrder.getGuest().getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Not found the order"));
     }
 

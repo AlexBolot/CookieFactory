@@ -56,12 +56,12 @@ public class StoreTest {
 
         store.setKitchen(getInfiniteMockKitchen());
 
-        Order order = new Order(store, LocalDateTime.now(), Day.TUESDAY);
+        Order order = new Order(store, LocalDateTime.now());
         order.setGuest(guestBob);
         orders.add(order);
 
 
-        order = new Order(store, LocalDateTime.now().plusHours(1), Day.FRIDAY);
+        order = new Order(store, LocalDateTime.now().plusHours(1));
         order.addCookie(globalRecipes.get(0), 1);
         order.addCookie(globalRecipes.get(2), 3);
         order.setGuest(guestAlice);
@@ -108,11 +108,11 @@ public class StoreTest {
 
         LocalDateTime now = LocalDateTime.now();
 
-        Order emptyOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
-        Order normalOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
-        Order tooEarlyOrder = new Order(store, now.minusHours(6), Day.TUESDAY);
-        Order tooLateOrder = new Order(store, now.plusHours(6), Day.TUESDAY);
-        Order tooShortOrder = new Order(store, now.plusHours(1), Day.TUESDAY);
+        Order emptyOrder = new Order(store, now.plusHours(3));
+        Order normalOrder = new Order(store, now.plusHours(3));
+        Order tooEarlyOrder = new Order(store, now.minusHours(6));
+        Order tooLateOrder = new Order(store, now.plusHours(6));
+        Order tooShortOrder = new Order(store, now.plusHours(1));
 
         for (int i = 1; i < 4; i++) {
             normalOrder.addCookie(utils.randomRecipe(), i);
@@ -133,7 +133,7 @@ public class StoreTest {
 
         LocalDateTime now = LocalDateTime.now();
 
-        Order normalOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
+        Order normalOrder = new Order(store, now.plusHours(3));
 
         for (int i = 1; i < 4; i++) {
             normalOrder.addCookie(utils.randomRecipe(), i);
@@ -146,7 +146,7 @@ public class StoreTest {
     public void placeOrderEmpty(){
         LocalDateTime now = LocalDateTime.now();
 
-        Order emptyOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
+        Order emptyOrder = new Order(store, now.plusHours(3));
 
         store.placeOrder(emptyOrder);
     }
@@ -155,7 +155,7 @@ public class StoreTest {
     public void payingAnOrder(){
         LocalDateTime now = LocalDateTime.now();
 
-        Order normalOrder = new Order(store, now.plusHours(3), Day.TUESDAY);
+        Order normalOrder = new Order(store, now.plusHours(3));
         normalOrder.addCookie(utils.randomRecipe(), 10);
         normalOrder.setGuest(guestAlice);
         store.placeOrder(normalOrder);
@@ -170,20 +170,20 @@ public class StoreTest {
         LocalDateTime pickUpTime = LocalDateTime.now();
         Guest guest = new Guest("");
         guest.setEmail("email");
-        final Order order = new Order(store, pickUpTime, pickUpDay);
+        final Order order = new Order(store, pickUpTime);
         order.setGuest(guest);
         store.getOrders().add(order);
-        assertEquals(store.findOrder(pickUpTime, pickUpDay, guest.getEmail()).orElse(null), order);
+        assertEquals(store.findOrder(pickUpTime, guest.getEmail()).orElse(null), order);
     }
 
     @Test
     public void findOrderWithDuplicateCriterias() {
         Day pickUpDay = Day.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
-        final Order order = new Order(store, pickUpTime, pickUpDay);
+        final Order order = new Order(store, pickUpTime);
         store.getOrders().add(order);
         order.setGuest(guestAlice);
-        assertEquals(store.findOrder(pickUpTime, pickUpDay, guestAlice.getEmail()).orElse(null), order);
+        assertEquals(store.findOrder(pickUpTime, guestAlice.getEmail()).orElse(null), order);
     }
 
     @Test
@@ -191,21 +191,21 @@ public class StoreTest {
         Day pickUpDay = Day.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
         store = new Store(utils.randomRecipe(), new ArrayList<>(),new ArrayList<>(), new HashMap<>(),new HashMap<>(),1.0);
-        assertFalse(store.findOrder(pickUpTime, pickUpDay, guestAlice.getEmail()).isPresent());
+        assertFalse(store.findOrder(pickUpTime, guestAlice.getEmail()).isPresent());
     }
 
     @Test
     public void emptyWhenOrderNotFound() {
         Day pickUpDay = Day.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
-        assertFalse(store.findOrder(pickUpTime, pickUpDay, guestAlice.getEmail()).isPresent());
+        assertFalse(store.findOrder(pickUpTime, guestAlice.getEmail()).isPresent());
     }
 
     @Test
     public void cancelOrder(){
         Day pickUpDay = Day.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now().plusHours(3);
-        final Order order = new Order(store, pickUpTime, pickUpDay);
+        final Order order = new Order(store, pickUpTime);
         order.addCookie(utils.randomRecipe(), 2);
         Guest guest = new Guest("");
         guest.setTemporaryOrder(order);

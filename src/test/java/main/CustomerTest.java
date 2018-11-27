@@ -93,7 +93,7 @@ public class CustomerTest {
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
 
-        double unexpected = globalRecipes.get(1).price * 30 * store.getTax() * 0.9;
+        double unexpected = order.getStore().getRecipePrice(globalRecipes.get(1)) * 30 * store.getTax() * 0.9;
 
         assertNotEquals(unexpected, customer.placeOrder(true), delta);
     }
@@ -111,7 +111,7 @@ public class CustomerTest {
 
         customer.setTemporaryOrder(order2);
 
-        double expected = globalRecipes.get(2).price * 2 * store.getTax() * 0.9;
+        double expected = order.getStore().getRecipePrice(globalRecipes.get(2)) * 2 * store.getTax() * 0.9;
 
         assertEquals(expected, customer.placeOrder(true), delta);
     }
@@ -142,25 +142,25 @@ public class CustomerTest {
         Order order = new Order(store, LocalDateTime.now().plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
-        assertEquals(globalRecipes.get(1).price * 30 * store.getTax(), customer.placeOrder(true), delta);
+        assertEquals(this.store.getRecipePrice(globalRecipes.get(1)) * 30 * this.store.getTax(), customer.placeOrder(true), delta);
 
         //Second order, first Discount :
-        Order order2 = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order2 = new Order(this.store, LocalDateTime.now().plusHours(3));
         order2.addCookie(globalRecipes.get(2), 2);
         customer.setTemporaryOrder(order2);
-        assertEquals(globalRecipes.get(2).price * 2 * store.getTax() * 0.9, customer.placeOrder(true), delta);
+        assertEquals(this.store.getRecipePrice(globalRecipes.get(2)) * 2 * this.store.getTax() * 0.9, customer.placeOrder(true), delta);
 
         //Third order, no discount
-        Order order3 = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order3 = new Order(this.store, LocalDateTime.now().plusHours(3));
         order3.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order3);
-        assertEquals(globalRecipes.get(1).price * 30 * store.getTax(), customer.placeOrder(true), delta);
+        assertEquals(this.store.getRecipePrice(globalRecipes.get(1)) * 30 * this.store.getTax(), customer.placeOrder(true), delta);
 
         //Forth order,second discount :
-        Order order4 = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order4 = new Order(this.store, LocalDateTime.now().plusHours(3));
         order4.addCookie(globalRecipes.get(2), 2);
         customer.setTemporaryOrder(order4);
-        assertEquals(globalRecipes.get(2).price * 2 * store.getTax() * 0.9, customer.placeOrder(true), delta);
+        assertEquals(this.store.getRecipePrice(globalRecipes.get(2)) * 2 * this.store.getTax() * 0.9, customer.placeOrder(true), delta);
         assertFalse(customer.canHaveDiscount());
     }
 
@@ -171,7 +171,7 @@ public class CustomerTest {
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
 
-        double unexpected = globalRecipes.get(1).price * 30 * store.getTax() * 0.9;
+        double unexpected = order.getStore().getRecipePrice(globalRecipes.get(1)) * 30 * store.getTax() * 0.9;
 
         assertNotEquals(unexpected, customer.placeOrder(true), delta);
 

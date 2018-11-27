@@ -46,7 +46,8 @@ public class LoyaltyProgramStepdefs {
     public void seeThePriceOfHisWithCookiesItHaveADiscountOfPourcent(String sCustomer, String sOrder, int numberCookie) throws Throwable {
 
         Order order = context.orders.get(sOrder);
-        Assert.assertEquals((recipe.price * 10)*0.9, price,0);
+        double orderLinePrices = order.getOrderLines().stream().mapToDouble(line -> line.getAmount() * order.getStore().getRecipePrice(line.getRecipe())).sum();
+        Assert.assertEquals(orderLinePrices * 0.9, price, 0);
 
     }
 

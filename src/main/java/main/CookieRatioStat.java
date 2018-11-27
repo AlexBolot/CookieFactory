@@ -2,7 +2,6 @@ package main;
 
 import order.Order;
 import order.OrderLine;
-import recipe.Recipe;
 import store.Store;
 
 import java.util.HashMap;

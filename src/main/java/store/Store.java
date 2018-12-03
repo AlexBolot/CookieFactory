@@ -9,10 +9,7 @@ import recipe.ingredient.Ingredient;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class Store {
 
@@ -54,6 +51,26 @@ public class Store {
         }
 
         return order.placeOrder();
+    }
+
+    /**
+     * Provides a stack of all the rewards corresponding to a given order and the unFaithPath applied to the store
+     *
+     * @param order scanned for rewards
+     * @return a list of reward for all cookies in the order
+     */
+    public List<Reward> getRewards (Order order) {
+        if (this.unFaithPass == null) {
+            throw new IllegalStateException("Trying to check for rewards without unFaithPass applied");
+        }
+        List<Reward> rewards = new ArrayList<>();
+        for (OrderLine orderline : order.getOrderLines()) {
+            Reward reward = unFaithPass.getRewardFromRecipe(orderline.getRecipe());
+            if (reward!=null) {
+                rewards.addAll(Collections.nCopies(orderline.getAmount(),reward));
+            }
+        }
+        return rewards;
     }
 
     /**

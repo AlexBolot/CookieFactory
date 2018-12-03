@@ -12,7 +12,7 @@ public class UnFaithPass {
     }
 
     public Reward getRewardFromRecipe(Recipe recipe) {
-        return this.rewards.get(recipe);
+        return this.rewards.getOrDefault(recipe,null);
     }
 
     public void changeReward (Recipe recipe, Reward reward) {

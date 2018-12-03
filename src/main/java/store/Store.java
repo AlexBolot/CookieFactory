@@ -25,6 +25,7 @@ public class Store {
     private double tax;
     private double customRecipeeMargin;
     private Kitchen kitchen;
+    private UnFaithPass unFaithPass;
 
     public Store(String name,
                  Recipe monthlyRecipe,
@@ -239,6 +240,10 @@ public class Store {
             throw new IllegalArgumentException("Trying to set closing time before opening time for " + day);
 
         this.closingTimes.put(day, localTime);
+    }
+
+    public void applyUnFaithPath(UnFaithPass unFaithPass) {
+        this.unFaithPass = unFaithPass;
     }
 
     public double getRecipePrice(Recipe recipe) {

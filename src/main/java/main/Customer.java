@@ -31,8 +31,9 @@ public class Customer extends Guest {
         this.setTemporaryOrder(temporaryOrder);
     }
 
-    public static Customer from(Guest guest, String firstName, String lastName, String phoneNumber, String password) {
-        Customer customer = new Customer(firstName, lastName, phoneNumber, guest.getEmail(), password);
+    static Customer from(Guest guest, String firstName, String lastName, String phoneNumber, String email,
+                           String password) {
+        Customer customer = new Customer(firstName, lastName, phoneNumber, email, password);
         customer.setId(guest.getId());
         customer.setBankingData(guest.getBankingData());
         customer.setTemporaryOrder(guest.getTemporaryOrder());

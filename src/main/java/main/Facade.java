@@ -23,6 +23,17 @@ public class Facade {
         cookieFirm.addStore(store);
     }*/
 
+    public boolean guestCreateAccount(int idGuest, String fName, String lastN, String phone, String email,
+                                  String password){
+        Optional<Guest> opGuest = this.cookieFirm.findGuest(idGuest);
+
+        if(opGuest.isPresent()){
+            Customer customer = Customer.from(opGuest.get(), fName, lastN, phone, email, password);
+            return this.cookieFirm.saveCustomerAccountIfAbsent(customer);
+        }
+        return false;
+    }
+
 
     public void createACustomer(String sName, String sLastName, String phoneNumber, String email, String
             password){

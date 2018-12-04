@@ -138,7 +138,7 @@ public class CookieFirm {
 
     Customer createAccount(String firstName, String lastName, String phoneNumber, String email, String password) {
         Customer newAccount = new Customer(firstName, lastName, phoneNumber, email, password);
-        if (saveCustomerAccountIfAbsent(newAccount, email)) {
+        if (saveCustomerAccountIfAbsent(newAccount)) {
             return newAccount;
         } else {
             throw new IllegalArgumentException("An account already exists with this email");
@@ -147,20 +147,20 @@ public class CookieFirm {
 
     public Customer createAccount(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
         Customer newAccount = new Customer(firstName, lastName, phoneNumber, email, password, temporaryOrder);
-        if (saveCustomerAccountIfAbsent(newAccount, email)) {
+        if (saveCustomerAccountIfAbsent(newAccount)) {
             return newAccount;
         } else {
             throw new IllegalArgumentException("An account already exists with this email");
         }
     }
 
-    private boolean saveCustomerAccountIfAbsent(Customer customer, String email) {
+    boolean saveCustomerAccountIfAbsent(Customer customer) {
         for (Customer account : this.accounts) {
-            if (account.getEmail().equals(email)) {
+            if (account.getEmail().equals(customer.getEmail())) {
                 return false;
             }
         }
-        guests = guests.stream().filter(g -> !g.getEmail().equals(email)).collect(Collectors.toSet());
+        guests = guests.stream().filter(g -> !g.getEmail().equals(customer.getEmail())).collect(Collectors.toSet());
         accounts.add(customer);
         return true;
     }
@@ -173,6 +173,16 @@ public class CookieFirm {
             }
         }
         return Optional.ofNullable(customer);
+    }
+
+    Optional<Guest> findGuest(int id){
+        Guest guest = null;
+        for(Guest account : this.guests){
+            if(account.getId() == id){
+                guest = account;
+            }
+        }
+        return Optional.ofNullable(guest);
     }
 
     Optional<Store> findStore(String name) {

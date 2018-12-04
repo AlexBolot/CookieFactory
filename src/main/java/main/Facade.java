@@ -2,6 +2,7 @@ package main;
 
 import api.BankingData;
 import order.Order;
+import recipe.Recipe;
 import store.Store;
 
 import java.time.DayOfWeek;
@@ -113,6 +114,21 @@ public class Facade {
         }
     }
 
+    public void guestAddSpecificCookie(int id, String sStore, int quantity, String recipeName){
+        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
+        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
+
+        if (opGuest.isPresent() && opStore.isPresent()) {
+            opGuest.get().getTemporaryOrder().setStore(opStore.get());
+            for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
+                if (cookie.getName().equals(recipeName)) {
+                    opGuest.get().getTemporaryOrder().addCookie(cookie, quantity);
+                    return;
+                }
+            }
+        }
+    }
+
 
     public void guestPlaceOrderWithCookies(int id, String sStore, int nbCookies, int
             pickupTime, String pickUpDay, Boolean payedOnline) {
@@ -128,6 +144,15 @@ public class Facade {
             opGuest.get().placeOrder(payedOnline);
         }
     }
+
+    //TODO permettre la création de custom recipe
+    /*
+    public void guestOrderCustomRecipe(){
+
+    }
+    */
+
+    //TODO permettre de refill la kitchen via le facade
 
     public void guestPlaceOrder(int id , Boolean payedOnline){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
@@ -179,7 +204,7 @@ public class Facade {
             Optional<Order> opOrder = opStore.get().findOrder(generateTime(time, day), email);
 
             if(opOrder.isPresent()) {
-                if(action.toUpperCase().equals("CANCEL")) {
+                if(action.toUpperCase().equals("CANCELED")) {
                     opOrder.get().cancel();
                     return true;
                 }

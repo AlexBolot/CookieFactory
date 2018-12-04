@@ -7,6 +7,7 @@ import cucumber.api.java.en.When;
 import main.Customer;
 import order.Order;
 import org.junit.Assert;
+import store.Store;
 import utils.CucumberContext;
 
 import java.time.DayOfWeek;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 public class CancelOrderStepDefs {
 
@@ -23,44 +25,12 @@ public class CancelOrderStepDefs {
     private Order currentOrder;
 
 
-    @Given("^\"([^\"]*)\" made an \"([^\"]*)\" into the \"([^\"]*)\" in (\\d+) hours, on \"([^\"]*)\"$")
-    public void madeAnIntoTheInHoursOn(String sCustomer, String sOrder, String sStore, int iTime, String sDay) {
-
-        Customer jack = context.getCustomer(sCustomer);
-        Order order = jack.getTemporaryOrder();
-        order.setStore(context.stores.get(sStore));
-        order.setPickUpTime( LocalDateTime.now().plusHours(iTime)
-                .with(TemporalAdjusters.next(DayOfWeek.valueOf(sDay.toUpperCase()))));
-        order.addCookie(context.utils.randomRecipe(),10);
-        context.orders.put(sOrder, order);
-        jack.placeOrder(true);
-
-    }
-
     @And("^An employee see the \"([^\"]*)\"'s orders$")
     public void anEmployeeSeeTheSOrders(String sStore) {
-        ordersStore = context.stores.get(sStore).getOrders();
-        // System.out.println(ordersStore.size());
-    }
-
-    @When("^An employee of \"([^\"]*)\" cancel the \"([^\"]*)\"$")
-    public void anEmployeeOfCancelThe(String sStore, String sNameOrder) {
-        Order targetOrder = context.orders.get(sNameOrder);
-        currentOrder = context.stores.get(sStore)
-                .findOrder(targetOrder.getPickUpTime(), targetOrder.getGuest().getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Not found the order"));
-        currentOrder.cancel();
-    }
-
-    @Then("^The order is no longer in the list of orders of the \"([^\"]*)\"$")
-    public void theOrderIsNoLongerInTheListOfOrdersOfThe(String sStore) {
-        //  Assert.assertTrue(ordersStore.size()-1 == context.stores.get(sStore).getOrders().size());
-
-    }
-
-    @Then("^\"([^\"]*)\" is \"([^\"]*)\"$")
-    public void is(String sOrder, String sEtat) {
-        Assert.assertEquals(context.orders.get(sOrder).getState(), context.utils.stateFromName(sEtat));
+        Optional<Store> store = context.cookieFirm().findStore(sStore);
+        if(store.isPresent()){
+           //TODO permettre de voir les recettes d'un store.get().
+        }
     }
 
     @And("^\"([^\"]*)\" receveid a \"([^\"]*)\"$")

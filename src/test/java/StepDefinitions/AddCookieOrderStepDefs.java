@@ -1,5 +1,6 @@
 package StepDefinitions;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -26,7 +27,6 @@ public class AddCookieOrderStepDefs {
     private final Map<String, Recipe> recipes = new HashMap<>();
     private final CookieFirm cookieFirm = CookieFirm.instance();
     private final CucumberContext context = CucumberContext.getContext();
-    private final Guest guest = new Guest();
     private Recipe currentRecipe;
 
     private Dough customDough;
@@ -37,12 +37,10 @@ public class AddCookieOrderStepDefs {
 
     @Given("^The guest see the list of cookies$")
     public void theGuestSeeTheListOfCookies() {
-        this.guest.getTemporaryOrder().setStore(new Store("", null, Collections.emptyList(), new HashMap<>(), new HashMap<>(), 1.0, 1));
-        this.guest.getTemporaryOrder().getStore().setKitchen(getInfiniteMockKitchen());
     }
 
-    @When("^The guest select the recipee \"([^\"]*)\"$")
-    public void theGuestSelectTheRecipee(String recipee) {
+    @When("^The guest select the recipee \"([^\"]*)\" of the \"([^\"]*)\"$")
+    public void theGuestSelectTheRecipee(String recipee, String sStore) {
         for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
             if (cookie.getName().equals(recipee)) {
                 this.currentRecipe = cookie;
@@ -52,36 +50,45 @@ public class AddCookieOrderStepDefs {
 
     }
 
-    @When("^The guest order (\\d+) cookie \"([^\"]*)\"$")
-    public void theGuestOrderCookie(int amount, String recipeName) {
-        for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
-            if (cookie.getName().equals(recipeName)) {
-                recipes.put(recipeName, cookie);
-                guest.getTemporaryOrder().addCookie(cookie, amount);
-                return;
-            }
-        }
+    @When("^The guest order (\\d+) cookie \"([^\"]*)\" from the \"([^\"]*)\"$")
+    public void theGuestOrderCookie(int amount, String recipeName, String store) {
+        context.getFacade().guestAddSpecificCookie(context.getCurrentId(),store,amount, recipeName);
     }
 
     @Then("^The order contains (\\d+) cookie \"([^\"]*)\"$")
     public void theOrderContainCookie(int amount, String recipeName) {
-        for (OrderLine line : guest.getTemporaryOrder().getOrderLines()) {
-            if (recipes.get(recipeName).equals(line.getRecipe())) {
-                assertEquals(amount, line.getAmount());
+        Optional<Guest> guest = context.cookieFirm().findGuest(context.getCurrentId());
+
+        if(guest.isPresent()) {
+            for (OrderLine line : guest.get().getTemporaryOrder().getOrderLines()){
+                if (recipes.get(recipeName).equals(line.getRecipe())) {
+                    assertEquals(amount, line.getAmount());
+                }
             }
         }
     }
 
-    @Given("^The guest see the list of ingredients$")
-    public void theGuestSeeTheListOfIngredients() {
-        this.guest.getTemporaryOrder().setStore(new Store("", null, Collections.emptyList(), new
-                HashMap<>(), new HashMap<>(), 1.0, 1));
-        this.guest.getTemporaryOrder().getStore().setKitchen(getInfiniteMockKitchen());
+    @And("^The kitchen of \"([^\"]*)\" is empty$")
+    public void theKitchenOfIsEmpty(String storeName) {
+        Optional<Store> store = context.cookieFirm().findStore(storeName);
+        store.get().setKitchen(new Kitchen());
     }
 
-    @And("^add (\\d+) cookie of the selected recipee$")
-    public void addCookieOfTheSelectedRecipee(int cookieAmount) {
-        this.guest.getTemporaryOrder().addCookie(currentRecipe, cookieAmount);
+    @And("^The guest is ordering at the store \"([^\"]*)\"$")
+    public void theGuestIsOrderingAtTheStore(String sStore) throws Throwable {
+        context.getFacade().guestAddStoreToOrder(context.getCurrentId(), sStore);
+    }
+
+    @Given("^The guest see the list of ingredients$")
+    public void theGuestSeeTheListOfIngredients() {
+        /*this.guest.getTemporaryOrder().setStore(new Store("", null, Collections.emptyList(), new
+                HashMap<>(), new HashMap<>(), 1.0, 1));
+        this.guest.getTemporaryOrder().getStore().setKitchen(getInfiniteMockKitchen());*/
+    }
+
+    @And("^add (\\d+) cookie of the selected recipee in the \"([^\"]*)\"$")
+    public void addCookieOfTheSelectedRecipee(int cookieAmount, String store) {
+        context.getFacade().guestAddSpecificCookie(context.getCurrentId(),store, cookieAmount, currentRecipe.getName());
     }
 
     @And("^The guest choose the dough \"([^\"]*)\"$")
@@ -114,33 +121,26 @@ public class AddCookieOrderStepDefs {
 
     @When("^The guest order (\\d+) custom cookie \"([^\"]*)\"$")
     public void theGuestOrderCustomCookie(int amount, String recipeName) {
-        recipes.put(recipeName, guest.orderCustomRecipe(amount,
+       /* recipes.put(recipeName, guest.orderCustomRecipe(amount,
                 this.customDough,
                 this.customFlavor,
                 this.customToppings,
                 this.customMix,
-                this.customCooking));
+                this.customCooking));*/
     }
 
     @Then("^The order contain (\\d+) orderLines")
     public void theOrderContainCookie(int arg0) {
-        assertEquals(arg0, this.guest.getTemporaryOrder().getOrderLines().size());
+       // assertEquals(arg0, this.guest.getTemporaryOrder().getOrderLines().size());
     }
 
-    @And("^An order \"([^\"]*)\" at the store \"([^\"]*)\"$")
-    public void anOrderAtTheStore(String orderName, String storeName) {
-        Store store = context.getStore(storeName);
-        Order order = context.getOrder(orderName);
-        order.setStore(store);
-    }
 
-    @And("^The kitchen of \"([^\"]*)\" is empty$")
-    public void theKitchenOfIsEmpty(String storeName) {
-        context.getStore(storeName).setKitchen(new Kitchen());
-    }
+
+
 
     @And("^The kitchen of \"([^\"]*)\" can do (\\d+) \"([^\"]*)\"$")
     public void theKitchenOfCanDo(String storeName, int recipeCount, String recipeName) {
+
         Store store = context.getStore(storeName);
         Kitchen kitchen = new Kitchen();
         Recipe recipe = getRecipe(recipeName).orElse(null);
@@ -165,13 +165,13 @@ public class AddCookieOrderStepDefs {
 
     @And("^The order contain (\\d+) cookie \"([^\"]*)\"$")
     public void theOrderContainCookieRecipe(int cookieCount, String recipee) {
-        Recipe recipe = getRecipe(recipee).orElse(null);
+       /* Recipe recipe = getRecipe(recipee).orElse(null);
         Optional<OrderLine> optionalOrderLine =
                 guest.getTemporaryOrder()
                         .getOrderLines().stream()
                         .filter(line -> line.getRecipe().equals(recipe)).findFirst();
         assertTrue(optionalOrderLine.isPresent());
-        assertEquals(optionalOrderLine.get().getAmount(), cookieCount);
+        assertEquals(optionalOrderLine.get().getAmount(), cookieCount);*/
     }
 
     @When("^The manager refill the stock of \"([^\"]*)\" \"([^\"]*)\" by (\\d+) in the kitchen of \"([^\"]*)\"$")
@@ -210,4 +210,6 @@ public class AddCookieOrderStepDefs {
                 //Do nothing
         }
     }
+
+
 }

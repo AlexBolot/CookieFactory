@@ -3,6 +3,7 @@ package main;
 import api.BankingData;
 import order.Order;
 import recipe.Recipe;
+import store.Manager;
 import store.Store;
 
 import java.time.DayOfWeek;
@@ -26,18 +27,94 @@ public class Facade {
         return store;
     }
 
-    public void addOpeningClosingTime(String sStore, String dayName, int behindHours, int aheadHours){
-        DayOfWeek day = dayFromName(dayName);
-        LocalTime opTime = LocalTime.now().minusHours(behindHours);
-        LocalTime clTime = LocalTime.now().plusHours(aheadHours);
 
-        Optional<Store> store = cookieFirm.findStore(sStore);
-
-        if(store.isPresent()) {
-            store.get().setOpeningTime(day, opTime);
-            store.get().setClosingTime(day, clTime);
+    public void addManagerToStore(String manager, String store){
+        Optional<Store> store1 = cookieFirm.findStore(store);
+        if(store1.isPresent()) {
+            Manager manager1 = new Manager(store1.get(), manager);
+            cookieFirm.addManager(manager1);
         }
     }
+    public void addOpeningClosingTimeFromNow(String manager,String dayName, int behindHours, int aheadHours){
+        DayOfWeek day = dayFromName(dayName);
+        LocalTime opTime = LocalTime.now().minusHours(behindHours).plusSeconds(0).plusNanos(0);
+        LocalTime clTime = LocalTime.now().plusHours(aheadHours).plusSeconds(0).plusNanos(0);
+
+        Optional<Manager> manager1 = cookieFirm.findManager(manager);
+
+        if(manager1.isPresent()) {
+            manager1.get().changeOpeningTime(day, opTime);
+            manager1.get().changeClosingTime(day, clTime);
+        }
+    }
+
+    public void addOpeningClosingTime(String manager,String dayName, String beginHours, String endHours){
+        int opHour = Integer.parseInt(beginHours.split(":")[0]);
+        int opMinutes = Integer.parseInt(beginHours.split(":")[1]);
+
+        int clHour = Integer.parseInt(endHours.split(":")[0]);
+        int clMinutes = Integer.parseInt(endHours.split(":")[1]);
+
+        DayOfWeek day = dayFromName(dayName);
+
+        LocalTime opTime = LocalTime.of(opHour, opMinutes);
+        LocalTime clTime = LocalTime.of(clHour, clMinutes);
+        Optional<Manager> manager1 = cookieFirm.findManager(manager);
+
+        if(manager1.isPresent()) {
+            manager1.get().changeOpeningTime(day, opTime);
+            manager1.get().changeClosingTime(day, clTime);
+        }
+    }
+
+    public void managerChangeOpeningClosingTime(String manager, String dayName, String beginHours,
+                                      String endHours){
+        int opHour = Integer.parseInt(beginHours.split(":")[0]);
+        int opMinutes = Integer.parseInt(beginHours.split(":")[1]);
+
+        int clHour = Integer.parseInt(endHours.split(":")[0]);
+        int clMinutes = Integer.parseInt(endHours.split(":")[1]);
+
+        DayOfWeek day = dayFromName(dayName);
+
+        LocalTime opTime = LocalTime.of(opHour, opMinutes);
+        LocalTime clTime = LocalTime.of(clHour, clMinutes);
+        Optional<Manager> manager1 = cookieFirm.findManager(manager);
+
+        if(manager1.isPresent()) {
+            manager1.get().changeOpeningTime(day, opTime);
+            manager1.get().changeClosingTime(day, clTime);
+        }
+    }
+
+    public void managerChangeOpeningTime(String manager, String dayName, String beginHours){
+        int opHour = Integer.parseInt(beginHours.split(":")[0]);
+        int opMinutes = Integer.parseInt(beginHours.split(":")[1]);
+
+        DayOfWeek day = dayFromName(dayName);
+
+        LocalTime opTime = LocalTime.of(opHour, opMinutes);
+        Optional<Manager> manager1 = cookieFirm.findManager(manager);
+
+        if(manager1.isPresent()) {
+            manager1.get().changeOpeningTime(day, opTime);
+        }
+    }
+
+    public void managerChangeClosingTime(String manager, String dayName, String endHours){
+        int opHour = Integer.parseInt(endHours.split(":")[0]);
+        int opMinutes = Integer.parseInt(endHours.split(":")[1]);
+
+        DayOfWeek day = dayFromName(dayName);
+
+        LocalTime opTime = LocalTime.of(opHour, opMinutes);
+        Optional<Manager> manager1 = cookieFirm.findManager(manager);
+
+        if(manager1.isPresent()) {
+            manager1.get().changeClosingTime(day, opTime);
+        }
+    }
+
 
     public Integer createGuest(){
         Guest guest = new Guest();

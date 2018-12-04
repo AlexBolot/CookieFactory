@@ -3,7 +3,8 @@ Feature: Customer order
   Background:
     Given A store "store" with a tax 1 and margin on recipe 1
     Given The kitchen for "store" is infinite
-    Given The "store" opens "Monday" 5 hours ago and closes in 4 hours
+    Given "Francis" the manager of "store"
+    Given The store of "Francis" opens "Monday" 5 hours ago and closes in 4 hours
     Given A customer "Bob"
 
   Scenario: A customer places an order

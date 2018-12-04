@@ -255,7 +255,7 @@ public class Store {
         this.monthlyRecipe = newRecipe;
     }
 
-    public void setOpeningTime(DayOfWeek day, LocalTime localTime) {
+    void setOpeningTime(DayOfWeek day, LocalTime localTime) {
         // Check if store has a closing time for the [day], to ensure no time crossing
         if (closingTimes.containsKey(day) && localTime.isAfter(closingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set opening time after closing time for " + day);
@@ -263,7 +263,7 @@ public class Store {
         this.openingTimes.put(day, localTime);
     }
 
-    public void setClosingTime(DayOfWeek day, LocalTime localTime) {
+    void setClosingTime(DayOfWeek day, LocalTime localTime) {
         // Check if store has a opening time for the [day], to ensure no time crossing
         if (openingTimes.containsKey(day) && localTime.isBefore(openingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set closing time before opening time for " + day);

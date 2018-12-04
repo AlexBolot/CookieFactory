@@ -43,8 +43,8 @@ public class CustomerTest {
 
         // Each day the store opens 5h before now and closes 5h after now (for easier testing purposes)
         for (DayOfWeek day : DayOfWeek.values()) {
-            openingTimes.put(day, LocalTime.now().minusHours(5));
-            closingTimes.put(day, LocalTime.now().plusHours(5));
+            openingTimes.put(day, LocalTime.now().minusHours(8));
+            closingTimes.put(day, LocalTime.now().plusHours(8));
         }
 
         store = new Store("", utils.randomRecipe(), globalRecipes, openingTimes, closingTimes, 15.5, 1);

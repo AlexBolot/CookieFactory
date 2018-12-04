@@ -10,6 +10,7 @@ import statistics.CookieRatioStat;
 import statistics.IngredientRatio;
 import statistics.UnweightedIngredientCustomStat;
 import statistics.WeightedIngredientCustomStat;
+import store.Manager;
 import store.Store;
 import utils.TestUtils;
 
@@ -31,8 +32,9 @@ public class StatTest {
     public void setUp() {
         this.store = new Store("", null, new ArrayList<>(), new HashMap<>(), new HashMap<>(), 0f, 1);
         this.store.setKitchen(TestUtils.getInfiniteMockKitchen());
-        this.store.setClosingTime(DayOfWeek.MONDAY, LocalTime.now().plusHours(4));
-        this.store.setOpeningTime(DayOfWeek.MONDAY, LocalTime.now().minusHours(4));
+        Manager manager = new Manager(store, "Bob");
+        manager.changeClosingTime(DayOfWeek.MONDAY, LocalTime.now().plusHours(4));
+        manager.changeOpeningTime(DayOfWeek.MONDAY, LocalTime.now().minusHours(4));
     }
 
     @Test

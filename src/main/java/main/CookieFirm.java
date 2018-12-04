@@ -188,6 +188,17 @@ public class CookieFirm {
         return Optional.ofNullable(guest);
     }
 
+    public Optional<Manager> findManager(String name){
+        Manager manager1 = null;
+        for(Manager manager : managers){
+            if(manager.getName().equals(name)){
+                manager1 = manager;
+            }
+        }
+        return Optional.ofNullable(manager1);
+    }
+
+
     public Optional<Guest> findGuestOrCustomer(int id){
         Set<Guest> guests = getAllGuests();
         Guest guest = null;

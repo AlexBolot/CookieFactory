@@ -1,10 +1,12 @@
 package main;
 
+import cucumber.api.java.it.Ma;
 import order.Order;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import recipe.Recipe;
+import store.Manager;
 import store.Reward;
 import store.Store;
 import store.UnFaithPass;
@@ -29,8 +31,9 @@ public class UnFaithPassTest {
     public void setUp() {
         this.store = new Store("", null, new ArrayList<>(), new HashMap<>(), new HashMap<>(), 0f, 1);
         this.store.setKitchen(TestUtils.getInfiniteMockKitchen());
-        this.store.setClosingTime(DayOfWeek.MONDAY, LocalTime.now().plusHours(4));
-        this.store.setOpeningTime(DayOfWeek.MONDAY, LocalTime.now().minusHours(4));
+        Manager manager = new Manager(store, "Bob");
+        manager.changeOpeningTime(DayOfWeek.MONDAY, LocalTime.now().minusHours(4));
+        manager.changeClosingTime(DayOfWeek.MONDAY, LocalTime.now().plusHours(4));
 
     }
 

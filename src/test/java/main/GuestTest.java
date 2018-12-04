@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import recipe.Recipe;
+import store.Manager;
 import store.Store;
 import utils.TestUtils;
 
@@ -35,8 +36,10 @@ public class GuestTest {
 
         Store store = new Store("", utils.randomRecipe(), globalRecipes, new HashMap<>(), new HashMap<>(), 14, 1);
 
-        store.setOpeningTime(MONDAY, LocalTime.now().minusHours(6));
-        store.setClosingTime(MONDAY, LocalTime.now().plusHours(6));
+        Manager manager = new Manager(store, "Bob");
+
+        manager.changeOpeningTime(MONDAY, LocalTime.now().minusHours(6));
+        manager.changeClosingTime(MONDAY, LocalTime.now().plusHours(6));
 
         order = new Order(store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek.MONDAY)));
         order.getStore().setKitchen(getInfiniteMockKitchen());

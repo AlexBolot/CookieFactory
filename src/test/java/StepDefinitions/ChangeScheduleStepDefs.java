@@ -1,13 +1,17 @@
 package StepDefinitions;
 
+import cucumber.api.PendingException;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.junit.Assert;
 import store.Manager;
+import store.Store;
 import utils.CucumberContext;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.Optional;
 
 public class ChangeScheduleStepDefs {
 
@@ -16,29 +20,14 @@ public class ChangeScheduleStepDefs {
     private Exception openingTimeException;
     private Exception closingTimeException;
 
+    @Given("^The store manage by \"([^\"]*)\" opens \"([^\"]*)\" at \"([^\"]*)\" and closes at \"([^\"]*)\"$")
+    public void theStoreManageByOpensAtAndClosesAt(String mName, String sDay, String opening, String closing) throws Throwable {
+        context.getFacade().addOpeningClosingTime(mName, sDay, opening, closing);
+    }
 
     @When("^\"([^\"]*)\" changes opening time of \"([^\"]*)\" to \"([^\"]*)\"$")
     public void theManagerChangesOpeningTime(String managerName, String dayName, String openingTime) {
-
-        //Given the template Hours:Minutes
-        int opHour = Integer.parseInt(openingTime.split(":")[0]);
-        int opMinutes = Integer.parseInt(openingTime.split(":")[1]);
-
-        DayOfWeek day = context.utils.dayFromName(dayName);
-
-        LocalTime opTime = LocalTime.of(opHour, opMinutes);
-
-        Manager manager = context.managers.get(managerName);
-
-        try {
-            manager.changeOpeningTime(day, opTime);
-
-            if (opTime.isAfter(manager.getStore().closingTime(day)))
-                Assert.fail("Expecting IllegalArgumentException to be thrown");
-
-        } catch (IllegalArgumentException iae) {
-            openingTimeException = iae;
-        }
+        context.getFacade().managerChangeOpeningTime(managerName, dayName, openingTime);
     }
 
     @Then("^The \"([^\"]*)\" opening of \"([^\"]*)\" is \"([^\"]*)\"$")
@@ -52,30 +41,14 @@ public class ChangeScheduleStepDefs {
 
         LocalTime expectedOpTime = LocalTime.of(opHour, opMinutes);
 
-        Assert.assertEquals(expectedOpTime, context.stores.get(storeName).openingTime(day));
+        Optional<Store> store = context.cookieFirm().findStore(storeName);
+        if (store.isPresent())
+            Assert.assertEquals(expectedOpTime, store.get().openingTime(day));
     }
 
     @When("^\"([^\"]*)\" changes closing time of \"([^\"]*)\" to \"([^\"]*)\"$")
     public void theManagerChangesClosingTime(String managerName, String dayName, String closingTime) {
-        //Given the template Hours:Minutes
-        int opHour = Integer.parseInt(closingTime.split(":")[0]);
-        int opMinutes = Integer.parseInt(closingTime.split(":")[1]);
-
-        DayOfWeek day = context.utils.dayFromName(dayName);
-
-        LocalTime clTime = LocalTime.of(opHour, opMinutes);
-
-        Manager manager = context.managers.get(managerName);
-
-        try {
-            manager.changeClosingTime(day, clTime);
-
-            if (clTime.isBefore(manager.getStore().openingTime(day)))
-                Assert.fail("Expecting IllegalArgumentException to be thrown");
-
-        } catch (IllegalArgumentException iae) {
-            closingTimeException = iae;
-        }
+        context.getFacade().managerChangeClosingTime(managerName, dayName, closingTime);
     }
 
     @Then("^The \"([^\"]*)\" closing of \"([^\"]*)\" is \"([^\"]*)\"$")
@@ -89,7 +62,9 @@ public class ChangeScheduleStepDefs {
 
         LocalTime expectedClTime = LocalTime.of(clHour, clMinutes);
 
-        Assert.assertEquals(expectedClTime, context.stores.get(storeName).closingTime(day));
+        Optional<Store> store = context.cookieFirm().findStore(storeName);
+        if(store.isPresent())
+            Assert.assertEquals(expectedClTime, store.get().closingTime(day));
     }
 
     @Then("^Changing opening time of \"([^\"]*)\" fails$")
@@ -105,4 +80,7 @@ public class ChangeScheduleStepDefs {
         Assert.assertEquals(closingTimeException.getMessage(), exception.getMessage());
         closingTimeException = null;
     }
+
+
+
 }

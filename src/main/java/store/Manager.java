@@ -8,9 +8,11 @@ import java.time.LocalTime;
 public class Manager {
 
     private Store store;
+    private String name;
 
-    public Manager(Store store) {
+    public Manager(Store store, String name) {
         this.store = store;
+        this.name = name;
     }
 
     public void changeOpeningTime(DayOfWeek day, LocalTime time) {
@@ -28,6 +30,8 @@ public class Manager {
     public Store getStore() {
         return store;
     }
+
+    public String getName(){return name;}
 
 
 }

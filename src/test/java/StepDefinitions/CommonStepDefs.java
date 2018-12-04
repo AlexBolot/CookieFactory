@@ -53,14 +53,13 @@ public class CommonStepDefs {
 
     @Given("^\"([^\"]*)\" the manager of \"([^\"]*)\"$")
     public void theManagerOf(String managerName, String storeName) {
-        //TODO a refaire avec la facade
-        Manager manager = new Manager(context.stores.get(storeName));
-        context.managers.put(managerName, manager);
+        context.getFacade().addManagerToStore(managerName, storeName);
     }
 
-    @Given("^The \"([^\"]*)\" opens \"([^\"]*)\" (\\d+) hours ago and closes in (\\d+) hours$")
-    public void theStoreOpensHoursAgoAndClosesInHours(String storeName, String dayName, int behindHours, int aheadHours) {
-        context.getFacade().addOpeningClosingTime(storeName, dayName, behindHours, aheadHours);
+    @Given("^The store of \"([^\"]*)\" opens \"([^\"]*)\" (\\d+) hours ago and closes in (\\d+) hours$")
+    public void theStoreOpensHoursAgoAndClosesInHours(String mManager, String dayName, int behindHours,
+                                                      int aheadHours) {
+        context.getFacade().addOpeningClosingTimeFromNow(mManager, dayName, behindHours, aheadHours);
 
     }
 

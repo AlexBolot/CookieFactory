@@ -38,6 +38,12 @@ public class Facade {
         }
     }
 
+    public Integer createGuest(){
+        Guest guest = new Guest();
+        this.cookieFirm.addGuest(guest);
+        return guest.getId();
+    }
+
     public Optional<Integer> guestCreateAccount(int idGuest, String fName, String lastN, String phone, String email,
                                   String password){
         Optional<Guest> opGuest = this.cookieFirm.findGuest(idGuest);
@@ -102,6 +108,7 @@ public class Facade {
 
         if (opGuest.isPresent() && opStore.isPresent()) {
             Order order = opGuest.get().getTemporaryOrder();
+            order.setStore(opStore.get());
             order.addCookie(opStore.get().getMonthlyRecipe(), quantity);
         }
     }
@@ -143,10 +150,14 @@ public class Facade {
     }
 
 
-    /*public void guestValidateHisOrder(String sEmail){
-
+    public void guestValidateHisOrder(int id, String email, boolean pay){
+        Optional<Guest> opGuest = this.cookieFirm.findGuest(id);
+        if(opGuest.isPresent()) {
+            opGuest.get().setEmail(email);
+            opGuest.get().placeOrder(pay);
+        }
     }
-    */
+
 
     public void setBankingDataCustomer(String sEmail, String accountId){
         Optional<Customer> opCustomer = this.cookieFirm.findCustomer(sEmail);
@@ -168,11 +179,11 @@ public class Facade {
             Optional<Order> opOrder = opStore.get().findOrder(generateTime(time, day), email);
 
             if(opOrder.isPresent()) {
-                if(action.equals("cancel")) {
+                if(action.toUpperCase().equals("CANCEL")) {
                     opOrder.get().cancel();
                     return true;
                 }
-                else if(action.equals("withdrawn")){
+                else if(action.toUpperCase().equals("WITHDRAWN")){
                     opOrder.get().withdraw();
                     return true;
                 }
@@ -182,9 +193,22 @@ public class Facade {
     }
 
 
+    public String anEmployeeSearchAnOrderState(String sStore, int time, String day, String email){
+        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
+
+        if(opStore.isPresent()){
+            Optional<Order> opOrder = opStore.get().findOrder(generateTime(time, day), email);
+
+            if(opOrder.isPresent()) {
+                return opOrder.get().getState().toString();
+            }
+        }
+        return "none";
+    }
+
     private LocalDateTime generateTime(int pickupTime, String pickUpDay) {
         return LocalDateTime.now().plusHours(pickupTime).with(TemporalAdjusters
-                .next(DayOfWeek.valueOf(pickUpDay.toUpperCase())));
+                .next(DayOfWeek.valueOf(pickUpDay.toUpperCase()))).withSecond(0).withNano(0);
     }
 
     public DayOfWeek dayFromName(String dayName) {

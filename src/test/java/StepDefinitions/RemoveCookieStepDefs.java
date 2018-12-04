@@ -31,11 +31,6 @@ public class RemoveCookieStepDefs {
         order.removeCookie(order.getOrderLines().get(0).getRecipe(), cookieAmount);
     }
 
-    @Given("^A guest$")
-    public void aGuest() {
-        this.guest = new Guest();
-    }
-
     @Given("^An order with (\\d+) recipe of (\\d+) cookie$")
     public void anOrderWithRecipeOfCookie(int recipies, int cookies) {
         this.order = new Order();

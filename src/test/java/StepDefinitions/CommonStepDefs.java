@@ -1,7 +1,9 @@
 package StepDefinitions;
 
 import cucumber.api.PendingException;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.api.java.sl.In;
 import main.Guest;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class CommonStepDefs {
@@ -29,6 +32,12 @@ public class CommonStepDefs {
         store.setMonthlyRecipe(utils.randomRecipe());
         store.setKitchen(getInfiniteMockKitchen());
     }
+    @Given("^The kitchen for \"([^\"]*)\" is infinite$")
+    public void theKitchenForIsInfinite(String storeName) {
+        Optional<Store> opStore = context.cookieFirm().findStore(storeName);
+        if(opStore.isPresent())
+            opStore.get().setKitchen(getInfiniteMockKitchen());
+    }
 
     @Given("^A customer \"([^\"]*)\"$")
     public void aCustomer(String name) {
@@ -37,13 +46,14 @@ public class CommonStepDefs {
         context.getFacade().setBankingDataCustomer(utils.createEmail(name), "02833777");
     }
 
-    @Given("^A guest \"([^\"]*)\"$")
-    public void aGuest(String name) {
-        context.addGuest(name, new Guest());
+    @Given("^A guest$")
+    public void aGuest() {
+        context.setCurrentId(context.getFacade().createGuest());
     }
 
     @Given("^\"([^\"]*)\" the manager of \"([^\"]*)\"$")
     public void theManagerOf(String managerName, String storeName) {
+        //TODO a refaire avec la facade
         Manager manager = new Manager(context.stores.get(storeName));
         context.managers.put(managerName, manager);
     }
@@ -54,11 +64,6 @@ public class CommonStepDefs {
 
     }
 
-
-    @Given("^The kitchen for \"([^\"]*)\" is infinite$")
-    public void theKitchenForIsInfinite(String storeName) {
-        context.getStore(storeName).setKitchen(getInfiniteMockKitchen());
-    }
 
     @Given("^The customer choose a store \"([^\"]*)\" to pickup \"([^\"]*)\" in (\\d+) hours$")
     public void aCustomerChooseAStoreToPickupInHours(String sStore, String sDay, int time) throws Throwable {
@@ -79,4 +84,15 @@ public class CommonStepDefs {
     }
 
 
+    @Then("^The \"([^\"]*)\" purchase the order with (\\d+), \"([^\"]*)\", \"([^\"]*)\" and \"([^\"]*)\" it$")
+    public void thePurschaseTheOrderWithAndIt(String sStore, int time, String day, String email, String action) throws Throwable {
+        context.getFacade().anEmployeeMakeAnActionOnOrder(sStore, time, day, email, action);
+    }
+
+
+
+    @And("^The order in the \"([^\"]*)\" with (\\d+), \"([^\"]*)\" made by \"([^\"]*)\" is \"([^\"]*)\"$")
+    public void theOrderInTheWithMadeByIs(String sStore, int time, String day, String email, String etat) throws Throwable {
+        assertEquals(etat.toUpperCase(), context.getFacade().anEmployeeSearchAnOrderState(sStore, time, day, email));
+    }
 }

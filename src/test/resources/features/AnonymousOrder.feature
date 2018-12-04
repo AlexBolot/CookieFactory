@@ -1,14 +1,14 @@
 Feature: Anonymous order
   Background:
-    Given A store "store"
+    Given A store "store" with a tax 1 and margin on recipe 1
     Given The kitchen for "store" is infinite
     Given The "store" opens "Monday" 5 hours ago and closes in 4 hours
-
+    Given A guest
 
   Scenario: A customer put an order anonymously
-    Given A guest "Joelle" have selected 4 cookies in the "store"
-    And "Joelle" choose to pickup her "order1" in 3 hours in the "store" on "Monday" and want to pay "in the store"
-    And "Joelle" entered her "jojo@gmail.com" to put her "order1"
-    Then The purchase "order1" is scan in the "store"
+    Given The customer add 4 cookies from the "store"
+    Given The customer choose a store "store" to pickup "Monday" in 2 hours
+    And The customer entered her "jojo@gmail.com" to place her order and pay "not online"
     And "Joelle" pay her cookies
-    And The order is "Withdrawn"
+    Then The "store" purchase the order with 2, "Monday", "jojo@gmail.com" and "Withdrawn" it
+    And The order in the "store" with 2, "Monday" made by "jojo@gmail.com" is "Withdrawn"

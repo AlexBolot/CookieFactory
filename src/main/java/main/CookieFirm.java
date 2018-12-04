@@ -163,7 +163,7 @@ public class CookieFirm {
         }
         guests.removeIf((guest -> guest.getId() == customer.getId()));
         guests =
-                guests.stream().filter(g -> !g.getEmail().equals(customer.getEmail())).collect(Collectors.toSet());
+                guests.stream().filter(g -> !customer.getEmail().equals(g.getEmail())).collect(Collectors.toSet());
         accounts.add(customer);
         return true;
     }
@@ -178,7 +178,7 @@ public class CookieFirm {
         return Optional.ofNullable(customer);
     }
 
-    Optional<Guest> findGuest(int id){
+    public Optional<Guest> findGuest(int id){
         Guest guest = null;
         for(Guest account : this.guests){
             if(account.getId() == id){

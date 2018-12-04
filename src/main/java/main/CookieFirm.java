@@ -9,6 +9,7 @@ import store.Store;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CookieFirm {
 
@@ -160,7 +161,9 @@ public class CookieFirm {
                 return false;
             }
         }
-        guests = guests.stream().filter(g -> !g.getEmail().equals(customer.getEmail())).collect(Collectors.toSet());
+        guests.removeIf((guest -> guest.getId() == customer.getId()));
+        guests =
+                guests.stream().filter(g -> !g.getEmail().equals(customer.getEmail())).collect(Collectors.toSet());
         accounts.add(customer);
         return true;
     }
@@ -185,7 +188,20 @@ public class CookieFirm {
         return Optional.ofNullable(guest);
     }
 
-    Optional<Store> findStore(String name) {
+    public Optional<Guest> findGuestOrCustomer(int id){
+        Set<Guest> guests = getAllGuests();
+        Guest guest = null;
+        for(Guest account : guests){
+            if(account.getId() == id){
+                guest = account;
+            }
+        }
+        return Optional.ofNullable(guest);
+    }
+
+
+
+    public Optional<Store> findStore(String name) {
         Store store = null;
         for (Store s : this.stores) {
             if (s.getName().equals(name))
@@ -223,6 +239,10 @@ public class CookieFirm {
 
     Set<Guest> getGuests() {
         return guests;
+    }
+
+    Set<Guest> getAllGuests(){
+        return Stream.concat(guests.stream(),accounts.stream()).collect(Collectors.toSet());
     }
 
     public Set<Customer> getAccounts() {

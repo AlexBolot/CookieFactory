@@ -27,22 +27,19 @@ public class CustomerOrderStepDefs {
     private TestUtils utils = new TestUtils();
 
 
-    @Then("^\"([^\"]*)\" has (\\d+) order in his history$")
-    public void hasOrderInHisHistory(String name, int amount) {
+    @Then("^The customer with the email \"([^\"]*)\" has (\\d+) order in his history$")
+    public void theCustomerWithTheEmailHasOrderInHisHistory(String name, int amount) throws Throwable {
         Optional<Customer> opCustomer = context.cookieFirm().findCustomer(utils.createEmail(name));
         if(opCustomer.isPresent())
             assertEquals(amount, opCustomer.get().getOrderHistory().size());
     }
 
-    @And("^\"([^\"]*)\" has an empty temporary order$")
-    public void hasAnEmptyTempraryOrder(String name) {
+    @And("^The customer with the email \"([^\"]*)\" has an empty temporary order$")
+    public void theCustomerWithTheEmailHasAnEmptyTemporaryOrder(String name) throws Throwable {
         Optional<Customer> opCustomer = context.cookieFirm().findCustomer(utils.createEmail(name));
         if(opCustomer.isPresent())
-            assertEquals(new Order(), opCustomer.get().getTemporaryOrder());
+            assertEquals( 0, opCustomer.get().getTemporaryOrder().getOrderLines().size());
     }
-
-
-
 }
 
 

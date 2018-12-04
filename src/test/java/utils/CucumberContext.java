@@ -18,6 +18,7 @@ public class CucumberContext {
     private final Map<String, Guest> clients = new HashMap<>();
     public final Map<String, Order> orders = new HashMap<>();
     public final TestUtils utils = new TestUtils();
+    private Integer currentId;
 
 
     private final Facade facade = new Facade();
@@ -30,6 +31,13 @@ public class CucumberContext {
         return context;
     }
 
+    public Integer getCurrentId(){
+        return this.currentId;
+    }
+
+    public void setCurrentId(Integer id){
+        this.currentId = id;
+    }
     public void addGuest(String name, Guest guest) {
         clients.put(name, guest);
     }

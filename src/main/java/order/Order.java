@@ -193,6 +193,6 @@ public class Order {
 
     @Override
     public int hashCode() {
-        return Objects.hash(store, orderLines, pickUpTime, orderState, payed, guest);
+        return Objects.hash(store, orderLines, pickUpTime, orderState, payed, guest.getId());
     }
 }

@@ -195,7 +195,7 @@ public class CustomerTest {
         guest.setBankingData(bankingData);
         guest.setEmail("bob.rasovski@gmail.com");
 
-        Customer customer = Customer.from(guest, "Bob", "Rasovski", "0648593823", "password");
+        Customer customer = Customer.from(guest, "Bob", "Rasovski", "0648593823","bob.rasovski@gmail.com", "password");
 
         assertEquals(guest.getId(), customer.getId());
         assertEquals(guest.getBankingData(), customer.getBankingData());

@@ -49,16 +49,25 @@ public class Customer extends Guest {
      */
     @Override
     public double placeOrder(boolean onlinePayment) {
-
         Order order = getTemporaryOrder();
 
-        double price = super.placeOrder(onlinePayment);
+
+        if (order.isPayed())
+            throw new IllegalStateException("The order you are trying to place has already been paid");
+
+        double price = order.getStore().placeOrder(order);
+
+        if (onlinePayment) {
+            order.setPayed();
+        }
 
         if (loyaltyProgram && haveDiscount) {
             useDiscount();
         }
 
         addToOrderHistory(order);
+
+        setTemporaryOrder(initOrder());
 
         return price;
     }

@@ -39,6 +39,17 @@ public class Store {
         this.customRecipeeMargin = customeRecipeeMargin;
     }
 
+    public Store(String name, double tax, double customeRecipeeMargin)
+    {
+        this.name = name;
+        this.monthlyRecipe = null;
+        this.globalRecipes = new ArrayList<>();
+        this.openingTimes = new HashMap<>();
+        this.closingTimes = new HashMap<>();
+        this.tax = tax;
+        this.customRecipeeMargin = customeRecipeeMargin;
+    }
+
     public double placeOrder(Order order) {
 
         // Throws exception if order not valid
@@ -213,6 +224,7 @@ public class Store {
         return monthlyRecipe;
     }
 
+
     public Collection<Order> getOrders() {
         return orders;
     }
@@ -235,7 +247,7 @@ public class Store {
      *
      * @param newRecipe new monthly recipe.ingredient of the store
      */
-    void setMonthlyRecipe(Recipe newRecipe) {
+    public void setMonthlyRecipe(Recipe newRecipe) {
         if (this.monthlyRecipe != null && this.monthlyRecipe == newRecipe) {
             throw new IllegalArgumentException("Recipe " + newRecipe + " is the same as the previous one");
         }

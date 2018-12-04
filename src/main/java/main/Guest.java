@@ -46,7 +46,7 @@ public class Guest {
     }
 
     /**
-     * Order a custom recipe by giving the ingrdients to a recipe Factory
+     * Order a custom recipe by giving the ingredients to a recipe Factory
      *
      * @param quantity of cookie ordered
      * @param dough

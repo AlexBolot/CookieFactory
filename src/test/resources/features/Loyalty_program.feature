@@ -1,15 +1,19 @@
 Feature: Loyalty Program
 
   Background:
-    Given A store "store"
+    Given A store "store" with a tax 1 and margin on recipe 1
     Given The kitchen for "store" is infinite
-    Given The store "store" opens "Monday" 5 hours ago and closes in 4 hours
-    Given The store "store" opens "Friday" 5 hours ago and closes in 6 hours
+    Given "Francis" the manager of "store"
+    Given The store of "Francis" opens "Monday" 5 hours ago and closes in 4 hours
+    Given The store of "Francis" opens "Friday" 5 hours ago and closes in 6 hours
 
-@Ignore pb de prix
   Scenario: An customer have discount at his second order
     Given A customer "Frank"
-    Given "Frank" is in the loyaltyProgram
-    Given "Frank" made an "order1" into the "store" in 3 hours, on "Monday", with 40 cookies
-    And "Frank" made an "order2" into the "store" in 4 hours, on "Friday", with 10 cookies
-    When "Frank" see the price of his "order2" with 10 cookies it have a discount
+    Given "Frank@Frank.fr" is in the loyaltyProgram
+    Given The customer choose a store "store" to pickup "Monday" in 2 hours
+    Given The customer add 40 cookies from the "store"
+    Given The customer place his order and pay "online"
+    And The customer choose a store "store" to pickup "Friday" in 2 hours
+    And The customer add 10 cookies from the "store"
+    And The customer place his order and pay "online"
+    When "Frank@Frank.fr" see the price of his order with 10 cookies it have a discount

@@ -19,6 +19,7 @@ public class CookieFirm {
     private List<Manager> managers = new ArrayList<>();
     private List<Recipe> globalRecipes = new ArrayList<>();
     private BankAPI bankAPI = new BankAPI();
+    private Catalog catalog;
 
     private static boolean inflated = false;
     private static CookieFirm cookieFirm = new CookieFirm();
@@ -29,7 +30,7 @@ public class CookieFirm {
 
     private CookieFirm() {
 
-        Catalog catalog = new Catalog();
+        this.catalog = new Catalog();
 
         //Recipe 1: Peanut Butter / Chili / / Mixed / Crunchy
         this.globalRecipes.add(new Recipe("Pathway to hell",
@@ -266,6 +267,10 @@ public class CookieFirm {
 
     public BankAPI getBankAPI() {
         return bankAPI;
+    }
+
+    Catalog getCatalog() {
+        return catalog;
     }
 
     public void addCustomerToLoyaltyProgram(Customer customer) {

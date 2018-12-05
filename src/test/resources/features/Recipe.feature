@@ -1,15 +1,9 @@
 Feature: Create a Recipe
 
   Background:
-    Given A store "store"
+    Given A store "store" with a tax 1 and margin on recipe 1
     Given "Bob" the manager of "store"
 
   Scenario: Adding a monthy recipe
-    Given A recipe "monthly" is created by "Bob"
-    And The dough of "monthly" is "Chocolate"
-    And The flavor of "monthly" is "Vanilla"
-    And The topping of "monthly" is "M&M's"
-    And The mix of "monthly" is "Mixed"
-    And The cooking of "monthly" is "Crunchy"
-    When "Bob" add "monthly" as monthly recipe
-    Then The monthly recipe of the store of "Bob" is "monthly"
+    Given "Bob" add the recipe named "New" have "Chocolate", flavor "Vanilla", topping "M&M's", mix "Mixed", cooking "Crunchy"
+    Then The monthly recipe of the "store" is "New"

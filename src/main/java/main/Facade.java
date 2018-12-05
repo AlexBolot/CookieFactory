@@ -3,6 +3,7 @@ package main;
 import api.BankingData;
 import order.Order;
 import recipe.Recipe;
+import recipe.ingredient.*;
 import store.Manager;
 import store.Store;
 
@@ -10,6 +11,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class Facade {
@@ -112,6 +115,20 @@ public class Facade {
 
         if(manager1.isPresent()) {
             manager1.get().changeClosingTime(day, opTime);
+        }
+    }
+
+    public void managerAddMonthlyCookie(String manager, String recipeName, String dough, String flavor, String topping,
+                                        String mix,
+                                        String cooking){
+        List<Topping> toppingList = new ArrayList<>();
+        toppingList.add(toppingFromName(topping));
+        Recipe recipe = new Recipe(recipeName, doughFromName(dough), flavorFromName(flavor), toppingList,
+                mixFromName(mix), cookingFromName(cooking), false);
+
+        Optional<Manager> manager1 = cookieFirm.findManager(manager);
+        if(manager1.isPresent()){
+            manager1.get().changeMontlyRecipe(recipe);
         }
     }
 
@@ -316,6 +333,41 @@ public class Facade {
     public DayOfWeek dayFromName(String dayName) {
         for (DayOfWeek day : DayOfWeek.values()) {
             if (day.name().equalsIgnoreCase(dayName)) return day;
+        }
+        return null;
+    }
+
+    public Mix mixFromName(String mixName) {
+        for (Mix mix : cookieFirm.getCatalog().getMixList()) {
+            if (mix.getName().equalsIgnoreCase(mixName)) return mix;
+        }
+        return null;
+    }
+
+    public Cooking cookingFromName(String cookingName) {
+        for (Cooking cooking : cookieFirm.getCatalog().getCookingList()) {
+            if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
+        }
+        return null;
+    }
+
+    public Dough doughFromName(String doughName) {
+        for (Dough dough : cookieFirm.getCatalog().getDoughList()) {
+            if (dough.getName().equalsIgnoreCase(doughName)) return dough;
+        }
+        return null;
+    }
+
+    public Topping toppingFromName(String toppingName) {
+        for (Topping topping : cookieFirm.getCatalog().getToppingList()) {
+            if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
+        }
+        return null;
+    }
+
+    public Flavor flavorFromName(String flavorName) {
+        for (Flavor flavor : cookieFirm.getCatalog().getFlavorList()) {
+            if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
         }
         return null;
     }

@@ -5,6 +5,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import main.Guest;
 import order.Order;
+import order.OrderLine;
 import recipe.Recipe;
 import recipe.ingredient.Catalog;
 import store.Store;
@@ -32,7 +33,11 @@ public class RemoveCookieStepDefs {
     public void theOrderContainsCookieRecipee(int recipeeAmount) {
         Optional<Guest> guest = context.cookieFirm().findGuest(context.getCurrentId());
         if(guest.isPresent()){
-            assertEquals(guest.get().getTemporaryOrder().getOrderLines(), recipeeAmount);
+            int count = 0;
+            for(OrderLine orderLine : guest.get().getTemporaryOrder().getOrderLines()) {
+                count += orderLine.getAmount();
+            }
+            assertEquals(count, recipeeAmount);
         }
     }
 }

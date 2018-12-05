@@ -1,11 +1,11 @@
 Feature: Remove Cookie Order
 
   Background:
+    Given A store "store" with a tax 1 and margin on recipe 1
+    Given The kitchen for "store" is infinite
     Given A guest
-    Given An order with 2 recipe of 1 cookie
+    Given The customer add 4 cookies from the "store"
 
-    @Ignore
   Scenario: Retirer 1 élément dans le panier
-    Given The customer checks his order
-    When The customer select 1 cookie to remove
-    Then The order contains 1 cookie recipee
+    When The customer select 1 cookie to remove from the "store"
+    Then The order contains 3 cookie recipee

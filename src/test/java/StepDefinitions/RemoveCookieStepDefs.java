@@ -8,50 +8,31 @@ import order.Order;
 import recipe.Recipe;
 import recipe.ingredient.Catalog;
 import store.Store;
+import utils.CucumberContext;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class RemoveCookieStepDefs {
 
-    private Guest guest;
-    private Order order;
+    private final CucumberContext context= CucumberContext.getContext();
 
-    @Given("^The customer checks his order$")
-    public void theChecksHisOrder() {
-        order = guest.getTemporaryOrder();
-        order.setGuest(guest);
+
+    @When("^The customer select (\\d+) cookie to remove from the \"([^\"]*)\"$")
+    public void theSelectCookieToRemove(int cookieAmount, String store) {
+        context.getFacade().guestRemoveCookies(context.getCurrentId(), store, cookieAmount);
     }
 
-    @When("^The customer select (\\d+) cookie to remove$")
-    public void theSelectCookieToRemove(int cookieAmount) {
-        order.removeCookie(order.getOrderLines().get(0).getRecipe(), cookieAmount);
-    }
-
-    @Given("^An order with (\\d+) recipe of (\\d+) cookie$")
-    public void anOrderWithRecipeOfCookie(int recipies, int cookies) {
-        this.order = new Order();
-        this.order.setStore(new Store("", null, Collections.emptyList(), new HashMap<>(), new HashMap<>(), 1.0, 1));
-        this.order.getStore().setKitchen(getInfiniteMockKitchen());
-        final Catalog kitchen = new Catalog();
-        for (int i = 0; i < recipies; i++) {
-            Recipe recipe = new Recipe(String.valueOf(i),
-                    kitchen.getDoughList().get(0),
-                    kitchen.getFlavorList().get(0),
-                    kitchen.getToppingList().subList(0, 1),
-                    kitchen.getMixList().get(0),
-                    kitchen.getCookingList().get(0),
-                    true);
-            this.order.addCookie(
-                    recipe, cookies);
-        }
-    }
 
     @Then("^The order contains (\\d+) cookie recipee$")
     public void theOrderContainsCookieRecipee(int recipeeAmount) {
-        assertEquals(recipeeAmount, this.order.getOrderLines().size());
+        Optional<Guest> guest = context.cookieFirm().findGuest(context.getCurrentId());
+        if(guest.isPresent()){
+            assertEquals(guest.get().getTemporaryOrder().getOrderLines(), recipeeAmount);
+        }
     }
 }

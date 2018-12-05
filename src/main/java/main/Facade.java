@@ -208,6 +208,17 @@ public class Facade {
         }
     }
 
+    public void guestRemoveCookies(int id, String sStore, int quantity){
+        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
+        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
+
+        if (opGuest.isPresent() && opStore.isPresent()) {
+            Order order = opGuest.get().getTemporaryOrder();
+            order.setStore(opStore.get());
+            order.removeCookie(opStore.get().getMonthlyRecipe(), quantity);
+        }
+    }
+
     public void guestAddSpecificCookie(int id, String sStore, int quantity, String recipeName){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
@@ -217,6 +228,21 @@ public class Facade {
             for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
                 if (cookie.getName().equals(recipeName)) {
                     opGuest.get().getTemporaryOrder().addCookie(cookie, quantity);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void guestRemoveSpecificCookie(int id, String sStore, int quantity, String recipeName){
+        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
+        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
+
+        if (opGuest.isPresent() && opStore.isPresent()) {
+            opGuest.get().getTemporaryOrder().setStore(opStore.get());
+            for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
+                if (cookie.getName().equals(recipeName)) {
+                    opGuest.get().getTemporaryOrder().removeCookie(cookie, quantity);
                     return;
                 }
             }

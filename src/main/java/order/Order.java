@@ -22,6 +22,7 @@ public class Order {
     private OrderState orderState = DRAFT;
 
     private boolean payed = false;
+    private boolean hadDiscount=false;
     private Guest guest;
 
     public Order(Store store, LocalDateTime pickUpTime) {
@@ -127,6 +128,7 @@ public class Order {
 
         double price = orderLines.stream().mapToDouble(line -> line.getAmount() * store.getRecipePrice(line.getRecipe())).sum() * storeTax;
         if (guest.isInLoyaltyProgram() && guest.canHaveDiscount()) {
+            hadDiscount = true;
             price = (price * 0.90);
         }
 
@@ -172,6 +174,10 @@ public class Order {
     public void pay() {
         CookieFirm.instance().getBankAPI().pay(guest.getBankingData(), this.getPrice());
         this.payed = true;
+    }
+
+    public boolean didItHadDiscount(){
+        return hadDiscount;
     }
 
     public OrderState getState() {

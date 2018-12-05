@@ -32,14 +32,22 @@ public class LoyaltyProgramStepdefs {
     @When("^\"([^\"]*)\" see the price of his order with (\\d+) cookies it have a discount$")
     public void seeThePriceOfHisOrderWithCookiesItHaveADiscount(String sCustomer, int nbCookie) throws Throwable {
         Optional<Customer> customer = context.cookieFirm().findCustomer(sCustomer);
-
+        double price;
         if(customer.isPresent()) {
             Collection<Order> order = customer.get().getOrderHistory();
             List<Order> orderList = new ArrayList<>(order);
             Order currentOrder = orderList.get(orderList.size()-1);
 
             double orderLinePrices = currentOrder.getOrderLines().stream().mapToDouble(line -> line.getAmount() * currentOrder.getStore().getRecipePrice(line.getRecipe())).sum();
-            //assertEquals(orderLinePrices * 0.9, price, 0);
+
+            if(currentOrder.didItHadDiscount()){
+                price = currentOrder.getPrice() * 0.9;
+            }
+            else
+            {
+                price = currentOrder.getPrice();
+            }
+            assertEquals(orderLinePrices * 0.9, price, 0);
         }
     }
 }

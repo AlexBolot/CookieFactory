@@ -132,6 +132,25 @@ public class Facade {
         }
     }
 
+    public void managerChangeIngredientMargin(String managerName, String type, String ingredientName, double newMargin) {
+        Ingredient ingredient;
+        if(type.equals("dough")) {
+            ingredient = doughFromName(ingredientName);
+        } else if (type.equals("flavor")) {
+            ingredient = flavorFromName(ingredientName);
+        } else if (type.equals("topping")) {
+            ingredient = toppingFromName(ingredientName);
+        } else {
+            return;
+        }
+
+        Optional<Manager> opManager = cookieFirm.findManager(managerName);
+        if (opManager.isPresent()) {
+            opManager.get().changeIngredientMargin(ingredient,newMargin);
+        }
+
+    }
+
 
     public Integer createGuest(){
         Guest guest = new Guest();

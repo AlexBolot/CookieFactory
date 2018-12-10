@@ -1,13 +1,16 @@
 Feature: Account creation while ordering
 
   Background:
-    Given A guest "guest"
+    Given A store "store" with a tax 1 and margin on recipe 1
+    Given The kitchen for "store" is infinite
+    Given "Francis" the manager of "store"
+    Given The store of "Francis" opens "Monday" 5 hours ago and closes in 4 hours
+    Given A guest
 
-@Ignore
   Scenario: Account creation while ordering
-    Given An order "Order1" with 2 cookies "Dreams On"
-    And A guest "guest" is ordering the order "Order1"
-    And The guest "guest" gives "email@email" as email
-    When The guest "guest" create an account "customer" at the name of "John" "Doe" with the password "azerty" and the phone "06.06.06.06.06"
-    Then The account "customer" is saved
-    And The order "Order1" is saved in the account "customer"
+    Given The customer add 4 cookies from the "store"
+    Given The customer choose a store "store" to pickup "Monday" in 2 hours
+    And The customer entered her "jojo@jojo.com" to place her order and pay "not online"
+    When The guest create an account at the name of "Jo" "Doe" with the password "azerty" and the phone "06.06.06.06.06" from "jojo@jojo.com"
+    Then The account with "jojo@jojo.com" is saved
+    And The order in the "store" with 2, "Monday" made by "jojo@jojo.com" is saved

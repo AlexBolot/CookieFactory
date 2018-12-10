@@ -351,7 +351,7 @@ public class Facade {
         return "none";
     }
 
-    private LocalDateTime generateTime(int pickupTime, String pickUpDay) {
+    public LocalDateTime generateTime(int pickupTime, String pickUpDay) {
         return LocalDateTime.now().plusHours(pickupTime).with(TemporalAdjusters
                 .next(DayOfWeek.valueOf(pickUpDay.toUpperCase()))).withSecond(0).withNano(0);
     }

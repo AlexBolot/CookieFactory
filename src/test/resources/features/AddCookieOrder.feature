@@ -23,6 +23,7 @@ Feature: Add cookie to order
     Then The order contain 1 orderLines
     And The order contain 2 cookie "White Dog"
 
+      @Ignore
   Scenario: Add no cookie if cannot do the recipe
     And The kitchen of "emptyStore" is empty
     And The guest is ordering at the store "emptyStore"

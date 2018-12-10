@@ -2,6 +2,7 @@ Feature: Add cookie to order
 
   Background:
     Given A store "emptyStore" with a tax 1 and margin on recipe 1
+    Given A store "store" with a tax 1 and margin on recipe 1
     Given The kitchen for "store" is infinite
     And A guest
 
@@ -11,7 +12,7 @@ Feature: Add cookie to order
     And add 1 cookie of the selected recipee in the "store"
     Then The order contain 1 orderLines
 
-  @Ignore
+    @Ignore
   Scenario: Add too much cookie
     And The kitchen of "emptyStore" is empty
     And The kitchen of "emptyStore" can do 2 "White Dog"

@@ -25,15 +25,8 @@ import static utils.TestUtils.getInfiniteMockKitchen;
 public class AddCookieOrderStepDefs {
 
     private final Map<String, Recipe> recipes = new HashMap<>();
-    private final CookieFirm cookieFirm = CookieFirm.instance();
     private final CucumberContext context = CucumberContext.getContext();
     private Recipe currentRecipe;
-
-    private Dough customDough;
-    private Flavor customFlavor;
-    private List<Topping> customToppings;
-    private Mix customMix;
-    private Cooking customCooking;
 
     @Given("^The guest see the list of cookies$")
     public void theGuestSeeTheListOfCookies() {
@@ -41,7 +34,7 @@ public class AddCookieOrderStepDefs {
 
     @When("^The guest select the recipee \"([^\"]*)\" of the \"([^\"]*)\"$")
     public void theGuestSelectTheRecipee(String recipee, String sStore) {
-        for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
+        for (Recipe cookie : context.cookieFirm().getGlobalRecipes()) {
             if (cookie.getName().equals(recipee)) {
                 this.currentRecipe = cookie;
                 return;
@@ -91,34 +84,6 @@ public class AddCookieOrderStepDefs {
         context.getFacade().guestAddSpecificCookie(context.getCurrentId(),store, cookieAmount, currentRecipe.getName());
     }
 
-    @And("^The guest choose the dough \"([^\"]*)\"$")
-    public void theGuestChooseTheDough(String doughName) {
-        this.customDough = context.utils.doughFromName(doughName);
-    }
-
-    @And("^The guest choose the flavor \"([^\"]*)\"$")
-    public void theGuestChooseTheFlavor(String flavorName) {
-        this.customFlavor = context.utils.flavorFromName(flavorName);
-    }
-
-
-    @And("^The guest choose the topping \"([^\"]*)\"$")
-    public void theGuestChooseTheTopping(String toppingName) {
-        List<Topping> toppings = new ArrayList<>();
-        toppings.add(context.utils.toppingFromName(toppingName));
-        this.customToppings = toppings;
-    }
-
-    @And("^The guest choose the mix \"([^\"]*)\"$")
-    public void theGuestChooseTheMix(String mixName) {
-        this.customMix = context.utils.mixFromName(mixName);
-    }
-
-    @And("^The guest choose the cooking \"([^\"]*)\"$")
-    public void theGuestChooseTheCooking(String cookingName) {
-        this.customCooking = context.utils.cookingFromName(cookingName);
-    }
-
     @When("^The guest order (\\d+) custom cookie \"([^\"]*)\"$")
     public void theGuestOrderCustomCookie(int amount, String recipeName) {
        /* recipes.put(recipeName, guest.orderCustomRecipe(amount,
@@ -154,7 +119,7 @@ public class AddCookieOrderStepDefs {
     }
 
     private Optional<Recipe> getRecipe(String recipeName) {
-        return cookieFirm.getGlobalRecipes().stream().filter(r -> r.getName().equals(recipeName)).findFirst();
+        return context.cookieFirm().getGlobalRecipes().stream().filter(r -> r.getName().equals(recipeName)).findFirst();
     }
 
 

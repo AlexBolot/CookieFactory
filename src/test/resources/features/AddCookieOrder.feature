@@ -35,11 +35,7 @@ Feature: Add cookie to order
   @Ignore
   Scenario: Add custom cookies in the order
     Given The guest see the list of ingredients
-    And  The guest choose the dough "Plain"
-    And The guest choose the flavor "Chili"
-    And The guest choose the topping "White Chocolate"
-    And The guest choose the mix "Topped"
-    And The guest choose the cooking "Crunchy"
+    And  The guest choose the dough "Plain", flavor "Chili", topping "White Chocolate", mix "Topped" cooking "Crunchy"
     When The guest order 4 custom cookie "Custom"
     Then The order contains 4 cookie "Custom"
 

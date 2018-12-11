@@ -87,6 +87,27 @@ public class Facade {
         manager1.ifPresent(manager2 -> manager2.changeMontlyRecipe(recipe));
     }
 
+    public void managerChangeIngredientMargin(String managerName, String type, String ingredientName, double newMargin) {
+        Ingredient ingredient;
+        switch (type) {
+            case "dough":
+                ingredient = doughFromName(ingredientName);
+                break;
+            case "flavor":
+                ingredient = flavorFromName(ingredientName);
+                break;
+            case "topping":
+                ingredient = toppingFromName(ingredientName);
+                break;
+            default:
+                return;
+        }
+
+        Optional<Manager> opManager = cookieFirm.findManager(managerName);
+        opManager.ifPresent(manager -> manager.changeIngredientMargin(ingredient, newMargin));
+    }
+
+
     //UTILS MANAGER
     private LocalTime transformeStringToTime(String time){
         int opHour = Integer.parseInt(time.split(":")[0]);
@@ -283,14 +304,7 @@ public class Facade {
 
     public void addStockForTopping(String store, String type, String ingredient, int quantity){
         Optional<Store> opStore = this.cookieFirm.findStore(store);
-        if(opStore.isPresent()){
-            if(type.equals("topping"))
-                opStore.get().getKitchen().refill(toppingFromName(ingredient), quantity);
-            else if(type.equals("dough"))
-                opStore.get().getKitchen().refill(doughFromName(ingredient), quantity);
-            else if(type.equals("flavor"))
-                opStore.get().getKitchen().refill(flavorFromName(ingredient), quantity);
-        }
+        opStore.ifPresent(store1 -> store1.getKitchen().refill(ingredientFromName(type, ingredient), quantity));
     }
 
     public LocalDateTime generateTime(int pickupTime, String pickUpDay) {
@@ -319,26 +333,39 @@ public class Facade {
         return null;
     }
 
-    public Dough doughFromName(String doughName) {
+    private Dough doughFromName(String doughName) {
         for (Dough dough : cookieFirm.getCatalog().getDoughList()) {
             if (dough.getName().equalsIgnoreCase(doughName)) return dough;
         }
         return null;
     }
 
-    public Topping toppingFromName(String toppingName) {
+    private Topping toppingFromName(String toppingName) {
         for (Topping topping : cookieFirm.getCatalog().getToppingList()) {
             if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
         }
         return null;
     }
 
-    public Flavor flavorFromName(String flavorName) {
+    private Flavor flavorFromName(String flavorName) {
         for (Flavor flavor : cookieFirm.getCatalog().getFlavorList()) {
             if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
         }
         return null;
     }
+
+    public Ingredient ingredientFromName(String type, String ingredientName) {
+        switch (type) {
+            case "dough":
+                return doughFromName(ingredientName);
+            case "flavor":
+                return flavorFromName(ingredientName);
+            case "topping":
+                return toppingFromName(ingredientName);
+        }
+        return null;
+    }
+
 
     private List<Topping> createToppingList(String topping, String topping2, String topping3){
         List<Topping> toppingList = new ArrayList<>();

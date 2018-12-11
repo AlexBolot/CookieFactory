@@ -122,8 +122,9 @@ public class Facade {
                                         String mix,
                                         String cooking){
         List<Topping> toppingList = new ArrayList<>();
-        toppingList.add(toppingFromName(topping));
-        Recipe recipe = new Recipe(recipeName, doughFromName(dough), flavorFromName(flavor), toppingList,
+        toppingList.add((Topping) ingredientFromName("topping",topping));
+        Recipe recipe = new Recipe(recipeName, (Dough) ingredientFromName("dough",dough),
+                (Flavor) ingredientFromName("flavor",flavor), toppingList,
                 mixFromName(mix), cookingFromName(cooking), false);
 
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
@@ -133,16 +134,7 @@ public class Facade {
     }
 
     public void managerChangeIngredientMargin(String managerName, String type, String ingredientName, double newMargin) {
-        Ingredient ingredient;
-        if(type.equals("dough")) {
-            ingredient = doughFromName(ingredientName);
-        } else if (type.equals("flavor")) {
-            ingredient = flavorFromName(ingredientName);
-        } else if (type.equals("topping")) {
-            ingredient = toppingFromName(ingredientName);
-        } else {
-            return;
-        }
+        Ingredient ingredient=ingredientFromName(type,ingredientName);
 
         Optional<Manager> opManager = cookieFirm.findManager(managerName);
         if (opManager.isPresent()) {
@@ -372,14 +364,7 @@ public class Facade {
 
     public void addStockForTopping(String store, String type, String ingredient, int quantity){
         Optional<Store> opStore = this.cookieFirm.findStore(store);
-        if(opStore.isPresent()){
-            if(type.equals("topping"))
-                opStore.get().getKitchen().refill(toppingFromName(ingredient), quantity);
-            else if(type.equals("dough"))
-                opStore.get().getKitchen().refill(doughFromName(ingredient), quantity);
-            else if(type.equals("flavor"))
-                opStore.get().getKitchen().refill(flavorFromName(ingredient), quantity);
-        }
+        opStore.ifPresent(store1 -> store1.getKitchen().refill(ingredientFromName(type, ingredient), quantity));
     }
 
     public LocalDateTime generateTime(int pickupTime, String pickUpDay) {
@@ -408,23 +393,23 @@ public class Facade {
         return null;
     }
 
-    public Dough doughFromName(String doughName) {
-        for (Dough dough : cookieFirm.getCatalog().getDoughList()) {
-            if (dough.getName().equalsIgnoreCase(doughName)) return dough;
-        }
-        return null;
-    }
-
-    public Topping toppingFromName(String toppingName) {
-        for (Topping topping : cookieFirm.getCatalog().getToppingList()) {
-            if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
-        }
-        return null;
-    }
-
-    public Flavor flavorFromName(String flavorName) {
-        for (Flavor flavor : cookieFirm.getCatalog().getFlavorList()) {
-            if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
+    public Ingredient ingredientFromName(String type, String ingredientName) {
+        switch (type) {
+            case "dough":
+                for (Dough dough : cookieFirm.getCatalog().getDoughList()) {
+                    if (dough.getName().equalsIgnoreCase(ingredientName)) return dough;
+                }
+                break;
+            case "flavor":
+                for (Flavor flavor : cookieFirm.getCatalog().getFlavorList()) {
+                    if (flavor.getName().equalsIgnoreCase(ingredientName)) return flavor;
+                }
+                break;
+            case "topping":
+                for (Topping topping : cookieFirm.getCatalog().getToppingList()) {
+                    if (topping.getName().equalsIgnoreCase(ingredientName)) return topping;
+                }
+                break;
         }
         return null;
     }

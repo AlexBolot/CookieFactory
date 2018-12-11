@@ -158,4 +158,10 @@ public class Kitchen {
     public void setMarginOf(Ingredient ingredient, double margin) {
         margins.put(ingredient, margin);
     }
+
+    public double getMarginOf(Ingredient ingredient) {return margins.get(ingredient);}
+
+    public Map<Ingredient, Double> getMargins() {
+        return margins;
+    }
 }

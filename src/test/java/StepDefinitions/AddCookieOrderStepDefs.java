@@ -24,7 +24,6 @@ import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class AddCookieOrderStepDefs {
 
-    private final Map<String, Recipe> recipes = new HashMap<>();
     private final CucumberContext context = CucumberContext.getContext();
     private Recipe currentRecipe;
 
@@ -54,17 +53,29 @@ public class AddCookieOrderStepDefs {
 
         if(guest.isPresent()) {
             for (OrderLine line : guest.get().getTemporaryOrder().getOrderLines()){
-                if (recipes.get(recipeName).equals(line.getRecipe())) {
+                if (line.getRecipe().getName().equals(recipeName)) {
                     assertEquals(amount, line.getAmount());
                 }
             }
         }
     }
 
+    @Then("^The order contain (\\d+) orderLines$")
+    public void theOrderContainOrderLines(int amount) {
+
+        Optional<Guest> guest = context.cookieFirm().findGuest(context.getCurrentId());
+
+        if(guest.isPresent()) {
+            assertEquals(amount, guest.get().getTemporaryOrder().getOrderLines().size());
+        }
+    }
+
+
     @And("^The kitchen of \"([^\"]*)\" is empty$")
     public void theKitchenOfIsEmpty(String storeName) {
         Optional<Store> store = context.cookieFirm().findStore(storeName);
-        store.get().setKitchen(new Kitchen());
+        if(store.isPresent())
+            store.get().setKitchen(new Kitchen());
     }
 
     @And("^The guest is ordering at the store \"([^\"]*)\"$")
@@ -83,98 +94,5 @@ public class AddCookieOrderStepDefs {
     public void addCookieOfTheSelectedRecipee(int cookieAmount, String store) {
         context.getFacade().guestAddSpecificCookie(context.getCurrentId(),store, cookieAmount, currentRecipe.getName());
     }
-
-    @When("^The guest order (\\d+) custom cookie \"([^\"]*)\"$")
-    public void theGuestOrderCustomCookie(int amount, String recipeName) {
-       /* recipes.put(recipeName, guest.orderCustomRecipe(amount,
-                this.customDough,
-                this.customFlavor,
-                this.customToppings,
-                this.customMix,
-                this.customCooking));*/
-    }
-
-    @Then("^The order contain (\\d+) orderLines")
-    public void theOrderContainCookie(int arg0) {
-       // assertEquals(arg0, this.guest.getTemporaryOrder().getOrderLines().size());
-    }
-
-
-
-
-
-    @And("^The kitchen of \"([^\"]*)\" can do (\\d+) \"([^\"]*)\"$")
-    public void theKitchenOfCanDo(String storeName, int recipeCount, String recipeName) {
-
-        Store store = context.getStore(storeName);
-        Kitchen kitchen = new Kitchen();
-        Recipe recipe = getRecipe(recipeName).orElse(null);
-        if (recipe == null)
-            return;
-        kitchen.refill(recipe.getDough(), recipeCount);
-        kitchen.refill(recipe.getFlavor(), recipeCount);
-        recipe.getToppings().forEach(t -> kitchen.refill(t, recipeCount));
-
-        store.setKitchen(kitchen);
-    }
-
-    private Optional<Recipe> getRecipe(String recipeName) {
-        return context.cookieFirm().getGlobalRecipes().stream().filter(r -> r.getName().equals(recipeName)).findFirst();
-    }
-
-
-    @And("^The guest is ordering the \"([^\"]*)\"$")
-    public void theGuestIsOrderingThe(String orderName) {
-      //  this.guest.setTemporaryOrder(context.getOrder(orderName));
-    }
-
-    @And("^The order contain (\\d+) cookie \"([^\"]*)\"$")
-    public void theOrderContainCookieRecipe(int cookieCount, String recipee) {
-       /* Recipe recipe = getRecipe(recipee).orElse(null);
-        Optional<OrderLine> optionalOrderLine =
-                guest.getTemporaryOrder()
-                        .getOrderLines().stream()
-                        .filter(line -> line.getRecipe().equals(recipe)).findFirst();
-        assertTrue(optionalOrderLine.isPresent());
-        assertEquals(optionalOrderLine.get().getAmount(), cookieCount);*/
-    }
-
-    @When("^The manager refill the stock of \"([^\"]*)\" \"([^\"]*)\" by (\\d+) in the kitchen of \"([^\"]*)\"$")
-    public void theManagerRefillTheStockOfToppingByInTheKitchenOf(String ingredientType, String ingredientName, int amount, String storeName) {
-        switch (ingredientType) {
-            case "topping":
-                context.getStore(storeName).getKitchen().refill(context.utils.toppingFromName(ingredientName),amount);
-                break;
-            case "flavor":
-                context.getStore(storeName).getKitchen().refill(context.utils.toppingFromName(ingredientName),amount);
-                break;
-            case "dough":
-                context.getStore(storeName).getKitchen().refill(context.utils.toppingFromName(ingredientName),amount);
-                break;
-            default:
-                //Do nothing
-        }
-    }
-
-    @Then("^The kitchen of \"([^\"]*)\" has exactly (\\d+) \"([^\"]*)\" \"([^\"]*)\"$")
-    public void theKitchenOfContainsTopping(String storeName, int amount,String ingredientType, String ingredientName) {
-        switch (ingredientType) {
-            case "topping":
-                Assert.assertTrue(context.getStore(storeName).getKitchen().hasInStock(context.utils.toppingFromName(ingredientName),amount));
-                Assert.assertFalse(context.getStore(storeName).getKitchen().hasInStock(context.utils.toppingFromName(ingredientName),amount+1));
-                break;
-            case "flavor":
-                Assert.assertTrue(context.getStore(storeName).getKitchen().hasInStock(context.utils.flavorFromName(ingredientName),amount));
-                Assert.assertFalse(context.getStore(storeName).getKitchen().hasInStock(context.utils.flavorFromName(ingredientName),amount+1));
-                break;
-            case "dough":
-                Assert.assertTrue(context.getStore(storeName).getKitchen().hasInStock(context.utils.doughFromName(ingredientName),amount));
-                Assert.assertFalse(context.getStore(storeName).getKitchen().hasInStock(context.utils.doughFromName(ingredientName),amount+1));
-                break;
-            default:
-                //Do nothing
-        }
-    }
-
 
 }

@@ -94,4 +94,10 @@ public class CommonStepDefs {
     public void theOrderInTheWithMadeByIs(String sStore, int time, String day, String email, String etat) throws Throwable {
         assertEquals(etat.toUpperCase(), context.getFacade().anEmployeeSearchAnOrderState(sStore, time, day, email));
     }
+
+    @When("^The manager refill the stock of \"([^\"]*)\" \"([^\"]*)\" by (\\d+) in the kitchen of \"([^\"]*)\"$")
+    public void theManagerRefillTheStockOfByInTheKitchenOf(String type, String ingredient, int quantity,
+                                                           String store) throws Throwable {
+        context.getFacade().addStockForTopping(store, type, ingredient, quantity);
+    }
 }

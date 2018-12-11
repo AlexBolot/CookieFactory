@@ -70,7 +70,7 @@ public class CookieFirm {
                 catalog.getCookingList().get(1),
                 false));
 
-        //Recipe 5: Peanut Butter / Vanille / 3 White Chocolate / Mixed / Crunchy
+        //Recipe 5: Peanut Butter / Vanilla / 3 White Chocolate / Mixed / Crunchy
         this.globalRecipes.add(new Recipe("White Dog",
                 catalog.getDoughList().get(3),
                 catalog.getFlavorList().get(0),
@@ -269,7 +269,7 @@ public class CookieFirm {
         return bankAPI;
     }
 
-    Catalog getCatalog() {
+    public Catalog getCatalog() {
         return catalog;
     }
 

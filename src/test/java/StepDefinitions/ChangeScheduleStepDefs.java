@@ -22,7 +22,7 @@ public class ChangeScheduleStepDefs {
 
     @Given("^The store manage by \"([^\"]*)\" opens \"([^\"]*)\" at \"([^\"]*)\" and closes at \"([^\"]*)\"$")
     public void theStoreManageByOpensAtAndClosesAt(String mName, String sDay, String opening, String closing) throws Throwable {
-        context.getFacade().addOpeningClosingTime(mName, sDay, opening, closing);
+        context.getFacade().managerChangeOpeningClosingTime(mName, sDay, opening, closing);
     }
 
     @When("^\"([^\"]*)\" changes opening time of \"([^\"]*)\" to \"([^\"]*)\"$")

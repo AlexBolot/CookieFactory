@@ -38,6 +38,10 @@ public class Facade {
             cookieFirm.addManager(manager1);
         }
     }
+
+
+    //MANAGER
+
     public void addOpeningClosingTimeFromNow(String manager,String dayName, int behindHours, int aheadHours){
         DayOfWeek day = dayFromName(dayName);
         LocalTime opTime = LocalTime.now().minusHours(behindHours).plusSeconds(0).plusNanos(0);
@@ -46,103 +50,66 @@ public class Facade {
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
 
         if(manager1.isPresent()) {
-            manager1.get().changeOpeningTime(day, opTime);
-            manager1.get().changeClosingTime(day, clTime);
-        }
-    }
-
-    public void addOpeningClosingTime(String manager,String dayName, String beginHours, String endHours){
-        int opHour = Integer.parseInt(beginHours.split(":")[0]);
-        int opMinutes = Integer.parseInt(beginHours.split(":")[1]);
-
-        int clHour = Integer.parseInt(endHours.split(":")[0]);
-        int clMinutes = Integer.parseInt(endHours.split(":")[1]);
-
-        DayOfWeek day = dayFromName(dayName);
-
-        LocalTime opTime = LocalTime.of(opHour, opMinutes);
-        LocalTime clTime = LocalTime.of(clHour, clMinutes);
-        Optional<Manager> manager1 = cookieFirm.findManager(manager);
-
-        if(manager1.isPresent()) {
-            manager1.get().changeOpeningTime(day, opTime);
-            manager1.get().changeClosingTime(day, clTime);
+            managerChangeTime(manager1.get(), day, opTime, clTime);
         }
     }
 
     public void managerChangeOpeningClosingTime(String manager, String dayName, String beginHours,
                                       String endHours){
-        int opHour = Integer.parseInt(beginHours.split(":")[0]);
-        int opMinutes = Integer.parseInt(beginHours.split(":")[1]);
-
-        int clHour = Integer.parseInt(endHours.split(":")[0]);
-        int clMinutes = Integer.parseInt(endHours.split(":")[1]);
-
         DayOfWeek day = dayFromName(dayName);
-
-        LocalTime opTime = LocalTime.of(opHour, opMinutes);
-        LocalTime clTime = LocalTime.of(clHour, clMinutes);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
 
         if(manager1.isPresent()) {
-            manager1.get().changeOpeningTime(day, opTime);
-            manager1.get().changeClosingTime(day, clTime);
+            manager1.get().changeOpeningTime(day, transformeStringToTime(beginHours));
+            manager1.get().changeClosingTime(day, transformeStringToTime(endHours));
         }
     }
 
     public void managerChangeOpeningTime(String manager, String dayName, String beginHours){
-        int opHour = Integer.parseInt(beginHours.split(":")[0]);
-        int opMinutes = Integer.parseInt(beginHours.split(":")[1]);
-
         DayOfWeek day = dayFromName(dayName);
-
-        LocalTime opTime = LocalTime.of(opHour, opMinutes);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
-
         if(manager1.isPresent()) {
-            manager1.get().changeOpeningTime(day, opTime);
+            manager1.get().changeOpeningTime(day, transformeStringToTime(beginHours));
         }
     }
 
     public void managerChangeClosingTime(String manager, String dayName, String endHours){
-        int opHour = Integer.parseInt(endHours.split(":")[0]);
-        int opMinutes = Integer.parseInt(endHours.split(":")[1]);
-
         DayOfWeek day = dayFromName(dayName);
-
-        LocalTime opTime = LocalTime.of(opHour, opMinutes);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
-
         if(manager1.isPresent()) {
-            manager1.get().changeClosingTime(day, opTime);
+            manager1.get().changeClosingTime(day, transformeStringToTime(endHours));
         }
     }
 
-    public void managerAddMonthlyCookie(String manager, String recipeName, String dough, String flavor, String topping,
+
+    public void managerAddMonthlyCookie(String manager, String recipeName, String dough, String flavor,
+                                        String topping, String topping2, String topping3,
                                         String mix,
                                         String cooking){
-        List<Topping> toppingList = new ArrayList<>();
-        toppingList.add((Topping) ingredientFromName("topping",topping));
-        Recipe recipe = new Recipe(recipeName, (Dough) ingredientFromName("dough",dough),
-                (Flavor) ingredientFromName("flavor",flavor), toppingList,
+        Recipe recipe = new Recipe(recipeName, doughFromName(dough), flavorFromName(flavor),
+                createToppingList(topping, topping2, topping3),
                 mixFromName(mix), cookingFromName(cooking), false);
-
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
         if(manager1.isPresent()){
             manager1.get().changeMontlyRecipe(recipe);
         }
     }
 
-    public void managerChangeIngredientMargin(String managerName, String type, String ingredientName, double newMargin) {
-        Ingredient ingredient=ingredientFromName(type,ingredientName);
-
-        Optional<Manager> opManager = cookieFirm.findManager(managerName);
-        if (opManager.isPresent()) {
-            opManager.get().changeIngredientMargin(ingredient,newMargin);
-        }
-
+    //UTILS MANAGER
+    private LocalTime transformeStringToTime(String time){
+        int opHour = Integer.parseInt(time.split(":")[0]);
+        int opMinutes = Integer.parseInt(time.split(":")[1]);
+        LocalTime opTime = LocalTime.of(opHour, opMinutes);
+        return opTime;
     }
 
+    private void managerChangeTime(Manager m, DayOfWeek day, LocalTime opTime, LocalTime clTime){
+        m.changeOpeningTime(day, opTime);
+        m.changeClosingTime(day, clTime);
+    }
+
+
+    //PART GUEST
 
     public Integer createGuest(){
         Guest guest = new Guest();
@@ -160,23 +127,6 @@ public class Facade {
             id = customer.getId();
         }
         return Optional.ofNullable(id);
-    }
-
-
-    public Integer createACustomer(String sName, String sLastName, String phoneNumber, String email, String
-            password){
-        Customer customer = this.cookieFirm.createAccount(sName, sLastName, phoneNumber, email, password);
-        return customer.getId();
-    }
-
-
-    public boolean addACustomerToLP(String sEmail){
-        Optional<Customer> customer = this.cookieFirm.findCustomer(sEmail);
-        if(customer.isPresent()) {
-            this.cookieFirm.addCustomerToLoyaltyProgram(customer.get());
-            return true;
-        }
-        return false;
     }
 
     public void guestAddStoreToOrder(int id, String sStore){
@@ -260,6 +210,19 @@ public class Facade {
         }
     }
 
+    public void guestOrderCustomCookie(int id, String dough, String flavor,
+                                       String topping, String topping2, String topping3,
+                                       String mix,
+                                       String cooking, int quantity){
+
+        Optional<Guest> guest = cookieFirm.findGuestOrCustomer(id);
+        if(guest.isPresent()){
+            guest.get().orderCustomRecipe(quantity, doughFromName(dough), flavorFromName(flavor),
+                    createToppingList(topping, topping2, topping3),
+                    mixFromName(mix), cookingFromName(cooking));
+        }
+    }
+
 
     public void guestPlaceOrderWithCookies(int id, String sStore, int nbCookies, int
             pickupTime, String pickUpDay, Boolean payedOnline) {
@@ -275,15 +238,6 @@ public class Facade {
             opGuest.get().placeOrder(payedOnline);
         }
     }
-
-    //TODO permettre la création de custom recipe
-    /*
-    public void guestOrderCustomRecipe(){
-
-    }
-    */
-
-    //TODO permettre de refill la kitchen via le facade
 
     public void guestPlaceOrder(int id , Boolean payedOnline){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
@@ -305,7 +259,6 @@ public class Facade {
         }
     }
 
-
     public void guestValidateHisOrder(int id, String email, boolean pay){
         Optional<Guest> opGuest = this.cookieFirm.findGuest(id);
         if(opGuest.isPresent()) {
@@ -323,6 +276,23 @@ public class Facade {
         }
 
     }
+
+    public Integer createACustomer(String sName, String sLastName, String phoneNumber, String email, String
+            password){
+        Customer customer = this.cookieFirm.createAccount(sName, sLastName, phoneNumber, email, password);
+        return customer.getId();
+    }
+
+
+    public boolean addACustomerToLP(String sEmail){
+        Optional<Customer> customer = this.cookieFirm.findCustomer(sEmail);
+        if(customer.isPresent()) {
+            this.cookieFirm.addCustomerToLoyaltyProgram(customer.get());
+            return true;
+        }
+        return false;
+    }
+
 
 
     //TODO ajouter dans le bank id ajouter juste avec le accountID
@@ -364,7 +334,14 @@ public class Facade {
 
     public void addStockForTopping(String store, String type, String ingredient, int quantity){
         Optional<Store> opStore = this.cookieFirm.findStore(store);
-        opStore.ifPresent(store1 -> store1.getKitchen().refill(ingredientFromName(type, ingredient), quantity));
+        if(opStore.isPresent()){
+            if(type.equals("topping"))
+                opStore.get().getKitchen().refill(toppingFromName(ingredient), quantity);
+            else if(type.equals("dough"))
+                opStore.get().getKitchen().refill(doughFromName(ingredient), quantity);
+            else if(type.equals("flavor"))
+                opStore.get().getKitchen().refill(flavorFromName(ingredient), quantity);
+        }
     }
 
     public LocalDateTime generateTime(int pickupTime, String pickUpDay) {
@@ -372,46 +349,56 @@ public class Facade {
                 .next(DayOfWeek.valueOf(pickUpDay.toUpperCase()))).withSecond(0).withNano(0);
     }
 
-    public DayOfWeek dayFromName(String dayName) {
+    private DayOfWeek dayFromName(String dayName) {
         for (DayOfWeek day : DayOfWeek.values()) {
             if (day.name().equalsIgnoreCase(dayName)) return day;
         }
         return null;
     }
 
-    public Mix mixFromName(String mixName) {
+    private Mix mixFromName(String mixName) {
         for (Mix mix : cookieFirm.getCatalog().getMixList()) {
             if (mix.getName().equalsIgnoreCase(mixName)) return mix;
         }
         return null;
     }
 
-    public Cooking cookingFromName(String cookingName) {
+    private Cooking cookingFromName(String cookingName) {
         for (Cooking cooking : cookieFirm.getCatalog().getCookingList()) {
             if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
         }
         return null;
     }
 
-    public Ingredient ingredientFromName(String type, String ingredientName) {
-        switch (type) {
-            case "dough":
-                for (Dough dough : cookieFirm.getCatalog().getDoughList()) {
-                    if (dough.getName().equalsIgnoreCase(ingredientName)) return dough;
-                }
-                break;
-            case "flavor":
-                for (Flavor flavor : cookieFirm.getCatalog().getFlavorList()) {
-                    if (flavor.getName().equalsIgnoreCase(ingredientName)) return flavor;
-                }
-                break;
-            case "topping":
-                for (Topping topping : cookieFirm.getCatalog().getToppingList()) {
-                    if (topping.getName().equalsIgnoreCase(ingredientName)) return topping;
-                }
-                break;
+    public Dough doughFromName(String doughName) {
+        for (Dough dough : cookieFirm.getCatalog().getDoughList()) {
+            if (dough.getName().equalsIgnoreCase(doughName)) return dough;
         }
         return null;
+    }
+
+    public Topping toppingFromName(String toppingName) {
+        for (Topping topping : cookieFirm.getCatalog().getToppingList()) {
+            if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
+        }
+        return null;
+    }
+
+    public Flavor flavorFromName(String flavorName) {
+        for (Flavor flavor : cookieFirm.getCatalog().getFlavorList()) {
+            if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
+        }
+        return null;
+    }
+
+    private List<Topping> createToppingList(String topping, String topping2, String topping3){
+        List<Topping> toppingList = new ArrayList<>();
+        toppingList.add(toppingFromName(topping));
+        if(!topping2.equals("no topping"))
+            toppingList.add(toppingFromName(topping2));
+        if(!topping3.equals("no topping"))
+            toppingList.add(toppingFromName(topping3));
+        return toppingList;
     }
 
 }

@@ -26,7 +26,7 @@ public class RecipeBuilder {
         if (!this.catalog.getDoughList().contains(dough)) {
             throw new IllegalArgumentException("This dough does not exist in the catalog");
         }
-        if (!this.catalog.getFlavorList().contains(flavor)) {
+        if (flavor!= null && !this.catalog.getFlavorList().contains(flavor)) {
             throw new IllegalArgumentException("This flavor does not exist in the catalog");
         }
         if (!this.catalog.getMixList().contains(mix)) {

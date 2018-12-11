@@ -7,7 +7,7 @@ Feature: Anonymous order
     Given A guest
 
   Scenario: A customer put an order anonymously
-    Given The customer add 4 cookies from the "store"
+    Given The customer add 4 cookies "White Dog" from the "store"
     Given The customer choose a store "store" to pickup "Monday" in 2 hours
     And The customer entered her "jojo@gmail.com" to place her order and pay "not online"
     And "Joelle" pay her cookies

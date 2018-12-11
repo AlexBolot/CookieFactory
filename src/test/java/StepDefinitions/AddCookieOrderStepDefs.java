@@ -1,17 +1,12 @@
 package StepDefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import main.CookieFirm;
 import main.Guest;
-import order.Order;
 import order.OrderLine;
-import org.junit.Assert;
 import recipe.Recipe;
-import recipe.ingredient.*;
 import store.Kitchen;
 import store.Store;
 import utils.CucumberContext;
@@ -20,7 +15,6 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class AddCookieOrderStepDefs {
 
@@ -44,7 +38,7 @@ public class AddCookieOrderStepDefs {
 
     @When("^The guest order (\\d+) cookie \"([^\"]*)\" from the \"([^\"]*)\"$")
     public void theGuestOrderCookie(int amount, String recipeName, String store) {
-        context.getFacade().guestAddSpecificCookie(context.getCurrentId(),store,amount, recipeName);
+        context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(),store,amount, recipeName, false);
     }
 
     @Then("^The order contains (\\d+) cookie \"([^\"]*)\"$")
@@ -65,17 +59,14 @@ public class AddCookieOrderStepDefs {
 
         Optional<Guest> guest = context.cookieFirm().findGuest(context.getCurrentId());
 
-        if(guest.isPresent()) {
-            assertEquals(amount, guest.get().getTemporaryOrder().getOrderLines().size());
-        }
+        guest.ifPresent(guest1 -> assertEquals(amount, guest1.getTemporaryOrder().getOrderLines().size()));
     }
 
 
     @And("^The kitchen of \"([^\"]*)\" is empty$")
     public void theKitchenOfIsEmpty(String storeName) {
         Optional<Store> store = context.cookieFirm().findStore(storeName);
-        if(store.isPresent())
-            store.get().setKitchen(new Kitchen());
+        store.ifPresent(store1 -> store1.setKitchen(new Kitchen()));
     }
 
     @And("^The guest is ordering at the store \"([^\"]*)\"$")
@@ -92,7 +83,8 @@ public class AddCookieOrderStepDefs {
 
     @And("^add (\\d+) cookie of the selected recipee in the \"([^\"]*)\"$")
     public void addCookieOfTheSelectedRecipee(int cookieAmount, String store) {
-        context.getFacade().guestAddSpecificCookie(context.getCurrentId(),store, cookieAmount, currentRecipe.getName());
+        context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(),store, cookieAmount,
+                currentRecipe.getName(), false);
     }
 
 }

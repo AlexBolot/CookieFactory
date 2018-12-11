@@ -41,13 +41,6 @@ public class TestUtils {
         return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 7);
     }
 
-    public DayOfWeek dayFromName(String dayName) {
-        for (DayOfWeek day : DayOfWeek.values()) {
-            if (day.name().equalsIgnoreCase(dayName)) return day;
-        }
-        return null;
-    }
-
     public OrderState stateFromName(String targetStateName) {
         OrderState targetState = null;
         switch (targetStateName) {
@@ -145,9 +138,6 @@ public class TestUtils {
 
 
     public boolean payOnline(String pay){
-        if(pay.equals("online"))
-            return true;
-        else
-            return false;
+        return pay.equals("online");
     }
 }

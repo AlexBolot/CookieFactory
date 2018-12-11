@@ -8,7 +8,7 @@ Feature: Account creation while ordering
     Given A guest
 
   Scenario: Account creation while ordering
-    Given The customer add 4 cookies from the "store"
+    Given The customer add 4 cookies "White Dog" from the "store"
     Given The customer choose a store "store" to pickup "Monday" in 2 hours
     And The customer entered her "jojo@jojo.com" to place her order and pay "not online"
     When The guest create an account at the name of "Jo" "Doe" with the password "azerty" and the phone "06.06.06.06.06" from "jojo@jojo.com"

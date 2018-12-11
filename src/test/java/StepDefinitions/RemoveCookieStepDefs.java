@@ -22,13 +22,6 @@ public class RemoveCookieStepDefs {
 
     private final CucumberContext context= CucumberContext.getContext();
 
-
-    @When("^The customer select (\\d+) cookie to remove from the \"([^\"]*)\"$")
-    public void theSelectCookieToRemove(int cookieAmount, String store) {
-        context.getFacade().guestRemoveCookies(context.getCurrentId(), store, cookieAmount);
-    }
-
-
     @Then("^The order contains (\\d+) cookie recipee$")
     public void theOrderContainsCookieRecipee(int recipeeAmount) {
         Optional<Guest> guest = context.cookieFirm().findGuest(context.getCurrentId());

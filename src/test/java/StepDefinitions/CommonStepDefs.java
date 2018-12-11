@@ -1,24 +1,17 @@
 package StepDefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import cucumber.api.java.sl.In;
-import main.Guest;
-import store.Manager;
 import store.Store;
 import utils.CucumberContext;
 import utils.TestUtils;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class CommonStepDefs {
@@ -35,8 +28,7 @@ public class CommonStepDefs {
     @Given("^The kitchen for \"([^\"]*)\" is infinite$")
     public void theKitchenForIsInfinite(String storeName) {
         Optional<Store> opStore = context.cookieFirm().findStore(storeName);
-        if(opStore.isPresent())
-            opStore.get().setKitchen(getInfiniteMockKitchen());
+        opStore.ifPresent(store -> store.setKitchen(getInfiniteMockKitchen()));
     }
 
     @Given("^A customer \"([^\"]*)\"$")
@@ -60,6 +52,16 @@ public class CommonStepDefs {
     public void theStoreOpensHoursAgoAndClosesInHours(String mManager, String dayName, int behindHours,
                                                       int aheadHours) {
         context.getFacade().addOpeningClosingTimeFromNow(mManager, dayName, behindHours, aheadHours);
+    }
+
+    @Given("^The customer add (\\d+) cookies \"([^\"]*)\" from the \"([^\"]*)\"$")
+    public void theCustomerAddCookiesFromThe(int quantity, String recipe, String sStore) throws Throwable {
+        context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(), sStore, quantity, recipe,false);
+    }
+
+    @When("^The customer remove (\\d+) cookie \"([^\"]*)\" from the \"([^\"]*)\"$")
+    public void theCustomerRemoveCookieFromThe(int quantity, String recipe, String sStore) throws Throwable {
+        context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(), sStore, quantity, recipe,true);
 
     }
 
@@ -70,12 +72,6 @@ public class CommonStepDefs {
         context.getFacade().guestAddPickUpTimeAndStoreToOrder(context.getCurrentId(),sStore,time,sDay);
         
     }
-
-    @Given("^The customer add (\\d+) cookies from the \"([^\"]*)\"$")
-    public void aCustomerAddCookiesFromThe(int quantity, String sStore) throws Throwable {
-        context.getFacade().guestAddCookies(context.getCurrentId(), sStore, quantity);
-    }
-
 
     @When("^The customer place his order and pay \"([^\"]*)\"$")
     public void placeHisOrderAndPay(String pay) throws Throwable {
@@ -88,8 +84,6 @@ public class CommonStepDefs {
         context.getFacade().anEmployeeMakeAnActionOnOrder(sStore, time, day, email, action);
     }
 
-
-
     @And("^The order in the \"([^\"]*)\" with (\\d+), \"([^\"]*)\" made by \"([^\"]*)\" is \"([^\"]*)\"$")
     public void theOrderInTheWithMadeByIs(String sStore, int time, String day, String email, String etat) throws Throwable {
         assertEquals(etat.toUpperCase(), context.getFacade().anEmployeeSearchAnOrderState(sStore, time, day, email));
@@ -100,4 +94,6 @@ public class CommonStepDefs {
                                                            String store) throws Throwable {
         context.getFacade().addStockForTopping(store, type, ingredient, quantity);
     }
+
+
 }

@@ -9,7 +9,7 @@ Feature: Customer order
 
   Scenario: A customer places an order
     Given The customer choose a store "store" to pickup "Monday" in 2 hours
-    Given The customer add 6 cookies from the "store"
+    Given The customer add 6 cookies "White Dog" from the "store"
     When The customer place his order and pay "online"
     Then The customer with the email "Bob" has 1 order in his history
     And The customer with the email "Bob" has an empty temporary order

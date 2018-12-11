@@ -11,9 +11,9 @@ Feature: Loyalty Program
     Given A customer "Frank"
     Given "Frank@Frank.fr" is in the loyaltyProgram
     Given The customer choose a store "store" to pickup "Monday" in 2 hours
-    Given The customer add 40 cookies from the "store"
+    Given The customer add 40 cookies "White Dog" from the "store"
     Given The customer place his order and pay "online"
     And The customer choose a store "store" to pickup "Friday" in 2 hours
-    And The customer add 10 cookies from the "store"
+    And The customer add 10 cookies "White Dog" from the "store"
     And The customer place his order and pay "online"
     When "Frank@Frank.fr" see the price of his order with 10 cookies it have a discount

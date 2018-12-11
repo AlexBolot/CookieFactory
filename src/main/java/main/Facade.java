@@ -49,9 +49,7 @@ public class Facade {
 
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
 
-        if(manager1.isPresent()) {
-            managerChangeTime(manager1.get(), day, opTime, clTime);
-        }
+        manager1.ifPresent(manager2 -> managerChangeTime(manager2, day, opTime, clTime));
     }
 
     public void managerChangeOpeningClosingTime(String manager, String dayName, String beginHours,
@@ -68,17 +66,13 @@ public class Facade {
     public void managerChangeOpeningTime(String manager, String dayName, String beginHours){
         DayOfWeek day = dayFromName(dayName);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
-        if(manager1.isPresent()) {
-            manager1.get().changeOpeningTime(day, transformeStringToTime(beginHours));
-        }
+        manager1.ifPresent(manager2 -> manager2.changeOpeningTime(day, transformeStringToTime(beginHours)));
     }
 
     public void managerChangeClosingTime(String manager, String dayName, String endHours){
         DayOfWeek day = dayFromName(dayName);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
-        if(manager1.isPresent()) {
-            manager1.get().changeClosingTime(day, transformeStringToTime(endHours));
-        }
+        manager1.ifPresent(manager2 -> manager2.changeClosingTime(day, transformeStringToTime(endHours)));
     }
 
 
@@ -90,17 +84,14 @@ public class Facade {
                 createToppingList(topping, topping2, topping3),
                 mixFromName(mix), cookingFromName(cooking), false);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
-        if(manager1.isPresent()){
-            manager1.get().changeMontlyRecipe(recipe);
-        }
+        manager1.ifPresent(manager2 -> manager2.changeMontlyRecipe(recipe));
     }
 
     //UTILS MANAGER
     private LocalTime transformeStringToTime(String time){
         int opHour = Integer.parseInt(time.split(":")[0]);
         int opMinutes = Integer.parseInt(time.split(":")[1]);
-        LocalTime opTime = LocalTime.of(opHour, opMinutes);
-        return opTime;
+        return LocalTime.of(opHour, opMinutes);
     }
 
     private void managerChangeTime(Manager m, DayOfWeek day, LocalTime opTime, LocalTime clTime){
@@ -139,12 +130,13 @@ public class Facade {
         }
     }
 
+
+    //GUEST ADD PICKUPTIME
+
     public void guestAddPickTimeToOrder(int id, int time, String pickupDay){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
 
-        if(opGuest.isPresent()){
-            opGuest.get().getTemporaryOrder().setPickUpTime(generateTime(time, pickupDay));
-        }
+        opGuest.ifPresent(guest -> guest.getTemporaryOrder().setPickUpTime(generateTime(time, pickupDay)));
     }
 
     public void guestAddPickUpTimeAndStoreToOrder(int id, String sStore, int time, String pickupDay){
@@ -158,29 +150,9 @@ public class Facade {
         }
     }
 
-    public void guestAddCookies(int id, String sStore, int quantity){
-        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
-        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
-        if (opGuest.isPresent() && opStore.isPresent()) {
-            Order order = opGuest.get().getTemporaryOrder();
-            order.setStore(opStore.get());
-            order.addCookie(opStore.get().getMonthlyRecipe(), quantity);
-        }
-    }
-
-    public void guestRemoveCookies(int id, String sStore, int quantity){
-        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
-        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
-
-        if (opGuest.isPresent() && opStore.isPresent()) {
-            Order order = opGuest.get().getTemporaryOrder();
-            order.setStore(opStore.get());
-            order.removeCookie(opStore.get().getMonthlyRecipe(), quantity);
-        }
-    }
-
-    public void guestAddSpecificCookie(int id, String sStore, int quantity, String recipeName){
+    //GUEST ADD OR REMOVE COOKIES
+    public void guestAddOrRemoveCookie(int id, String sStore, int quantity, String recipeName, boolean remove) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
@@ -188,42 +160,30 @@ public class Facade {
             opGuest.get().getTemporaryOrder().setStore(opStore.get());
             for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
                 if (cookie.getName().equals(recipeName)) {
-                    opGuest.get().getTemporaryOrder().addCookie(cookie, quantity);
+                    if (!remove) {
+                        opGuest.get().getTemporaryOrder().addCookie(cookie, quantity);
+                    }
+                    else
+                        opGuest.get().getTemporaryOrder().removeCookie(cookie, quantity);
                     return;
                 }
             }
         }
     }
 
-    public void guestRemoveSpecificCookie(int id, String sStore, int quantity, String recipeName){
-        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
-        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
-
-        if (opGuest.isPresent() && opStore.isPresent()) {
-            opGuest.get().getTemporaryOrder().setStore(opStore.get());
-            for (Recipe cookie : cookieFirm.getGlobalRecipes()) {
-                if (cookie.getName().equals(recipeName)) {
-                    opGuest.get().getTemporaryOrder().removeCookie(cookie, quantity);
-                    return;
-                }
-            }
-        }
-    }
-
+    //GUEST ORDER CUSTOM COOKIE
     public void guestOrderCustomCookie(int id, String dough, String flavor,
                                        String topping, String topping2, String topping3,
                                        String mix,
                                        String cooking, int quantity){
 
         Optional<Guest> guest = cookieFirm.findGuestOrCustomer(id);
-        if(guest.isPresent()){
-            guest.get().orderCustomRecipe(quantity, doughFromName(dough), flavorFromName(flavor),
-                    createToppingList(topping, topping2, topping3),
-                    mixFromName(mix), cookingFromName(cooking));
-        }
+        guest.ifPresent(guest1 -> guest1.orderCustomRecipe(quantity, doughFromName(dough), flavorFromName(flavor),
+                createToppingList(topping, topping2, topping3),
+                mixFromName(mix), cookingFromName(cooking)));
     }
 
-
+    // GUEST PLACE ORDER
     public void guestPlaceOrderWithCookies(int id, String sStore, int nbCookies, int
             pickupTime, String pickUpDay, Boolean payedOnline) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
@@ -242,22 +202,9 @@ public class Facade {
     public void guestPlaceOrder(int id , Boolean payedOnline){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
 
-        if (opGuest.isPresent()) {
-            opGuest.get().placeOrder(payedOnline);
-        }
+        opGuest.ifPresent(guest -> guest.placeOrder(payedOnline));
     }
-    public void guestModifyHisOrder(int id, String sStore, int nbCookies, boolean remove){
-        Optional<Guest> guest = this.cookieFirm.findGuestOrCustomer(id);
-        Optional<Store> store = this.cookieFirm.findStore(sStore);
 
-        if(guest.isPresent() && store.isPresent()){
-            if(!remove)
-                guest.get().getTemporaryOrder().addCookie(store.get().getMonthlyRecipe(), nbCookies);
-            else
-                guest.get().getTemporaryOrder().removeCookie(store.get().getMonthlyRecipe(), nbCookies);
-
-        }
-    }
 
     public void guestValidateHisOrder(int id, String email, boolean pay){
         Optional<Guest> opGuest = this.cookieFirm.findGuest(id);
@@ -277,6 +224,8 @@ public class Facade {
 
     }
 
+
+    //CUSTOMER RELATED
     public Integer createACustomer(String sName, String sLastName, String phoneNumber, String email, String
             password){
         Customer customer = this.cookieFirm.createAccount(sName, sLastName, phoneNumber, email, password);

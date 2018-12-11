@@ -38,6 +38,10 @@ public class Facade {
             cookieFirm.addManager(manager1);
         }
     }
+
+
+    //MANAGER
+
     public void addOpeningClosingTimeFromNow(String manager,String dayName, int behindHours, int aheadHours){
         DayOfWeek day = dayFromName(dayName);
         LocalTime opTime = LocalTime.now().minusHours(behindHours).plusSeconds(0).plusNanos(0);
@@ -46,77 +50,37 @@ public class Facade {
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
 
         if(manager1.isPresent()) {
-            manager1.get().changeOpeningTime(day, opTime);
-            manager1.get().changeClosingTime(day, clTime);
-        }
-    }
-
-    public void addOpeningClosingTime(String manager,String dayName, String beginHours, String endHours){
-        int opHour = Integer.parseInt(beginHours.split(":")[0]);
-        int opMinutes = Integer.parseInt(beginHours.split(":")[1]);
-
-        int clHour = Integer.parseInt(endHours.split(":")[0]);
-        int clMinutes = Integer.parseInt(endHours.split(":")[1]);
-
-        DayOfWeek day = dayFromName(dayName);
-
-        LocalTime opTime = LocalTime.of(opHour, opMinutes);
-        LocalTime clTime = LocalTime.of(clHour, clMinutes);
-        Optional<Manager> manager1 = cookieFirm.findManager(manager);
-
-        if(manager1.isPresent()) {
-            manager1.get().changeOpeningTime(day, opTime);
-            manager1.get().changeClosingTime(day, clTime);
+            managerChangeTime(manager1.get(), day, opTime, clTime);
         }
     }
 
     public void managerChangeOpeningClosingTime(String manager, String dayName, String beginHours,
                                       String endHours){
-        int opHour = Integer.parseInt(beginHours.split(":")[0]);
-        int opMinutes = Integer.parseInt(beginHours.split(":")[1]);
-
-        int clHour = Integer.parseInt(endHours.split(":")[0]);
-        int clMinutes = Integer.parseInt(endHours.split(":")[1]);
-
         DayOfWeek day = dayFromName(dayName);
-
-        LocalTime opTime = LocalTime.of(opHour, opMinutes);
-        LocalTime clTime = LocalTime.of(clHour, clMinutes);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
 
         if(manager1.isPresent()) {
-            manager1.get().changeOpeningTime(day, opTime);
-            manager1.get().changeClosingTime(day, clTime);
+            manager1.get().changeOpeningTime(day, transformeStringToTime(beginHours));
+            manager1.get().changeClosingTime(day, transformeStringToTime(endHours));
         }
     }
 
     public void managerChangeOpeningTime(String manager, String dayName, String beginHours){
-        int opHour = Integer.parseInt(beginHours.split(":")[0]);
-        int opMinutes = Integer.parseInt(beginHours.split(":")[1]);
-
         DayOfWeek day = dayFromName(dayName);
-
-        LocalTime opTime = LocalTime.of(opHour, opMinutes);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
-
         if(manager1.isPresent()) {
-            manager1.get().changeOpeningTime(day, opTime);
+            manager1.get().changeOpeningTime(day, transformeStringToTime(beginHours));
         }
     }
 
     public void managerChangeClosingTime(String manager, String dayName, String endHours){
-        int opHour = Integer.parseInt(endHours.split(":")[0]);
-        int opMinutes = Integer.parseInt(endHours.split(":")[1]);
-
         DayOfWeek day = dayFromName(dayName);
-
-        LocalTime opTime = LocalTime.of(opHour, opMinutes);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
-
         if(manager1.isPresent()) {
-            manager1.get().changeClosingTime(day, opTime);
+            manager1.get().changeClosingTime(day, transformeStringToTime(endHours));
         }
     }
+
 
     public void managerAddMonthlyCookie(String manager, String recipeName, String dough, String flavor,
                                         String topping, String topping2, String topping3,
@@ -131,6 +95,21 @@ public class Facade {
         }
     }
 
+    //UTILS MANAGER
+    private LocalTime transformeStringToTime(String time){
+        int opHour = Integer.parseInt(time.split(":")[0]);
+        int opMinutes = Integer.parseInt(time.split(":")[1]);
+        LocalTime opTime = LocalTime.of(opHour, opMinutes);
+        return opTime;
+    }
+
+    private void managerChangeTime(Manager m, DayOfWeek day, LocalTime opTime, LocalTime clTime){
+        m.changeOpeningTime(day, opTime);
+        m.changeClosingTime(day, clTime);
+    }
+
+
+    //PART GUEST
 
     public Integer createGuest(){
         Guest guest = new Guest();
@@ -148,23 +127,6 @@ public class Facade {
             id = customer.getId();
         }
         return Optional.ofNullable(id);
-    }
-
-
-    public Integer createACustomer(String sName, String sLastName, String phoneNumber, String email, String
-            password){
-        Customer customer = this.cookieFirm.createAccount(sName, sLastName, phoneNumber, email, password);
-        return customer.getId();
-    }
-
-
-    public boolean addACustomerToLP(String sEmail){
-        Optional<Customer> customer = this.cookieFirm.findCustomer(sEmail);
-        if(customer.isPresent()) {
-            this.cookieFirm.addCustomerToLoyaltyProgram(customer.get());
-            return true;
-        }
-        return false;
     }
 
     public void guestAddStoreToOrder(int id, String sStore){
@@ -277,15 +239,6 @@ public class Facade {
         }
     }
 
-    //TODO permettre la création de custom recipe
-    /*
-    public void guestOrderCustomRecipe(){
-
-    }
-    */
-
-    //TODO permettre de refill la kitchen via le facade
-
     public void guestPlaceOrder(int id , Boolean payedOnline){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
 
@@ -306,7 +259,6 @@ public class Facade {
         }
     }
 
-
     public void guestValidateHisOrder(int id, String email, boolean pay){
         Optional<Guest> opGuest = this.cookieFirm.findGuest(id);
         if(opGuest.isPresent()) {
@@ -324,6 +276,23 @@ public class Facade {
         }
 
     }
+
+    public Integer createACustomer(String sName, String sLastName, String phoneNumber, String email, String
+            password){
+        Customer customer = this.cookieFirm.createAccount(sName, sLastName, phoneNumber, email, password);
+        return customer.getId();
+    }
+
+
+    public boolean addACustomerToLP(String sEmail){
+        Optional<Customer> customer = this.cookieFirm.findCustomer(sEmail);
+        if(customer.isPresent()) {
+            this.cookieFirm.addCustomerToLoyaltyProgram(customer.get());
+            return true;
+        }
+        return false;
+    }
+
 
 
     //TODO ajouter dans le bank id ajouter juste avec le accountID
@@ -380,21 +349,21 @@ public class Facade {
                 .next(DayOfWeek.valueOf(pickUpDay.toUpperCase()))).withSecond(0).withNano(0);
     }
 
-    public DayOfWeek dayFromName(String dayName) {
+    private DayOfWeek dayFromName(String dayName) {
         for (DayOfWeek day : DayOfWeek.values()) {
             if (day.name().equalsIgnoreCase(dayName)) return day;
         }
         return null;
     }
 
-    public Mix mixFromName(String mixName) {
+    private Mix mixFromName(String mixName) {
         for (Mix mix : cookieFirm.getCatalog().getMixList()) {
             if (mix.getName().equalsIgnoreCase(mixName)) return mix;
         }
         return null;
     }
 
-    public Cooking cookingFromName(String cookingName) {
+    private Cooking cookingFromName(String cookingName) {
         for (Cooking cooking : cookieFirm.getCatalog().getCookingList()) {
             if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
         }

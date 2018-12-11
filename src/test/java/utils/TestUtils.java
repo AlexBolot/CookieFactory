@@ -128,6 +128,7 @@ public class TestUtils {
         when(kitchen.canDo(any(), anyInt())).thenReturn(true);
         when(kitchen.hasInStock(any(), anyInt())).thenReturn(true);
         when(kitchen.recipeCapacity(any())).thenReturn(Integer.MAX_VALUE);
+        when(kitchen.vendingPriceOf(any())).thenReturn((double) 1);
         return kitchen;
     }
 

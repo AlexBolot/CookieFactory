@@ -5,5 +5,5 @@ Feature: Create a Recipe
     Given "Bob" the manager of "store"
 
   Scenario: Adding a monthy recipe
-    Given "Bob" add the recipe named "New" have "Chocolate", flavor "Vanilla", topping "M&M's", mix "Mixed", cooking "Crunchy"
+    Given "Bob" add the recipe named "New" have "Chocolate", flavor "Vanilla", topping "M&M's" and "no topping" and "no topping", mix "Mixed", cooking "Crunchy"
     Then The monthly recipe of the "store" is "New"

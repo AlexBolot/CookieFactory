@@ -21,7 +21,6 @@ Feature: Change store schedule
     When "Bob" changes closing time of "Monday" to "18:30"
     Then The "store" closing of "Monday" is "18:30"
 
-
     @Ignore
   Scenario: Change store closing time (invalid)
     Given The store manage by "Bob" opens "Monday" at "8:00" and closes at "17:30"

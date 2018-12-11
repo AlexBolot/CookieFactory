@@ -26,7 +26,20 @@ public class RecipeStepDefs {
     public void bobAddTheRecipeNamedHaveFlavorToppingMixCooking(String manager, String recipeName, String dough,
                                                                 String flavor,
                                                                 String topping, String mix, String cooking) throws Throwable {
-        context.getFacade().managerAddMonthlyCookie(manager, recipeName, dough, flavor, topping, mix, cooking);
+    }
+
+    @Given("^\"([^\"]*)\" add the recipe named \"([^\"]*)\" have \"([^\"]*)\", flavor \"([^\"]*)\", topping \"([^\"]*)\" and \"([^\"]*)\" and \"([^\"]*)\", mix \"([^\"]*)\", cooking \"([^\"]*)\"$")
+    public void addTheRecipeNamedHaveFlavorToppingAndAndMixCooking(String manager, String recipeName, String dough,
+                                                                   String flavor,
+                                                                   String topping,
+                                                                   String topping2,
+                                                                   String topping3,
+                                                                   String mix,
+                                                                   String cooking) throws Throwable {
+        context.getFacade().managerAddMonthlyCookie(manager, recipeName, dough, flavor, topping, topping2, topping3,
+                mix,
+                cooking);
+
     }
 
 
@@ -37,4 +50,6 @@ public class RecipeStepDefs {
         if(store1.isPresent())
             assertEquals(store1.get().getMonthlyRecipe().getName(), cookie);
     }
+
+
 }

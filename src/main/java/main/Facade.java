@@ -118,14 +118,13 @@ public class Facade {
         }
     }
 
-    public void managerAddMonthlyCookie(String manager, String recipeName, String dough, String flavor, String topping,
+    public void managerAddMonthlyCookie(String manager, String recipeName, String dough, String flavor,
+                                        String topping, String topping2, String topping3,
                                         String mix,
                                         String cooking){
-        List<Topping> toppingList = new ArrayList<>();
-        toppingList.add(toppingFromName(topping));
-        Recipe recipe = new Recipe(recipeName, doughFromName(dough), flavorFromName(flavor), toppingList,
+        Recipe recipe = new Recipe(recipeName, doughFromName(dough), flavorFromName(flavor),
+                createToppingList(topping, topping2, topping3),
                 mixFromName(mix), cookingFromName(cooking), false);
-
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
         if(manager1.isPresent()){
             manager1.get().changeMontlyRecipe(recipe);
@@ -246,6 +245,19 @@ public class Facade {
                     return;
                 }
             }
+        }
+    }
+
+    public void guestOrderCustomCookie(int id, String dough, String flavor,
+                                       String topping, String topping2, String topping3,
+                                       String mix,
+                                       String cooking, int quantity){
+
+        Optional<Guest> guest = cookieFirm.findGuestOrCustomer(id);
+        if(guest.isPresent()){
+            guest.get().orderCustomRecipe(quantity, doughFromName(dough), flavorFromName(flavor),
+                    createToppingList(topping, topping2, topping3),
+                    mixFromName(mix), cookingFromName(cooking));
         }
     }
 
@@ -408,6 +420,16 @@ public class Facade {
             if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
         }
         return null;
+    }
+
+    private List<Topping> createToppingList(String topping, String topping2, String topping3){
+        List<Topping> toppingList = new ArrayList<>();
+        toppingList.add(toppingFromName(topping));
+        if(!topping2.equals("no topping"))
+            toppingList.add(toppingFromName(topping2));
+        if(!topping3.equals("no topping"))
+            toppingList.add(toppingFromName(topping3));
+        return toppingList;
     }
 
 }

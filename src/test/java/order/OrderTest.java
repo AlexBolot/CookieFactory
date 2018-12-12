@@ -1,5 +1,6 @@
 package order;
 
+import api.BankingData;
 import main.CookieFirm;
 import main.Guest;
 import org.junit.Before;
@@ -7,13 +8,16 @@ import org.junit.Test;
 import recipe.Recipe;
 import recipe.ingredient.Catalog;
 import store.Kitchen;
+import store.Manager;
 import store.Store;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static jdk.nashorn.internal.objects.NativeMath.max;
 import static order.OrderState.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -26,6 +30,7 @@ public class OrderTest {
     private Recipe recipe1;
     private Recipe unavailableRecep;
     private CookieFirm cookieFirm;
+    private Guest guest;
 
     @Before
     public void setUp() {
@@ -33,6 +38,7 @@ public class OrderTest {
 
         Store store = new Store("", null, new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1, 1);
         store.setKitchen(new Kitchen());
+
         recipe1 = new Recipe(
                 "real",
                 catalog.getDoughList().get(1),
@@ -43,19 +49,27 @@ public class OrderTest {
                 true);
 
         cookieFirm = CookieFirm.instance();
-
         cookieFirm.inflate(Collections.singletonList(store), Collections.emptyList());
         unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), catalog.getFlavorList().get(0), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
-        LocalDateTime pickUpTime = LocalDateTime.now();
-        order = new Order(store, pickUpTime);
+        LocalDateTime pickUpTime = LocalDateTime.now().plusHours(3);
 
-        Guest guest = new Guest();
+        Manager manager = new Manager(store, "bob");
 
+        manager.changeOpeningTime(pickUpTime.getDayOfWeek(), LocalTime.now().minusHours(5));
+        manager.changeClosingTime(pickUpTime.getDayOfWeek(), LocalTime.now().plusHours(5));
+
+        guest = new Guest();
+        guest.setBankingData(new BankingData("FirstName", "LastName", "04838229405"));
+        guest.getTemporaryOrder().setStore(store);
+        guest.getTemporaryOrder().setPickUpTime(pickUpTime);
+
+        order = guest.getTemporaryOrder();
         order.setGuest(guest);
 
-        fillKitchenForRecipe(store.getKitchen(), recipe1, 10);
-    }
+        fillKitchenForRecipe(store.getKitchen(), recipe1, 50);
 
+        cookieFirm.setBankAPI(lenientBankAPI());
+    }
 
     @Test
     public void basicGetPrices() {
@@ -167,10 +181,10 @@ public class OrderTest {
     }
 
     @Test
-    public void withdrawPayedOrder() {
+    public void withdrawOrderWithBankingData() {
         cookieFirm.setBankAPI(lenientBankAPI());
-        order.placeOrder();
-        order.pay();
+        order.addCookie(recipe1, 5);
+        guest.placeOrder(true);
 
         // No exception should throw
         order.withdraw();
@@ -178,10 +192,14 @@ public class OrderTest {
         assertEquals(WITHDRAWN, order.getState());
     }
 
-    @Test(expected = WithdrawNotPaidOrderException.class)
-    public void withdrawNotPayedOrder() {
+    @Test(expected = IllegalStateException.class)
+    public void withdrawOrderWithoutBankingData() {
+        cookieFirm.setBankAPI(lenientBankAPI());
+        order.addCookie(recipe1, 5);
+        guest.placeOrder(true);
 
-        order.placeOrder();
+        // No exception should throw
+        order.withdraw();
 
         // Should throw exception
         order.withdraw();
@@ -192,6 +210,39 @@ public class OrderTest {
 
         // Should throw exception
         order.withdraw();
+    }
+
+    @Test
+    public void withdrawOrderWithValidDiscount() {
+        cookieFirm.setBankAPI(lenientBankAPI());
+
+        order.addCookie(recipe1, 5);
+        guest.placeOrder(true);
+
+        double defaultPrice = order.getPrice();
+
+        // No exception should throw
+        order.withdraw(max(defaultPrice - 1, 0));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void withdrawOrderWithNegativeDiscount() {
+        cookieFirm.setBankAPI(lenientBankAPI());
+        guest.placeOrder(true);
+
+        // No exception should throw
+        order.withdraw(- 1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void withdrawOrderWithTooBigDiscount() {
+        cookieFirm.setBankAPI(lenientBankAPI());
+        guest.placeOrder(true);
+
+        double defaultPrice = order.getPrice();
+
+        // No exception should throw
+        order.withdraw(defaultPrice + 1);
     }
 
     @Test
@@ -228,7 +279,6 @@ public class OrderTest {
     @Test(expected = IllegalStateException.class)
     public void cancelWithdrawn() {
         order.placeOrder();
-        order.pay();
         order.withdraw();
 
         //Should throw exception

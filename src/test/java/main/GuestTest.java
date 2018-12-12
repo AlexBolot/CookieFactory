@@ -1,7 +1,7 @@
 package main;
 
+import api.BankingData;
 import order.Order;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import recipe.Recipe;
@@ -48,27 +48,22 @@ public class GuestTest {
 
         guest = new Guest();
         guest.setTemporaryOrder(order);
+        guest.setBankingData(new BankingData("firstName", "lastName", "058318545"));
     }
 
     @Test
     public void placeOrder_OnlinePaiment() {
-        assertFalse(order.isPayed());
+        assertNull(order.getBankingData());
         guest.placeOrder(true);
-        Assert.assertTrue(order.isPayed());
+        assertNotNull(order.getBankingData());
+        assertEquals(order.getBankingData(), guest.getBankingData());
     }
 
     @Test
     public void placeOrder_DeskPaiment() {
-        assertFalse(order.isPayed());
+        assertNull(order.getBankingData());
         guest.placeOrder(false);
-        assertFalse(order.isPayed());
-        assertEquals(guest, order.getGuest());
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void placeOrder_AlreadyPaid() {
-        order.setPayed();
-        guest.placeOrder(true);
+        assertNull(order.getBankingData());
     }
 
     @Test

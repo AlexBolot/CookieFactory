@@ -32,7 +32,7 @@ public class Customer extends Guest {
     }
 
     static Customer from(Guest guest, String firstName, String lastName, String phoneNumber, String email,
-                           String password) {
+                         String password) {
         Customer customer = new Customer(firstName, lastName, phoneNumber, email, password);
         customer.setId(guest.getId());
         customer.setBankingData(guest.getBankingData());
@@ -51,14 +51,13 @@ public class Customer extends Guest {
     public double placeOrder(boolean onlinePayment) {
         Order order = getTemporaryOrder();
 
-
-        if (order.isPayed())
+        if (order.getBankingData() != null)
             throw new IllegalStateException("The order you are trying to place has already been paid");
 
         double price = order.getStore().placeOrder(order);
 
         if (onlinePayment) {
-            order.setPayed();
+            order.setBankingData(this.getBankingData());
         }
 
         if (loyaltyProgram && haveDiscount) {

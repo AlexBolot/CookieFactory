@@ -32,6 +32,10 @@ public class Manager {
         store.getKitchen().setMarginOf(ingredient,margin);
     }
 
+    public void changeRewardPointsToValueRatio(double ratio){
+        this.store.getUnFaithPass().setRewardValueToCashRatio(ratio);
+    }
+
     public Store getStore() {
         return store;
     }

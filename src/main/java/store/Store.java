@@ -39,8 +39,7 @@ public class Store {
         this.customRecipeeMargin = customeRecipeeMargin;
     }
 
-    public Store(String name, double tax, double customeRecipeeMargin)
-    {
+    public Store(String name, double tax, double customeRecipeeMargin) {
         this.name = name;
         this.monthlyRecipe = null;
         this.globalRecipes = new ArrayList<>();
@@ -70,15 +69,15 @@ public class Store {
      * @param order scanned for rewards
      * @return a list of reward for all cookies in the order
      */
-    public List<Reward> getRewards (Order order) {
+    public List<Reward> getRewards(Order order) {
         if (this.unFaithPass == null) {
             throw new IllegalStateException("Trying to check for rewards without unFaithPass applied");
         }
         List<Reward> rewards = new ArrayList<>();
         for (OrderLine orderline : order.getOrderLines()) {
             Reward reward = unFaithPass.getRewardFromRecipe(orderline.getRecipe());
-            if (reward!=null) {
-                rewards.addAll(Collections.nCopies(orderline.getAmount(),reward));
+            if (reward != null) {
+                rewards.addAll(Collections.nCopies(orderline.getAmount(), reward));
             }
         }
         return rewards;
@@ -123,7 +122,7 @@ public class Store {
                 throw new IllegalArgumentException("The store's kitchen is unable to cook a recipe of the order");
         }
 
-        if(order.getOrderLines().isEmpty()){
+        if (order.getOrderLines().isEmpty()) {
             throw new IllegalArgumentException("The order given is empty !");
         }
 
@@ -136,7 +135,6 @@ public class Store {
      * @param order Customer's order that needs checking
      * @return True is the order respectes the time constraints, false otherwise
      */
-    @SuppressWarnings("RedundantIfStatement")
     private boolean checkOrderDelay(Order order) {
 
         LocalDateTime pickUpDate = order.getPickUpTime();
@@ -149,27 +147,30 @@ public class Store {
         DayOfWeek pickupDay = pickUpDate.getDayOfWeek();
 
         // Selected time is earlier than opening time of selected day -> forbidden
-        if(pickupTime.isBefore(LocalTime.from(this.openingTime(pickupDay))))
+        if (pickupTime.isBefore(LocalTime.from(this.openingTime(pickupDay))))
             throw new IllegalArgumentException("The pickup time is earlier than opening time of the store");
 
         // Selected time is later than closing time of selected day -> forbidden
-        if(pickupTime.isAfter(LocalTime.from(this.closingTime(pickupDay))))
+        if (pickupTime.isAfter(LocalTime.from(this.closingTime(pickupDay))))
             throw new IllegalArgumentException("The pickup time is later than closing time of the store");
 
         // Else -> no problem :)
         return true;
     }
 
-
     /**
      * Set the order to payed
-     *  @param day        to pick up the order
+     *
+     * @param day        to pick up the order
      * @param pickUpTime time to pick up the order
      * @param email      the current customer
      */
     void setStatusPaymentOrder(DayOfWeek day, LocalDateTime pickUpTime, String email) {
-        Optional<Order> order = findOrder(pickUpTime, email);
-        order.ifPresent(Order::setPayed);
+
+        //TODO : Remove
+
+        //Optional<Order> order = findOrder(pickUpTime, email);
+        //order.ifPresent(Order::setPayed);
     }
 
     /**
@@ -182,7 +183,7 @@ public class Store {
     public Optional<Order> findOrder(LocalDateTime pickUpTime, String email) {
         return orders.stream()
                 .filter(order -> pickUpTime.equals(order.getPickUpTime()) &&
-                                email.equals(order.getGuest().getEmail())
+                        email.equals(order.getGuest().getEmail())
                 )
                 .findFirst();
     }
@@ -224,7 +225,6 @@ public class Store {
         return monthlyRecipe;
     }
 
-
     public Collection<Order> getOrders() {
         return orders;
     }
@@ -241,6 +241,10 @@ public class Store {
         return name;
     }
 
+    public UnFaithPass getUnFaithPass() {
+        return this.unFaithPass;
+    }
+
     /**
      * Sets the new Monthly Recipe of the store
      * Raise an exception if new recipe.ingredient is the same as the previous one
@@ -248,9 +252,8 @@ public class Store {
      * @param newRecipe new monthly recipe.ingredient of the store
      */
     public void setMonthlyRecipe(Recipe newRecipe) {
-        if (this.monthlyRecipe != null && this.monthlyRecipe == newRecipe) {
+        if (this.monthlyRecipe != null && this.monthlyRecipe == newRecipe)
             throw new IllegalArgumentException("Recipe " + newRecipe + " is the same as the previous one");
-        }
 
         this.monthlyRecipe = newRecipe;
     }
@@ -260,7 +263,7 @@ public class Store {
         if (closingTimes.containsKey(day) && localTime.isAfter(closingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set opening time after closing time for " + day);
 
-        this.openingTimes.put(day, localTime);
+        openingTimes.put(day, localTime);
     }
 
     void setClosingTime(DayOfWeek day, LocalTime localTime) {
@@ -268,7 +271,7 @@ public class Store {
         if (openingTimes.containsKey(day) && localTime.isBefore(openingTimes.get(day)))
             throw new IllegalArgumentException("Trying to set closing time before opening time for " + day);
 
-        this.closingTimes.put(day, localTime);
+        closingTimes.put(day, localTime);
     }
 
     public void applyUnFaithPath(UnFaithPass unFaithPass) {

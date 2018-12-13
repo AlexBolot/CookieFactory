@@ -30,6 +30,35 @@ public class Facade {
         return store;
     }
 
+    /**
+     * Add a topping to the cookie firm ingredient catalog
+     * If a topping with the same name already exists it will return this topping .
+     *
+     * @param toppingName {@link String} toppings name
+     */
+    public void addTopping(String toppingName) {
+        cookieFirm.getCatalog().addTopping(toppingName);
+    }
+
+    /**
+     * Add a dough to the cookie firm ingredient catalog
+     * If a dough with the same name already exists it will return this dough .
+     *
+     * @param doughName {@link String} dough name
+     */
+    public void addDough(String doughName) {
+        cookieFirm.getCatalog().addDough(doughName);
+    }
+
+    /**
+     * Add a flavor to the cookie firm ingredient catalog
+     * If a flavor with the same name already exists it will return this flavor .
+     *
+     * @param flavorName {@link String} flavor name
+     */
+    public void addFlavor(String flavorName) {
+        cookieFirm.getCatalog().addFlavor(flavorName);
+    }
 
     public void addManagerToStore(String manager, String store){
         Optional<Store> store1 = cookieFirm.findStore(store);
@@ -230,6 +259,13 @@ public class Facade {
         }
     }
 
+    //TODO permettre la création de custom recipe
+    /*
+    public void guestOrderCustomRecipe(){
+
+    }
+    */
+
     public void guestPlaceOrder(int id , Boolean payedOnline){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
 
@@ -387,5 +423,6 @@ public class Facade {
             toppingList.add(toppingFromName(topping3));
         return toppingList;
     }
+
 
 }

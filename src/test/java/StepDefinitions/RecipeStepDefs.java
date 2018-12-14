@@ -1,18 +1,21 @@
 package StepDefinitions;
 
-import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.junit.Assert;
 import recipe.Recipe;
-import recipe.ingredient.*;
+import recipe.ingredient.Catalog;
+import recipe.ingredient.Ingredient;
 import store.Store;
 import utils.CucumberContext;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class RecipeStepDefs {
@@ -22,11 +25,7 @@ public class RecipeStepDefs {
     private final Map<String, Recipe> recipes = new HashMap<>();
     private final Catalog catalog = new Catalog();
 
-    @Given("^\"([^\"]*)\" add the recipe named \"([^\"]*)\" have \"([^\"]*)\", flavor \"([^\"]*)\", topping \"([^\"]*)\", mix \"([^\"]*)\", cooking \"([^\"]*)\"$")
-    public void bobAddTheRecipeNamedHaveFlavorToppingMixCooking(String manager, String recipeName, String dough,
-                                                                String flavor,
-                                                                String topping, String mix, String cooking) throws Throwable {
-    }
+
 
     @Given("^\"([^\"]*)\" add the recipe named \"([^\"]*)\" have \"([^\"]*)\", flavor \"([^\"]*)\", topping \"([^\"]*)\" and \"([^\"]*)\" and \"([^\"]*)\", mix \"([^\"]*)\", cooking \"([^\"]*)\"$")
     public void addTheRecipeNamedHaveFlavorToppingAndAndMixCooking(String manager, String recipeName, String dough,
@@ -52,4 +51,38 @@ public class RecipeStepDefs {
     }
 
 
+    @Then("^The store \"([^\"]*)\" montly recipee contains ingredient \"([^\"]*)\"$")
+    public void theStoreMontlyRecipeeContainsIngredient(String storeName, String ingredientName) throws Throwable {
+        assertTrue(
+                context.cookieFirm().findStore(storeName).orElseThrow(IllegalArgumentException::new)
+                        .getMonthlyRecipe().getIngredients().stream().anyMatch(ingredient ->
+                        ingredient.getName().equalsIgnoreCase(ingredientName)));
+    }
+
+    /**
+     * We add a topping to the catalog through the facade
+     *
+     * @throws Throwable
+     */
+    @Given("^A new topping \"([^\"]*)\" is added to the catalog$")
+    public void aNewToppingIsAddedToTheCatalog(String arg0) throws Throwable {
+        context.getFacade().addTopping(arg0);
+    }
+
+    @Then("^The ingredient catalog contains \"([^\"]*)\"$")
+    public void theIngredientCatalogContains(String name) throws Throwable {
+        Catalog catalog = context.cookieFirm().getCatalog();
+        Stream<Ingredient> allIngredients = Stream.of(catalog.getToppingList(), catalog.getFlavorList(), catalog.getDoughList()).flatMap(Collection::stream);
+        assertTrue(allIngredients.anyMatch(ingredient -> ingredient.getName().equalsIgnoreCase(name)));
+    }
+
+    @When("^A new dough \"([^\"]*)\" is added to the catalog$")
+    public void aNewDoughIsAddedToTheCatalog(String name) throws Throwable {
+        context.getFacade().addDough(name);
+    }
+
+    @When("^A new flavor \"([^\"]*)\" is added to the catalog$")
+    public void aNewFlavorIsAddedToTheCatalog(String name) throws Throwable {
+        context.getFacade().addFlavor(name);
+    }
 }

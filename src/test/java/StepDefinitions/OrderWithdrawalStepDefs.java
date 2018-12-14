@@ -1,6 +1,5 @@
 package StepDefinitions;
 
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -9,7 +8,6 @@ import order.Order;
 import order.OrderState;
 import store.Store;
 import utils.CucumberContext;
-import utils.TestUtils;
 
 import java.time.LocalDateTime;
 
@@ -33,10 +31,7 @@ public class OrderWithdrawalStepDefs {
         Order order = context.orders.get(orderName);
         order.placeOrder();
 
-        //TODO Remove when price is fixed
-        context.cookieFirm().setBankAPI(TestUtils.lenientBankAPI());
-
-        order.pay();
+        context.cookieFirm().setBankAPI(context.cookieFirm().getBankAPI());
     }
 
     @When("^the employee of \"([^\"]*)\" scans \"([^\"]*)\"$")
@@ -46,11 +41,6 @@ public class OrderWithdrawalStepDefs {
         currentOrder = store
                 .findOrder(targetOrder.getPickUpTime(), targetOrder.getGuest().getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Not found the order"));
-    }
-
-    @And("^the employee recieves \"([^\"]*)\" payment$")
-    public void theEmpoyeeRecievesPayment(String customerName) {
-        currentOrder.pay();
     }
 
     @Given("^\"([^\"]*)\" is passed in the store \"([^\"]*)\" by \"([^\"]*)\"$")

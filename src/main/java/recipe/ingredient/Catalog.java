@@ -3,6 +3,7 @@ package recipe.ingredient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Represent the {@link main.CookieFirm} getIngredients catalog
@@ -67,5 +68,53 @@ public class Catalog {
 
     public List<Cooking> getCookingList() {
         return cookingList;
+    }
+
+    /**
+     * Add a topping to the list
+     * If a topping with the same name already exists it will return this topping ( case insensitive ).
+     *
+     * @param toppingName {@link String} toppings name
+     * @return Topping the created topping, or the already existing one
+     */
+    public Topping addTopping(String toppingName) {
+        Optional<Topping> alreadyExists = toppingList.stream().filter(topping -> topping.getName().equalsIgnoreCase(toppingName)).findFirst();
+        Topping newTopping = new Topping(toppingName);
+        if (!alreadyExists.isPresent()) {
+            toppingList.add(newTopping);
+        }
+        return alreadyExists.orElse(newTopping);
+    }
+
+    /**
+     * Add a dough to the list
+     * If a dough with the same name already exists it will return this dough ( case insensitive ).
+     *
+     * @param doughName {@link String} doughs name
+     * @return Dough the created dough, or the already existing one
+     */
+    public Dough addDough(String doughName) {
+        Optional<Dough> alreadyExists = doughList.stream().filter(dough -> dough.getName().equalsIgnoreCase(doughName)).findFirst();
+        Dough newdough = new Dough(doughName);
+        if (!alreadyExists.isPresent()) {
+            doughList.add(newdough);
+        }
+        return alreadyExists.orElse(newdough);
+    }
+
+    /**
+     * Add a flavor to the list
+     * If a flavor with the same name already exists it will return this flavor ( case insensitive ).
+     *
+     * @param flavorName {@link String} flavors name
+     * @return Flavor the created flavor, or the already existing one
+     */
+    public Flavor addFlavor(String flavorName) {
+        Optional<Flavor> alreadyExists = flavorList.stream().filter(flavor -> flavor.getName().equalsIgnoreCase(flavorName)).findFirst();
+        Flavor newflavor = new Flavor(flavorName);
+        if (!alreadyExists.isPresent()) {
+            flavorList.add(newflavor);
+        }
+        return alreadyExists.orElse(newflavor);
     }
 }

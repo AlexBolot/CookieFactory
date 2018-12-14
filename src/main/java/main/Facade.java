@@ -30,6 +30,35 @@ public class Facade {
         return store;
     }
 
+    /**
+     * Add a topping to the cookie firm ingredient catalog
+     * If a topping with the same name already exists it will return this topping .
+     *
+     * @param toppingName {@link String} toppings name
+     */
+    public void addTopping(String toppingName) {
+        cookieFirm.getCatalog().addTopping(toppingName);
+    }
+
+    /**
+     * Add a dough to the cookie firm ingredient catalog
+     * If a dough with the same name already exists it will return this dough .
+     *
+     * @param doughName {@link String} dough name
+     */
+    public void addDough(String doughName) {
+        cookieFirm.getCatalog().addDough(doughName);
+    }
+
+    /**
+     * Add a flavor to the cookie firm ingredient catalog
+     * If a flavor with the same name already exists it will return this flavor .
+     *
+     * @param flavorName {@link String} flavor name
+     */
+    public void addFlavor(String flavorName) {
+        cookieFirm.getCatalog().addFlavor(flavorName);
+    }
 
     public void addManagerToStore(String manager, String store){
         Optional<Store> store1 = cookieFirm.findStore(store);
@@ -107,6 +136,16 @@ public class Facade {
         opManager.ifPresent(manager -> manager.changeIngredientMargin(ingredient, newMargin));
     }
 
+    /**
+     * Allows a manager to change the "reward-value to cash" ratio of his store
+     *
+     * @param managerName Name of the manager
+     * @param ratio New ratio of the manager's store's UnFaitProgramm
+     */
+    public void managerChangeUnFaithPassRewardRatio(String managerName, double ratio){
+        Optional<Manager> opManager = cookieFirm.findManager(managerName);
+        opManager.ifPresent(manager -> manager.changeRewardPointsToValueRatio(ratio));
+    }
 
     //UTILS MANAGER
     private LocalTime transformeStringToTime(String time){
@@ -220,6 +259,13 @@ public class Facade {
         }
     }
 
+    //TODO permettre la création de custom recipe
+    /*
+    public void guestOrderCustomRecipe(){
+
+    }
+    */
+
     public void guestPlaceOrder(int id , Boolean payedOnline){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
 
@@ -228,11 +274,12 @@ public class Facade {
 
 
     public void guestValidateHisOrder(int id, String email, boolean pay){
-        Optional<Guest> opGuest = this.cookieFirm.findGuest(id);
+        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         if(opGuest.isPresent()) {
             opGuest.get().setEmail(email);
             opGuest.get().placeOrder(pay);
         }
+        else throw new IllegalArgumentException("Could not find Guest with id = " + id);
     }
 
 
@@ -376,5 +423,6 @@ public class Facade {
             toppingList.add(toppingFromName(topping3));
         return toppingList;
     }
+
 
 }

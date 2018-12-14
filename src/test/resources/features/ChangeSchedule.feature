@@ -9,8 +9,7 @@ Feature: Change store schedule
     When "Bob" changes opening time of "Monday" to "7:30"
     Then The "store" opening of "Monday" is "7:30"
 
-
-    @Ignore
+  @Ignore
   Scenario: Change store opening time (invalid)
     Given The store manage by "Bob" opens "Monday" at "8:00" and closes at "17:30"
     When "Bob" changes opening time of "Monday" to "18:30"
@@ -21,7 +20,7 @@ Feature: Change store schedule
     When "Bob" changes closing time of "Monday" to "18:30"
     Then The "store" closing of "Monday" is "18:30"
 
-    @Ignore
+  @Ignore
   Scenario: Change store closing time (invalid)
     Given The store manage by "Bob" opens "Monday" at "8:00" and closes at "17:30"
     When "Bob" changes closing time of "Monday" to "7:30"

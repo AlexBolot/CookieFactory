@@ -1,5 +1,6 @@
-package main;
+package store;
 
+import main.CookieFirm;
 import org.junit.Before;
 import org.junit.Test;
 import recipe.Recipe;

@@ -282,6 +282,15 @@ public class CookieFirm {
     }
 
     /**
+     * Find a recipee based on it's name
+     *
+     * @param recipeeName {@link String} recipee name
+     * @return {@link Optional<Recipe>} The search result, empty if no recipee were found.
+     */
+    public Optional<Recipe> findRecipee(String recipeeName) {
+        return this.getGlobalRecipes().stream().filter(recipe -> recipe.getName().equalsIgnoreCase(recipeeName)).findFirst();
+    }
+    /**
      * @deprecated was used once, not anymore, the mistery persists, should be erased.
      */
     @Deprecated
@@ -339,5 +348,6 @@ public class CookieFirm {
     public void addCustomerToLoyaltyProgram(Customer customer) {
         customer.addToLoyaltyProgram();
     }
+
 
 }

@@ -9,9 +9,9 @@ import utils.TestUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class CookieFirmTest {
 
@@ -105,5 +105,26 @@ public class CookieFirmTest {
         Assert.assertFalse(cookieFirm.getGlobalRecipes().contains(falseSimpleRecipe));
         Assert.assertTrue(cookieFirm.getGlobalRecipes().contains(trueComplexRecipe));
         Assert.assertFalse(cookieFirm.getGlobalRecipes().contains(falseComplexRecipe));
+    }
+
+    @Test
+    public void findARecipeeByName() {
+        Recipe expected = cookieFirm.getGlobalRecipes().get(1);
+        Optional<Recipe> result = cookieFirm.findRecipee(expected.getName());
+        assertTrue(result.isPresent());
+        assertEquals(expected, result.get());
+    }
+
+    @Test
+    public void findARecipeCaseInsensitive() {
+        Recipe expected = cookieFirm.getGlobalRecipes().get(1);
+        Optional<Recipe> result = cookieFirm.findRecipee(expected.getName().toUpperCase());
+        assertTrue(result.isPresent());
+        assertEquals(expected, result.get());
+    }
+
+    @Test
+    public void findARecipeReturnsEmpty() {
+        assertEquals(Optional.empty(), cookieFirm.findRecipee("Je Suis Improbable mais vrais"));
     }
 }

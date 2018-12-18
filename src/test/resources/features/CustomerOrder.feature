@@ -12,8 +12,8 @@ Feature: Customer order
     Given The customer choose a store "store" to pickup "Monday" at 16:30
     Given The customer add 6 cookies "White Dog" from the "store"
     When The customer place his order and pay "online"
-    Then The customer with the email "Bob" has 1 order in his history
-    And The customer with the email "Bob" has an empty temporary order
+    Then The customer with the email "Bob@Bob.fr" has 1 order in his history
+    And The customer with the email "Bob@Bob.fr" has an empty temporary order
 
   Scenario: A customer places an order
     Given A customer "Shaurt"

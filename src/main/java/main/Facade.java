@@ -23,7 +23,13 @@ public class Facade {
         this.cookieFirm = CookieFirm.instance();
     }
 
-
+    /**
+     * Add new store to cookie firm
+     * @param sStore name of the new store
+     * @param tax of the new store
+     * @param margin on the custom recipe of the new store
+     * @return the new Store
+     */
     public Store addAStoreToFirm(String sStore, int tax, int margin){
         Store store = new Store(sStore, tax, margin);
         cookieFirm.addStore(store);
@@ -105,6 +111,18 @@ public class Facade {
     }
 
 
+    /**
+     * Manager add a new Monthly cookie
+     * @param manager name of the manager
+     * @param recipeName name of the new recipe
+     * @param dough of the new recipe
+     * @param flavor of the new recipe(optional)
+     * @param topping of the new recipe
+     * @param topping2 of the new recipe (optional)
+     * @param topping3 of the new recipe(optional)
+     * @param mix of the new recipe
+     * @param cooking of the new recipe
+     */
     public void managerAddMonthlyCookie(String manager, String recipeName, String dough, String flavor,
                                         String topping, String topping2, String topping3,
                                         String mix,
@@ -120,22 +138,15 @@ public class Facade {
         manager1.ifPresent(manager2 -> manager2.changeMontlyRecipe(recipe));
     }
 
+    /**
+     * Manager change an ingredient margin
+     * @param managerName name of the manager
+     * @param type of the ingredient
+     * @param ingredientName name of the ingredient
+     * @param newMargin new margin for the ingredient
+     */
     public void managerChangeIngredientMargin(String managerName, String type, String ingredientName, double newMargin) {
-        Ingredient ingredient;
-        switch (type) {
-            case "dough":
-                ingredient = cookieFirm.getCatalog().doughFromName(ingredientName);
-                break;
-            case "flavor":
-                ingredient = cookieFirm.getCatalog().flavorFromName(ingredientName);
-                break;
-            case "topping":
-                ingredient = cookieFirm.getCatalog().toppingFromName(ingredientName);
-                break;
-            default:
-                return;
-        }
-
+        Ingredient ingredient = ingredientFromName(type, ingredientName);
         Optional<Manager> opManager = cookieFirm.findManager(managerName);
         opManager.ifPresent(manager -> manager.changeIngredientMargin(ingredient, newMargin));
     }
@@ -166,12 +177,26 @@ public class Facade {
 
     //PART GUEST
 
+    /**
+     * Create a new guest
+     * @return new guest id
+     */
     public Integer createGuest(){
         Guest guest = new Guest();
         this.cookieFirm.addGuest(guest);
         return guest.getId();
     }
 
+    /**
+     * Guest create an account when validating his order
+     * @param idGuest current id guest
+     * @param fName name of the guest
+     * @param lastN last name of the guest
+     * @param phone of the guest
+     * @param email of the guest
+     * @param password of the guest
+     * @return id of the customer created
+     */
     public Optional<Integer> guestCreateAccount(int idGuest, String fName, String lastN, String phone, String email,
                                   String password){
         Optional<Guest> opGuest = this.cookieFirm.findGuest(idGuest);
@@ -184,6 +209,11 @@ public class Facade {
         return Optional.ofNullable(id);
     }
 
+    /**
+     * Guest add a store to his order
+     * @param id of the current guest
+     * @param sStore name of the store to link to the order
+     */
     public void guestAddStoreToOrder(int id, String sStore){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
@@ -197,12 +227,25 @@ public class Facade {
 
     //GUEST ADD PICKUPTIME
 
+    /**
+     * Guest add a pickup time to his order
+     * @param id of the current guest
+     * @param time pickup time of the order
+     * @param pickupDay of the order
+     */
     public void guestAddPickTimeToOrder(int id, int time, String pickupDay){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
 
         opGuest.ifPresent(guest -> guest.getTemporaryOrder().setPickUpTime(generateTime(time, pickupDay)));
     }
 
+    /**
+     * Guest add pickup time, day and store to his order
+     * @param id of the current guest
+     * @param sStore name of the store to link to order
+     * @param time pickup time of the order
+     * @param pickupDay of the order
+     */
     public void guestAddPickUpTimeAndStoreToOrder(int id, String sStore, int time, String pickupDay){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
@@ -216,6 +259,15 @@ public class Facade {
 
 
     //GUEST ADD OR REMOVE COOKIES
+
+    /**
+     * Guest remove or add a quantity of a cookie
+     * @param id of the current guest
+     * @param sStore link to the order
+     * @param quantity to add or remove
+     * @param recipeName name of the recipe to modify
+     * @param remove boolean to remove or add the quantity
+     */
     public void guestAddOrRemoveCookie(int id, String sStore, int quantity, String recipeName, boolean remove) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
@@ -236,6 +288,19 @@ public class Facade {
     }
 
     //GUEST ORDER CUSTOM COOKIE
+
+    /**
+     * Guest order a custom cookie
+     * @param id of the current guest
+     * @param dough of the custom cookie
+     * @param flavor of the custom cookie (optional)
+     * @param topping of the custom cookie
+     * @param topping2 of the custom cookie (optional)
+     * @param topping3 of the custom cookie (optional)
+     * @param mix of the custom cookie
+     * @param cooking of the custom cookie
+     * @param quantity to order of the custom cookie
+     */
     public void guestOrderCustomCookie(int id, String dough, String flavor,
                                        String topping, String topping2, String topping3,
                                        String mix,
@@ -251,6 +316,16 @@ public class Facade {
     }
 
     // GUEST PLACE ORDER
+
+    /**
+     * Guest add cookie to his order and place his order at the same time
+     * @param id of the current guest
+     * @param sStore name of the store to link to the order
+     * @param nbCookies to order
+     * @param pickupTime pickup time of the order
+     * @param pickUpDay pickup day of the order
+     * @param payedOnline boolean that indicate if the order is payed online or not
+     */
     public void guestPlaceOrderWithCookies(int id, String sStore, int nbCookies, int
             pickupTime, String pickUpDay, Boolean payedOnline) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
@@ -266,13 +341,11 @@ public class Facade {
         }
     }
 
-    //TODO permettre la création de custom recipe
-    /*
-    public void guestOrderCustomRecipe(){
-
-    }
-    */
-
+    /**
+     * Guest place his order
+     * @param id of the current guest
+     * @param payedOnline boolean that indicate if the order is payed online or not
+     */
     public void guestPlaceOrder(int id , Boolean payedOnline){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
 
@@ -280,6 +353,12 @@ public class Facade {
     }
 
 
+    /**
+     * Guest validate his order
+     * @param id of the current guest
+     * @param email used to validate the order
+     * @param pay boolean that indicate if the order is payed online or not
+     */
     public void guestValidateHisOrder(int id, String email, boolean pay){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         if(opGuest.isPresent()) {
@@ -290,6 +369,14 @@ public class Facade {
     }
 
 
+
+    //CUSTOMER RELATED
+
+    /**
+     * Customer add his banking data
+     * @param sEmail of the customer
+     * @param accountId of his banking data
+     */
     public void setBankingDataCustomer(String sEmail, String accountId){
         Optional<Customer> opCustomer = this.cookieFirm.findCustomer(sEmail);
         if(opCustomer.isPresent()) {
@@ -298,16 +385,29 @@ public class Facade {
         }
 
     }
+    //TODO ajouter dans le bank id ajouter juste avec le accountID
 
 
-    //CUSTOMER RELATED
+    /**
+     * Create an account
+     * @param sName of the customer
+     * @param sLastName of the customer
+     * @param phoneNumber of the customer
+     * @param email of the customer
+     * @param password of the customer
+     * @return the id of the new customer
+     */
     public Integer createACustomer(String sName, String sLastName, String phoneNumber, String email, String
             password){
         Customer customer = this.cookieFirm.createAccount(sName, sLastName, phoneNumber, email, password);
         return customer.getId();
     }
 
-
+    /**
+     * Add customer to fidelity program
+     * @param sEmail of the customer
+     * @return if the customer was add to program or not
+     */
     public boolean addACustomerToLP(String sEmail){
         Optional<Customer> customer = this.cookieFirm.findCustomer(sEmail);
         if(customer.isPresent()) {
@@ -319,9 +419,19 @@ public class Facade {
 
 
 
-    //TODO ajouter dans le bank id ajouter juste avec le accountID
+    //EMPLOYEE RELATED
 
-
+    /**
+     * An employee make an action on an order (CANCELED, WITHDRAWN)
+     * Search the order with datas
+     * Not case sensitive
+     * @param sStore name of the store where the employee work
+     * @param time pickup time of the searched order
+     * @param day pickup day of the searched order
+     * @param email of the searched order's customer
+     * @param action to make on the order
+     * @return if the action could be done
+     */
     public boolean anEmployeeMakeAnActionOnOrder(String sStore, int time, String day, String email, String action){
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
@@ -342,7 +452,14 @@ public class Facade {
         return false;
     }
 
-
+    /**
+     * An employee search and order to see its state
+     * @param sStore name of the store where the employee work
+     * @param time pickup time of the searched order
+     * @param day pickup day of the searched order
+     * @param email of the searched order's customer
+     * @return the state of the order
+     */
     public String anEmployeeSearchAnOrderState(String sStore, int time, String day, String email){
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
@@ -356,6 +473,13 @@ public class Facade {
         return "none";
     }
 
+    /**
+     * Employee add stock for a topping
+     * @param store name of the store where the employee work
+     * @param type of the ingredient
+     * @param ingredient name of the ingredient
+     * @param quantity add to stock
+     */
     public void addStockForTopping(String store, String type, String ingredient, int quantity){
         Optional<Store> opStore = this.cookieFirm.findStore(store);
         opStore.ifPresent(store1 -> store1.getKitchen().refill(ingredientFromName(type, ingredient), quantity));

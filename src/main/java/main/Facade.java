@@ -30,6 +30,35 @@ public class Facade {
         return store;
     }
 
+    /**
+     * Add a topping to the cookie firm ingredient catalog
+     * If a topping with the same name already exists it will return this topping .
+     *
+     * @param toppingName {@link String} toppings name
+     */
+    public void addTopping(String toppingName) {
+        cookieFirm.getCatalog().addTopping(toppingName);
+    }
+
+    /**
+     * Add a dough to the cookie firm ingredient catalog
+     * If a dough with the same name already exists it will return this dough .
+     *
+     * @param doughName {@link String} dough name
+     */
+    public void addDough(String doughName) {
+        cookieFirm.getCatalog().addDough(doughName);
+    }
+
+    /**
+     * Add a flavor to the cookie firm ingredient catalog
+     * If a flavor with the same name already exists it will return this flavor .
+     *
+     * @param flavorName {@link String} flavor name
+     */
+    public void addFlavor(String flavorName) {
+        cookieFirm.getCatalog().addFlavor(flavorName);
+    }
 
     public void addManagerToStore(String manager, String store){
         Optional<Store> store1 = cookieFirm.findStore(store);
@@ -85,6 +114,37 @@ public class Facade {
                 mixFromName(mix), cookingFromName(cooking), false);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
         manager1.ifPresent(manager2 -> manager2.changeMontlyRecipe(recipe));
+    }
+
+    public void managerChangeIngredientMargin(String managerName, String type, String ingredientName, double newMargin) {
+        Ingredient ingredient;
+        switch (type) {
+            case "dough":
+                ingredient = doughFromName(ingredientName);
+                break;
+            case "flavor":
+                ingredient = flavorFromName(ingredientName);
+                break;
+            case "topping":
+                ingredient = toppingFromName(ingredientName);
+                break;
+            default:
+                return;
+        }
+
+        Optional<Manager> opManager = cookieFirm.findManager(managerName);
+        opManager.ifPresent(manager -> manager.changeIngredientMargin(ingredient, newMargin));
+    }
+
+    /**
+     * Allows a manager to change the "reward-value to cash" ratio of his store
+     *
+     * @param managerName Name of the manager
+     * @param ratio New ratio of the manager's store's UnFaitProgramm
+     */
+    public void managerChangeUnFaithPassRewardRatio(String managerName, double ratio){
+        Optional<Manager> opManager = cookieFirm.findManager(managerName);
+        opManager.ifPresent(manager -> manager.changeRewardPointsToValueRatio(ratio));
     }
 
     //UTILS MANAGER
@@ -199,6 +259,13 @@ public class Facade {
         }
     }
 
+    //TODO permettre la création de custom recipe
+    /*
+    public void guestOrderCustomRecipe(){
+
+    }
+    */
+
     public void guestPlaceOrder(int id , Boolean payedOnline){
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
 
@@ -207,11 +274,12 @@ public class Facade {
 
 
     public void guestValidateHisOrder(int id, String email, boolean pay){
-        Optional<Guest> opGuest = this.cookieFirm.findGuest(id);
+        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         if(opGuest.isPresent()) {
             opGuest.get().setEmail(email);
             opGuest.get().placeOrder(pay);
         }
+        else throw new IllegalArgumentException("Could not find Guest with id = " + id);
     }
 
 
@@ -283,19 +351,7 @@ public class Facade {
 
     public void addStockForTopping(String store, String type, String ingredient, int quantity){
         Optional<Store> opStore = this.cookieFirm.findStore(store);
-        if(opStore.isPresent()){
-            switch (type) {
-                case "topping":
-                    opStore.get().getKitchen().refill(cookieFirm.getCatalog().toppingFromName(ingredient), quantity);
-                    break;
-                case "dough":
-                    opStore.get().getKitchen().refill(cookieFirm.getCatalog().doughFromName(ingredient), quantity);
-                    break;
-                case "flavor":
-                    opStore.get().getKitchen().refill(cookieFirm.getCatalog().flavorFromName(ingredient), quantity);
-                    break;
-            }
-        }
+        opStore.ifPresent(store1 -> store1.getKitchen().refill(ingredientFromName(type, ingredient), quantity));
     }
 
     public LocalDateTime generateTime(int pickupTime, String pickUpDay) {
@@ -344,6 +400,19 @@ public class Facade {
         }
         return null;
     }
+
+    public Ingredient ingredientFromName(String type, String ingredientName) {
+        switch (type) {
+            case "dough":
+                return doughFromName(ingredientName);
+            case "flavor":
+                return flavorFromName(ingredientName);
+            case "topping":
+                return toppingFromName(ingredientName);
+        }
+        return null;
+    }
+
 
     private List<Topping> createToppingList(String topping, String topping2, String topping3){
         List<Topping> toppingList = new ArrayList<>();

@@ -11,14 +11,6 @@ public class BankAPI {
         // Then does nothing until we connect real API
     }
 
-    public void refund(BankingData bankingData, double amount) {
-        // Checks validity of parameters
-        if (amount <= 0) throw new IllegalArgumentException("Amount must be strictly positive. Given is : " + amount);
-        checkValidity(bankingData);
-
-        // Then does nothing until we connect real API
-    }
-
     private void checkValidity(BankingData bankingData) {
 
         if (bankingData.getFirstName().isEmpty())

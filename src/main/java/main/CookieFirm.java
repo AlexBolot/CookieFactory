@@ -11,6 +11,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Singleton representing The Cookie Factory
+ * Handle the accounts, the stores, and the global recipee and ingredient catalog.
+ */
 public class CookieFirm {
 
     private Set<Guest> guests = new HashSet<>();
@@ -28,6 +32,9 @@ public class CookieFirm {
         return cookieFirm;
     }
 
+    /**
+     * Private constructor, should never be called outside the class, for singleton use
+     */
     private CookieFirm() {
 
         this.catalog = new Catalog();
@@ -138,6 +145,17 @@ public class CookieFirm {
         return globalRecipes.contains(recipe);
     }
 
+    /**
+     * Create a customer account form the passed infomation
+     *
+     * @param firstName   {@link String} The firstname of the account to be creaated
+     * @param lastName    {@link String} The lastname of the account to be creaated
+     * @param phoneNumber {@link String} The phoneNumber of the account to be creaated
+     * @param email       {@link String} The email of the account to be creaated
+     * @param password    {@link String} The password of the account to be creaated
+     * @return Customer created
+     * @throws IllegalArgumentException if the email is alreay in use
+     */
     Customer createAccount(String firstName, String lastName, String phoneNumber, String email, String password) {
         Customer newAccount = new Customer(firstName, lastName, phoneNumber, email, password);
         if (saveCustomerAccountIfAbsent(newAccount)) {
@@ -147,6 +165,19 @@ public class CookieFirm {
         }
     }
 
+    /**
+     * Create a customer account with a temporary Order
+     *
+     * @param firstName      {@link String} The firstname of the account to be created
+     * @param lastName       {@link String} The lastname of the account to be created
+     * @param phoneNumber    {@link String} The phoneNumber of the account to be created
+     * @param email          {@link String} The email of the account to be created, used as an unique identifier
+     *                       If an account already exists with this email will throw
+     * @param password       {@link String} The password of the account to be created
+     * @param temporaryOrder {@link Order} The current order of the account to be created
+     * @return Customer created
+     * @throws IllegalArgumentException if the email is alreay in use
+     */
     public Customer createAccount(String firstName, String lastName, String phoneNumber, String email, String password, Order temporaryOrder) {
         Customer newAccount = new Customer(firstName, lastName, phoneNumber, email, password, temporaryOrder);
         if (saveCustomerAccountIfAbsent(newAccount)) {
@@ -156,6 +187,12 @@ public class CookieFirm {
         }
     }
 
+    /**
+     * Register a customer if the account does not exists in the account list
+     *
+     * @param customer {@link Customer} to be registered
+     * @return false if already in the account list, otherwise the new account is saved and return true
+     */
     boolean saveCustomerAccountIfAbsent(Customer customer) {
         for (Customer account : this.accounts) {
             if (account.getEmail().equals(customer.getEmail())) {
@@ -169,6 +206,11 @@ public class CookieFirm {
         return true;
     }
 
+    /**
+     * Return a customer from an email
+     * @param email {@link String} The target customer email. The optional will be empty if no customer with the email is found
+     * @return {@link Optional<Customer>} Optional of the customer with the passed email, empty if not found.
+     */
     public Optional<Customer> findCustomer(String email) {
         Customer customer = null;
         for (Customer account : this.accounts) {
@@ -179,6 +221,11 @@ public class CookieFirm {
         return Optional.ofNullable(customer);
     }
 
+    /**
+     * Return a guest from an id
+     * @param id {@link Integer} The target guest id. The optional will be empty if no guest with the id is found
+     * @return {@link Optional<Guest>} Optional of the customer with the passed id, empty if not found.
+     */
     public Optional<Guest> findGuest(int id){
         Guest guest = null;
         for(Guest account : this.guests){
@@ -189,6 +236,11 @@ public class CookieFirm {
         return Optional.ofNullable(guest);
     }
 
+    /**
+     * Return a manager from an email
+     * @param name {@link String} The target customer name. The optional will be empty if no manager with the name is found
+     * @return {@link Optional<Manager>} Optional of the manager with the passed name, empty if not found.
+     */
     public Optional<Manager> findManager(String name){
         Manager manager1 = null;
         for(Manager manager : managers){
@@ -199,7 +251,11 @@ public class CookieFirm {
         return Optional.ofNullable(manager1);
     }
 
-
+    /**
+     * Return a guest with the passed id considering the customers also.
+     * @param id {@link Integer} The target guest id. The optional will be empty if no guest with the id is found
+     * @return {@link Optional<Customer>} Optional of the customer with the passed email, empty if not found.
+     */
     public Optional<Guest> findGuestOrCustomer(int id){
         Set<Guest> guests = getAllGuests();
         Guest guest = null;
@@ -211,8 +267,11 @@ public class CookieFirm {
         return Optional.ofNullable(guest);
     }
 
-
-
+    /**
+     * Return a store from an name
+     * @param name {@link String} The target store name. The optional will be empty if no store with the name is found
+     * @return {@link Optional<Customer>} Optional of the store with the passed name, empty if not found.
+     */
     public Optional<Store> findStore(String name) {
         Store store = null;
         for (Store s : this.stores) {
@@ -222,6 +281,10 @@ public class CookieFirm {
         return Optional.ofNullable(store);
     }
 
+    /**
+     * @deprecated was used once, not anymore, the mistery persists, should be erased.
+     */
+    @Deprecated
     public void inflate(List<Store> stores, List<Manager> managers){
         this.managers = managers;
         this.stores = stores;

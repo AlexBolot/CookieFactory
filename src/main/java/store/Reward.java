@@ -3,20 +3,20 @@ package store;
 import java.util.Objects;
 
 public class Reward {
-    boolean freeCookie;
-    int points;
+    private boolean freeCookie;
+    private int value;
 
-    public Reward(boolean freeCookie, int points) {
+    public Reward(boolean freeCookie, int value) {
         this.freeCookie = freeCookie;
-        this.points = points;
+        this.value = value;
     }
 
     public boolean hasFreeCookie() {
         return freeCookie;
     }
 
-    public int getPoints() {
-        return points;
+    public int getValue() {
+        return value;
     }
 
     @Override
@@ -25,11 +25,11 @@ public class Reward {
         if (o == null || getClass() != o.getClass()) return false;
         Reward reward = (Reward) o;
         return freeCookie == reward.freeCookie &&
-                points == reward.points;
+                value == reward.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(freeCookie, points);
+        return Objects.hash(freeCookie, value);
     }
 }

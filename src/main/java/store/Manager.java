@@ -1,6 +1,7 @@
 package store;
 
 import recipe.Recipe;
+import recipe.ingredient.Ingredient;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -25,6 +26,14 @@ public class Manager {
 
     public void changeMontlyRecipe(Recipe recipe) {
         store.setMonthlyRecipe(recipe);
+    }
+
+    public void changeIngredientMargin(Ingredient ingredient, double margin) {
+        store.getKitchen().setMarginOf(ingredient,margin);
+    }
+
+    public void changeRewardPointsToValueRatio(double ratio){
+        this.store.getUnFaithPass().setRewardValueToCashRatio(ratio);
     }
 
     public Store getStore() {

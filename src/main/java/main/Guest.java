@@ -31,14 +31,10 @@ public class Guest {
 
     public double placeOrder(boolean onlinePayment) {
 
-        if (temporaryOrder.isPayed())
-            throw new IllegalStateException("The order you are trying to place has already been paid");
-
         double price = temporaryOrder.getStore().placeOrder(temporaryOrder);
 
-        if (onlinePayment) {
-            temporaryOrder.setPayed();
-        }
+        if (onlinePayment)
+            temporaryOrder.setBankingData(bankingData);
 
         setTemporaryOrder(initOrder());
 

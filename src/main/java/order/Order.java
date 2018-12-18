@@ -1,5 +1,6 @@
 package order;
 
+import api.BankingData;
 import main.CookieFirm;
 import main.Guest;
 import recipe.Recipe;
@@ -23,6 +24,7 @@ public class Order {
 
     private boolean payed = false;
     private boolean hadDiscount=false;
+    private BankingData bankingData;
     private Guest guest;
 
     public Order(Store store, LocalDateTime pickUpTime) {
@@ -82,15 +84,35 @@ public class Order {
 
     /**
      * Changes the OrderState to WITHDRAWN
-     * Condition : The order has to be payed
      */
     public void withdraw() {
-        if (this.payed && this.orderState == ORDERED)
+        withdraw(0);
+    }
+
+    /**
+     * Changes the OrderState to WITHDRAWN and applies given [discount]
+     * If bankingData is null, payment will me made in the store by the employee -> out of out scope
+     * Else, payment is made using given banking data
+     *
+     * @param discount Amount of money to reduce from the order's price
+     */
+    public void withdraw(double discount) {
+        if (this.orderState == ORDERED) {
             this.orderState = WITHDRAWN;
-        else if (orderState != ORDERED)
-            throw new IllegalStateException("Trying to withdraw an order that wasn't ORDERED first !");
-        else
-            throw new WithdrawNotPaidOrderException("Trying to withdraw an unpayed order !");
+
+            if (bankingData != null) {
+                double orderPrice = getPrice();
+
+                if (discount < 0)
+                    throw new IllegalArgumentException("Discount given is negative.");
+
+                if (orderPrice - discount < 0)
+                    throw new IllegalArgumentException("Discount greater than order's price : negative price as result");
+
+                CookieFirm.instance().getBankAPI().pay(guest.getBankingData(), orderPrice - discount);
+            }
+        } else
+            throw new IllegalStateException("Trying to withdraw an order that isn't in ORDERED state (maybe canceled, still in draft, or already withdrawn) !");
     }
 
     /**
@@ -114,7 +136,6 @@ public class Order {
     public void cancel() {
         if (this.orderState == ORDERED) {
             this.orderState = CANCELED;
-            CookieFirm.instance().getBankAPI().refund(guest.getBankingData(), this.getPrice());
         } else throw new IllegalStateException("Order has already been Canceled or Withdrawn and can not be canceled");
     }
 
@@ -147,12 +168,12 @@ public class Order {
         this.guest = guest;
     }
 
-    public boolean isPayed() {
-        return payed;
+    public BankingData getBankingData() {
+        return bankingData;
     }
 
-    public void setPayed() {
-        this.payed = true;
+    public void setBankingData(BankingData bankingData) {
+        this.bankingData = bankingData;
     }
 
     public void setStore(Store store) {
@@ -187,14 +208,13 @@ public class Order {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Order)) return false;
         Order order = (Order) o;
-        return payed == order.payed &&
-                Objects.equals(store, order.store) &&
+        return Objects.equals(store, order.store) &&
                 Objects.equals(orderLines, order.orderLines) &&
                 Objects.equals(pickUpTime, order.pickUpTime) &&
                 orderState == order.orderState &&
-                Objects.equals(guest, order.guest);
+                Objects.equals(bankingData, order.bankingData);
     }
 
     @Override

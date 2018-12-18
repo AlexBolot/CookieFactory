@@ -192,10 +192,11 @@ public class Store {
     // region --------------- Getters and Setters ---------------
 
     /**
-     * Builds a list of Recipe containing the Global ones and the monthly of this store
-     *
      * @return The list of all available Recipes at this Store
+     * @deprecated Not usable anymore, the global recipe used is not accurate in our current stores.
+     * Builds a list of Recipe containing the Global ones and the monthly of this store
      */
+    @Deprecated
     Collection<Recipe> getRecipes() {
         Collection<Recipe> recipes = globalRecipes;
         recipes.add(monthlyRecipe);
@@ -290,4 +291,6 @@ public class Store {
     public void setCustomRecipeeMargin(double customRecipeeMargin) {
         this.customRecipeeMargin = customRecipeeMargin;
     }
+
+
 }

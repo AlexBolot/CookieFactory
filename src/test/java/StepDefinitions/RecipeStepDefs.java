@@ -2,17 +2,11 @@ package StepDefinitions;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-import recipe.ingredient.Catalog;
-import recipe.ingredient.Ingredient;
 import store.Store;
 import utils.CucumberContext;
 
-import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Stream;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class RecipeStepDefs {

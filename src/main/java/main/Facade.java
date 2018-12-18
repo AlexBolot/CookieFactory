@@ -17,7 +17,7 @@ public class Facade {
 
     private CookieFirm cookieFirm;
 
-    public Facade(){
+    public Facade() {
         this.cookieFirm = CookieFirm.instance();
     }
 
@@ -28,7 +28,7 @@ public class Facade {
      * @param margin on the custom recipe of the new store
      * @return the new Store
      */
-    public Store addAStoreToFirm(String sStore, int tax, int margin){
+    public Store addAStoreToFirm(String sStore, int tax, int margin) {
         Store store = new Store(sStore, tax, margin);
         cookieFirm.addStore(store);
         return store;
@@ -145,11 +145,51 @@ public class Facade {
      * Allows a manager to change the "reward-value to cash" ratio of his store
      *
      * @param managerName Name of the manager
-     * @param ratio New ratio of the manager's store's UnFaitProgramm
+     * @param ratio       New ratio of the manager's store's UnFaitProgramm
      */
     public void managerChangeUnFaithPassRewardRatio(String managerName, double ratio) {
         Optional<Manager> opManager = cookieFirm.findManager(managerName);
         opManager.ifPresent(manager -> manager.changeRewardPointsToValueRatio(ratio));
+    }
+
+    /**
+     * Allow a manager to change the supplier price of an ingredient
+     *
+     * @param managerName {@link String} manager's name
+     * @param name        {@link String} ingredient name
+     * @param price       double desired price
+     * @throws IllegalArgumentException if ingredient is unknowned
+     */
+    public void managerChangeIngredientSuplierPrice(String managerName, String type, String name, double price) {
+        Optional<Manager> opManager = cookieFirm.findManager(managerName);
+        Ingredient ingredient = ingredientFromName(type, name);
+        if (ingredient == null)
+            throw new IllegalArgumentException("Unknown Ingredient Name");
+        opManager.ifPresent(manager -> manager.changeIngredientSupplierPrice(ingredient, price));
+
+    }
+
+    /**
+     * Allows a manager to query the unit price of a recipee
+     *
+     * @param managerName {@link String} name of the manager
+     * @param recipeeName {@link String} name of the rercipee
+     * @return float Unit price of the recipee at the manager's store
+     */
+    public double managerQueryPriceOf(String managerName, String recipeeName) {
+        Optional<Manager> opManager = cookieFirm.findManager(managerName);
+        Manager manager = opManager.orElseThrow(() -> new IllegalArgumentException("Unknown manager name"));
+
+        Optional<Recipe> opRecipee = this.cookieFirm.findRecipee(recipeeName);
+
+        Store store = manager.getStore();
+        Recipe recipee;
+        if (!opRecipee.isPresent() && !store.getMonthlyRecipe().getName().equalsIgnoreCase(recipeeName))
+            throw new IllegalArgumentException("Unknown Recipee Name");
+        else
+            recipee = opRecipee.orElse(store.getMonthlyRecipe());
+
+        return store.getRecipePrice(recipee);
     }
 
     //UTILS MANAGER
@@ -171,7 +211,7 @@ public class Facade {
      * Create a new guest
      * @return new guest id
      */
-    public Integer createGuest(){
+    public Integer createGuest() {
         Guest guest = new Guest();
         this.cookieFirm.addGuest(guest);
         return guest.getId();
@@ -337,7 +377,7 @@ public class Facade {
      * @param email used to validate the order
      * @param pay boolean that indicate if the order is payed online or not
      */
-    public void guestValidateHisOrder(int id, String email, boolean pay){
+    public void guestValidateHisOrder(int id, String email, boolean pay) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         if (opGuest.isPresent()) {
             opGuest.get().setEmail(email);
@@ -354,7 +394,7 @@ public class Facade {
      * @param sEmail of the customer
      * @param accountId of his banking data
      */
-    public void setBankingDataCustomer(String sEmail, String accountId){
+    public void setBankingDataCustomer(String sEmail, String accountId) {
         Optional<Customer> opCustomer = this.cookieFirm.findCustomer(sEmail);
         if (opCustomer.isPresent()) {
             BankingData bankingData = new BankingData(opCustomer.get().getFirstName(), opCustomer.get().getLastName(), accountId);
@@ -383,7 +423,7 @@ public class Facade {
      * @param sEmail of the customer
      * @return if the customer was add to program or not
      */
-    public boolean addACustomerToLP(String sEmail){
+    public boolean addACustomerToLP(String sEmail) {
         Optional<Customer> customer = this.cookieFirm.findCustomer(sEmail);
         if (customer.isPresent()) {
             this.cookieFirm.addCustomerToLoyaltyProgram(customer.get());
@@ -460,7 +500,7 @@ public class Facade {
      * @param ingredient name of the ingredient
      * @param quantity add to stock
      */
-    public void addStockForTopping(String store, String type, String ingredient, int quantity){
+    public void addStockForTopping(String store, String type, String ingredient, int quantity) {
         Optional<Store> opStore = this.cookieFirm.findStore(store);
         opStore.ifPresent(store1 -> store1.getKitchen().refill(ingredientFromName(type, ingredient), quantity));
     }
@@ -511,5 +551,7 @@ public class Facade {
             toppingList.add(cookieFirm.getCatalog().toppingFromName(topping3));
         return toppingList;
     }
+
+
 
 }

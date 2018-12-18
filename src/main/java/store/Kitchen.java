@@ -145,7 +145,15 @@ public class Kitchen {
         return supplierPrice + marginValue;
     }
 
+    /**
+     * Sets the supplier price of an ingredient. Price should not be negative
+     *
+     * @param ingredient {@link Ingredient} target ingredient
+     * @param price      double desired price
+     */
     public void setSupplierPriceOf(Ingredient ingredient, double price) {
+        if (price < 0)
+            throw new IllegalArgumentException("Price should not be negative");
         supplierPrices.put(ingredient, price);
     }
 

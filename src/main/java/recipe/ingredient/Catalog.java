@@ -50,26 +50,6 @@ public class Catalog {
 
     }
 
-    public List<Dough> getDoughList() {
-        return doughList;
-    }
-
-    public List<Flavor> getFlavorList() {
-        return flavorList;
-    }
-
-    public List<Topping> getToppingList() {
-        return toppingList;
-    }
-
-    public List<Mix> getMixList() {
-        return mixList;
-    }
-
-    public List<Cooking> getCookingList() {
-        return cookingList;
-    }
-
     /**
      * Add a topping to the list
      * If a topping with the same name already exists it will return this topping ( case insensitive ).
@@ -117,6 +97,27 @@ public class Catalog {
         }
         return alreadyExists.orElse(newflavor);
     }
+
+    public List<Dough> getDoughList() {
+        return doughList;
+    }
+
+    public List<Flavor> getFlavorList() {
+        return flavorList;
+    }
+
+    public List<Topping> getToppingList() {
+        return toppingList;
+    }
+
+    public List<Mix> getMixList() {
+        return mixList;
+    }
+
+    public List<Cooking> getCookingList() {
+        return cookingList;
+    }
+
 
 
     public Mix mixFromName(String mixName) {

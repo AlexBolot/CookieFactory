@@ -19,12 +19,12 @@ public class Facade {
 
     private CookieFirm cookieFirm;
 
-    public Facade(){
+    public Facade() {
         this.cookieFirm = CookieFirm.instance();
     }
 
 
-    public Store addAStoreToFirm(String sStore, int tax, int margin){
+    public Store addAStoreToFirm(String sStore, int tax, int margin) {
         Store store = new Store(sStore, tax, margin);
         cookieFirm.addStore(store);
         return store;
@@ -60,9 +60,9 @@ public class Facade {
         cookieFirm.getCatalog().addFlavor(flavorName);
     }
 
-    public void addManagerToStore(String manager, String store){
+    public void addManagerToStore(String manager, String store) {
         Optional<Store> store1 = cookieFirm.findStore(store);
-        if(store1.isPresent()) {
+        if (store1.isPresent()) {
             Manager manager1 = new Manager(store1.get(), manager);
             cookieFirm.addManager(manager1);
         }
@@ -71,7 +71,7 @@ public class Facade {
 
     //MANAGER
 
-    public void addOpeningClosingTimeFromNow(String manager,String dayName, int behindHours, int aheadHours){
+    public void addOpeningClosingTimeFromNow(String manager, String dayName, int behindHours, int aheadHours) {
         DayOfWeek day = dayFromName(dayName);
         LocalTime opTime = LocalTime.now().minusHours(behindHours).plusSeconds(0).plusNanos(0);
         LocalTime clTime = LocalTime.now().plusHours(aheadHours).plusSeconds(0).plusNanos(0);
@@ -82,23 +82,23 @@ public class Facade {
     }
 
     public void managerChangeOpeningClosingTime(String manager, String dayName, String beginHours,
-                                      String endHours){
+                                                String endHours) {
         DayOfWeek day = dayFromName(dayName);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
 
-        if(manager1.isPresent()) {
+        if (manager1.isPresent()) {
             manager1.get().changeOpeningTime(day, transformeStringToTime(beginHours));
             manager1.get().changeClosingTime(day, transformeStringToTime(endHours));
         }
     }
 
-    public void managerChangeOpeningTime(String manager, String dayName, String beginHours){
+    public void managerChangeOpeningTime(String manager, String dayName, String beginHours) {
         DayOfWeek day = dayFromName(dayName);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
         manager1.ifPresent(manager2 -> manager2.changeOpeningTime(day, transformeStringToTime(beginHours)));
     }
 
-    public void managerChangeClosingTime(String manager, String dayName, String endHours){
+    public void managerChangeClosingTime(String manager, String dayName, String endHours) {
         DayOfWeek day = dayFromName(dayName);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
         manager1.ifPresent(manager2 -> manager2.changeClosingTime(day, transformeStringToTime(endHours)));
@@ -108,7 +108,7 @@ public class Facade {
     public void managerAddMonthlyCookie(String manager, String recipeName, String dough, String flavor,
                                         String topping, String topping2, String topping3,
                                         String mix,
-                                        String cooking){
+                                        String cooking) {
         Recipe recipe = new Recipe(recipeName, doughFromName(dough), flavorFromName(flavor),
                 createToppingList(topping, topping2, topping3),
                 mixFromName(mix), cookingFromName(cooking), false);
@@ -140,21 +140,61 @@ public class Facade {
      * Allows a manager to change the "reward-value to cash" ratio of his store
      *
      * @param managerName Name of the manager
-     * @param ratio New ratio of the manager's store's UnFaitProgramm
+     * @param ratio       New ratio of the manager's store's UnFaitProgramm
      */
-    public void managerChangeUnFaithPassRewardRatio(String managerName, double ratio){
+    public void managerChangeUnFaithPassRewardRatio(String managerName, double ratio) {
         Optional<Manager> opManager = cookieFirm.findManager(managerName);
         opManager.ifPresent(manager -> manager.changeRewardPointsToValueRatio(ratio));
     }
 
+    /**
+     * Allow a manager to change the supplier price of an ingredient
+     *
+     * @param managerName {@link String} manager's name
+     * @param name        {@link String} ingredient name
+     * @param price       double desired price
+     * @throws IllegalArgumentException if ingredient is unknowned
+     */
+    public void managerChangeIngredientSuplierPrice(String managerName, String type, String name, double price) {
+        Optional<Manager> opManager = cookieFirm.findManager(managerName);
+        Ingredient ingredient = ingredientFromName(type, name);
+        if (ingredient == null)
+            throw new IllegalArgumentException("Unknown Ingredient Name");
+        opManager.ifPresent(manager -> manager.changeIngredientSupplierPrice(ingredient, price));
+
+    }
+
+    /**
+     * Allows a manager to query the unit price of a recipee
+     *
+     * @param managerName {@link String} name of the manager
+     * @param recipeeName {@link String} name of the rercipee
+     * @return float Unit price of the recipee at the manager's store
+     */
+    public double managerQueryPriceOf(String managerName, String recipeeName) {
+        Optional<Manager> opManager = cookieFirm.findManager(managerName);
+        Manager manager = opManager.orElseThrow(() -> new IllegalArgumentException("Unknown manager name"));
+
+        Optional<Recipe> opRecipee = this.cookieFirm.findRecipee(recipeeName);
+
+        Store store = manager.getStore();
+        Recipe recipee;
+        if (!opRecipee.isPresent() && !store.getMonthlyRecipe().getName().equalsIgnoreCase(recipeeName))
+            throw new IllegalArgumentException("Unknown Recipee Name");
+        else
+            recipee = opRecipee.orElse(store.getMonthlyRecipe());
+
+        return store.getRecipePrice(recipee);
+    }
+
     //UTILS MANAGER
-    private LocalTime transformeStringToTime(String time){
+    private LocalTime transformeStringToTime(String time) {
         int opHour = Integer.parseInt(time.split(":")[0]);
         int opMinutes = Integer.parseInt(time.split(":")[1]);
         return LocalTime.of(opHour, opMinutes);
     }
 
-    private void managerChangeTime(Manager m, DayOfWeek day, LocalTime opTime, LocalTime clTime){
+    private void managerChangeTime(Manager m, DayOfWeek day, LocalTime opTime, LocalTime clTime) {
         m.changeOpeningTime(day, opTime);
         m.changeClosingTime(day, clTime);
     }
@@ -162,17 +202,17 @@ public class Facade {
 
     //PART GUEST
 
-    public Integer createGuest(){
+    public Integer createGuest() {
         Guest guest = new Guest();
         this.cookieFirm.addGuest(guest);
         return guest.getId();
     }
 
     public Optional<Integer> guestCreateAccount(int idGuest, String fName, String lastN, String phone, String email,
-                                  String password){
+                                                String password) {
         Optional<Guest> opGuest = this.cookieFirm.findGuest(idGuest);
         Integer id = null;
-        if(opGuest.isPresent()){
+        if (opGuest.isPresent()) {
             Customer customer = Customer.from(opGuest.get(), fName, lastN, phone, email, password);
             this.cookieFirm.saveCustomerAccountIfAbsent(customer);
             id = customer.getId();
@@ -180,11 +220,11 @@ public class Facade {
         return Optional.ofNullable(id);
     }
 
-    public void guestAddStoreToOrder(int id, String sStore){
+    public void guestAddStoreToOrder(int id, String sStore) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
-        if(opGuest.isPresent() && opStore.isPresent()){
+        if (opGuest.isPresent() && opStore.isPresent()) {
             Order order = opGuest.get().getTemporaryOrder();
             order.setStore(opStore.get());
         }
@@ -193,17 +233,17 @@ public class Facade {
 
     //GUEST ADD PICKUPTIME
 
-    public void guestAddPickTimeToOrder(int id, int time, String pickupDay){
+    public void guestAddPickTimeToOrder(int id, int time, String pickupDay) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
 
         opGuest.ifPresent(guest -> guest.getTemporaryOrder().setPickUpTime(generateTime(time, pickupDay)));
     }
 
-    public void guestAddPickUpTimeAndStoreToOrder(int id, String sStore, int time, String pickupDay){
+    public void guestAddPickUpTimeAndStoreToOrder(int id, String sStore, int time, String pickupDay) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
-        if(opGuest.isPresent() && opStore.isPresent()){
+        if (opGuest.isPresent() && opStore.isPresent()) {
             Order order = opGuest.get().getTemporaryOrder();
             order.setStore(opStore.get());
             order.setPickUpTime(generateTime(time, pickupDay));
@@ -222,8 +262,7 @@ public class Facade {
                 if (cookie.getName().equals(recipeName)) {
                     if (!remove) {
                         opGuest.get().getTemporaryOrder().addCookie(cookie, quantity);
-                    }
-                    else
+                    } else
                         opGuest.get().getTemporaryOrder().removeCookie(cookie, quantity);
                     return;
                 }
@@ -235,7 +274,7 @@ public class Facade {
     public void guestOrderCustomCookie(int id, String dough, String flavor,
                                        String topping, String topping2, String topping3,
                                        String mix,
-                                       String cooking, int quantity){
+                                       String cooking, int quantity) {
 
         Optional<Guest> guest = cookieFirm.findGuestOrCustomer(id);
         guest.ifPresent(guest1 -> guest1.orderCustomRecipe(quantity, doughFromName(dough), flavorFromName(flavor),
@@ -266,26 +305,25 @@ public class Facade {
     }
     */
 
-    public void guestPlaceOrder(int id , Boolean payedOnline){
+    public void guestPlaceOrder(int id, Boolean payedOnline) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
 
         opGuest.ifPresent(guest -> guest.placeOrder(payedOnline));
     }
 
 
-    public void guestValidateHisOrder(int id, String email, boolean pay){
+    public void guestValidateHisOrder(int id, String email, boolean pay) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
-        if(opGuest.isPresent()) {
+        if (opGuest.isPresent()) {
             opGuest.get().setEmail(email);
             opGuest.get().placeOrder(pay);
-        }
-        else throw new IllegalArgumentException("Could not find Guest with id = " + id);
+        } else throw new IllegalArgumentException("Could not find Guest with id = " + id);
     }
 
 
-    public void setBankingDataCustomer(String sEmail, String accountId){
+    public void setBankingDataCustomer(String sEmail, String accountId) {
         Optional<Customer> opCustomer = this.cookieFirm.findCustomer(sEmail);
-        if(opCustomer.isPresent()) {
+        if (opCustomer.isPresent()) {
             BankingData bankingData = new BankingData(opCustomer.get().getFirstName(), opCustomer.get().getLastName(), accountId);
             opCustomer.get().setBankingData(bankingData);
         }
@@ -295,15 +333,15 @@ public class Facade {
 
     //CUSTOMER RELATED
     public Integer createACustomer(String sName, String sLastName, String phoneNumber, String email, String
-            password){
+            password) {
         Customer customer = this.cookieFirm.createAccount(sName, sLastName, phoneNumber, email, password);
         return customer.getId();
     }
 
 
-    public boolean addACustomerToLP(String sEmail){
+    public boolean addACustomerToLP(String sEmail) {
         Optional<Customer> customer = this.cookieFirm.findCustomer(sEmail);
-        if(customer.isPresent()) {
+        if (customer.isPresent()) {
             this.cookieFirm.addCustomerToLoyaltyProgram(customer.get());
             return true;
         }
@@ -311,22 +349,20 @@ public class Facade {
     }
 
 
-
     //TODO ajouter dans le bank id ajouter juste avec le accountID
 
 
-    public boolean anEmployeeMakeAnActionOnOrder(String sStore, int time, String day, String email, String action){
+    public boolean anEmployeeMakeAnActionOnOrder(String sStore, int time, String day, String email, String action) {
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
-        if(opStore.isPresent()){
+        if (opStore.isPresent()) {
             Optional<Order> opOrder = opStore.get().findOrder(generateTime(time, day), email);
 
-            if(opOrder.isPresent()) {
-                if(action.toUpperCase().equals("CANCELED")) {
+            if (opOrder.isPresent()) {
+                if (action.toUpperCase().equals("CANCELED")) {
                     opOrder.get().cancel();
                     return true;
-                }
-                else if(action.toUpperCase().equals("WITHDRAWN")){
+                } else if (action.toUpperCase().equals("WITHDRAWN")) {
                     opOrder.get().withdraw();
                     return true;
                 }
@@ -336,20 +372,20 @@ public class Facade {
     }
 
 
-    public String anEmployeeSearchAnOrderState(String sStore, int time, String day, String email){
+    public String anEmployeeSearchAnOrderState(String sStore, int time, String day, String email) {
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
-        if(opStore.isPresent()){
+        if (opStore.isPresent()) {
             Optional<Order> opOrder = opStore.get().findOrder(generateTime(time, day), email);
 
-            if(opOrder.isPresent()) {
+            if (opOrder.isPresent()) {
                 return opOrder.get().getState().toString();
             }
         }
         return "none";
     }
 
-    public void addStockForTopping(String store, String type, String ingredient, int quantity){
+    public void addStockForTopping(String store, String type, String ingredient, int quantity) {
         Optional<Store> opStore = this.cookieFirm.findStore(store);
         opStore.ifPresent(store1 -> store1.getKitchen().refill(ingredientFromName(type, ingredient), quantity));
     }
@@ -414,15 +450,16 @@ public class Facade {
     }
 
 
-    private List<Topping> createToppingList(String topping, String topping2, String topping3){
+    private List<Topping> createToppingList(String topping, String topping2, String topping3) {
         List<Topping> toppingList = new ArrayList<>();
         toppingList.add(toppingFromName(topping));
-        if(!topping2.equals("no topping"))
+        if (!topping2.equals("no topping"))
             toppingList.add(toppingFromName(topping2));
-        if(!topping3.equals("no topping"))
+        if (!topping3.equals("no topping"))
             toppingList.add(toppingFromName(topping3));
         return toppingList;
     }
+
 
 
 }

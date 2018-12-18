@@ -36,11 +36,22 @@ public class Manager {
         this.store.getUnFaithPass().setRewardValueToCashRatio(ratio);
     }
 
+    /**
+     * change the manager's store suplier price for the given ingredient.
+     *
+     * @param ingredient {@link Ingredient} target ingredient
+     * @param price      {@link int} price, should not be negative
+     * @throws IllegalArgumentException for negative price
+     */
+    public void changeIngredientSupplierPrice(Ingredient ingredient, double price) {
+        store.getKitchen().setSupplierPriceOf(ingredient, price);
+    }
     public Store getStore() {
         return store;
     }
 
     public String getName(){return name;}
+
 
 
 }

@@ -85,4 +85,14 @@ public class RecipeStepDefs {
     public void aNewFlavorIsAddedToTheCatalog(String name) throws Throwable {
         context.getFacade().addFlavor(name);
     }
+
+    @When("^\"([^\"]*)\" checks the price of \"([^\"]*)\"$")
+    public void checksThePriceOf(String managerName, String recipee) throws Throwable {
+        context.getFacade().managerQueryPriceOf(managerName, recipee);
+    }
+
+    @Then("^The price of \"([^\"]*)\" for \"([^\"]*)\" is (.+)$")
+    public void thePriceOfForIs(String recipeeName, String managerName, double price) throws Throwable {
+        assertEquals(price, context.getFacade().managerQueryPriceOf(managerName, recipeeName), 0.001);
+    }
 }

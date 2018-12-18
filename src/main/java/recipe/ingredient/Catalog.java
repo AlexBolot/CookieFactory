@@ -117,4 +117,40 @@ public class Catalog {
         }
         return alreadyExists.orElse(newflavor);
     }
+
+
+    public Mix mixFromName(String mixName) {
+        for (Mix mix : getMixList()) {
+            if (mix.getName().equalsIgnoreCase(mixName)) return mix;
+        }
+        return null;
+    }
+
+    public Cooking cookingFromName(String cookingName) {
+        for (Cooking cooking : getCookingList()) {
+            if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
+        }
+        return null;
+    }
+
+    public Dough doughFromName(String doughName) {
+        for (Dough dough : getDoughList()) {
+            if (dough.getName().equalsIgnoreCase(doughName)) return dough;
+        }
+        return null;
+    }
+
+    public Topping toppingFromName(String toppingName) {
+        for (Topping topping : getToppingList()) {
+            if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
+        }
+        return null;
+    }
+
+    public Flavor flavorFromName(String flavorName) {
+        for (Flavor flavor : getFlavorList()) {
+            if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
+        }
+        return null;
+    }
 }

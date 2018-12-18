@@ -107,9 +107,13 @@ public class Facade {
                                         String topping, String topping2, String topping3,
                                         String mix,
                                         String cooking) {
-        Recipe recipe = new Recipe(recipeName, doughFromName(dough), flavorFromName(flavor),
+        Recipe recipe = new Recipe(recipeName,
+                cookieFirm.getCatalog().doughFromName(dough),
+                cookieFirm.getCatalog().flavorFromName(flavor),
                 createToppingList(topping, topping2, topping3),
-                mixFromName(mix), cookingFromName(cooking), false);
+                cookieFirm.getCatalog().mixFromName(mix),
+                cookieFirm.getCatalog().cookingFromName(cooking),
+                false);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
         manager1.ifPresent(manager2 -> manager2.changeMontlyRecipe(recipe));
     }
@@ -118,13 +122,13 @@ public class Facade {
         Ingredient ingredient;
         switch (type) {
             case "dough":
-                ingredient = doughFromName(ingredientName);
+                ingredient = cookieFirm.getCatalog().doughFromName(ingredientName);
                 break;
             case "flavor":
-                ingredient = flavorFromName(ingredientName);
+                ingredient = cookieFirm.getCatalog().flavorFromName(ingredientName);
                 break;
             case "topping":
-                ingredient = toppingFromName(ingredientName);
+                ingredient = cookieFirm.getCatalog().toppingFromName(ingredientName);
                 break;
             default:
                 return;
@@ -255,9 +259,12 @@ public class Facade {
                                        String cooking, int quantity) {
 
         Optional<Guest> guest = cookieFirm.findGuestOrCustomer(id);
-        guest.ifPresent(guest1 -> guest1.orderCustomRecipe(quantity, doughFromName(dough), flavorFromName(flavor),
+        guest.ifPresent(guest1 -> guest1.orderCustomRecipe(quantity,
+                cookieFirm.getCatalog().doughFromName(dough),
+                cookieFirm.getCatalog().flavorFromName(flavor),
                 createToppingList(topping, topping2, topping3),
-                mixFromName(mix), cookingFromName(cooking)));
+                cookieFirm.getCatalog().mixFromName(mix),
+                cookieFirm.getCatalog().cookingFromName(cooking)));
     }
 
     // GUEST PLACE ORDER
@@ -454,60 +461,26 @@ public class Facade {
         return null;
     }
 
-    private Mix mixFromName(String mixName) {
-        for (Mix mix : cookieFirm.getCatalog().getMixList()) {
-            if (mix.getName().equalsIgnoreCase(mixName)) return mix;
-        }
-        return null;
-    }
-
-    private Cooking cookingFromName(String cookingName) {
-        for (Cooking cooking : cookieFirm.getCatalog().getCookingList()) {
-            if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
-        }
-        return null;
-    }
-
-    private Dough doughFromName(String doughName) {
-        for (Dough dough : cookieFirm.getCatalog().getDoughList()) {
-            if (dough.getName().equalsIgnoreCase(doughName)) return dough;
-        }
-        return null;
-    }
-
-    private Topping toppingFromName(String toppingName) {
-        for (Topping topping : cookieFirm.getCatalog().getToppingList()) {
-            if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
-        }
-        return null;
-    }
-
-    private Flavor flavorFromName(String flavorName) {
-        for (Flavor flavor : cookieFirm.getCatalog().getFlavorList()) {
-            if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
-        }
-        return null;
-    }
 
     public Ingredient ingredientFromName(String type, String ingredientName) {
         switch (type) {
             case "dough":
-                return doughFromName(ingredientName);
+                return cookieFirm.getCatalog().doughFromName(ingredientName);
             case "flavor":
-                return flavorFromName(ingredientName);
+                return cookieFirm.getCatalog().flavorFromName(ingredientName);
             case "topping":
-                return toppingFromName(ingredientName);
+                return cookieFirm.getCatalog().toppingFromName(ingredientName);
         }
         return null;
     }
 
     private List<Topping> createToppingList(String topping, String topping2, String topping3) {
         List<Topping> toppingList = new ArrayList<>();
-        toppingList.add(toppingFromName(topping));
+        toppingList.add(cookieFirm.getCatalog().toppingFromName(topping));
         if (!topping2.equals("no topping"))
-            toppingList.add(toppingFromName(topping2));
+            toppingList.add(cookieFirm.getCatalog().toppingFromName(topping2));
         if (!topping3.equals("no topping"))
-            toppingList.add(toppingFromName(topping3));
+            toppingList.add(cookieFirm.getCatalog().toppingFromName(topping3));
         return toppingList;
     }
 

@@ -63,41 +63,6 @@ public class TestUtils {
         return targetState;
     }
 
-    public Mix mixFromName(String mixName) {
-        for (Mix mix : catalog.getMixList()) {
-            if (mix.getName().equalsIgnoreCase(mixName)) return mix;
-        }
-        return null;
-    }
-
-    public Cooking cookingFromName(String cookingName) {
-        for (Cooking cooking : catalog.getCookingList()) {
-            if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
-        }
-        return null;
-    }
-
-    public Dough doughFromName(String doughName) {
-        for (Dough dough : catalog.getDoughList()) {
-            if (dough.getName().equalsIgnoreCase(doughName)) return dough;
-        }
-        return null;
-    }
-
-    public Topping toppingFromName(String toppingName) {
-        for (Topping topping : catalog.getToppingList()) {
-            if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
-        }
-        return null;
-    }
-
-    public Flavor flavorFromName(String flavorName) {
-        for (Flavor flavor : catalog.getFlavorList()) {
-            if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;
-        }
-        return null;
-    }
-
     public Recipe recipeFromName(String recipeName) {
         for (Recipe recipe : cookieFirm.getGlobalRecipes()) {
             if (recipe.getName().equals(recipeName)) {

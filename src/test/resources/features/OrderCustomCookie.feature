@@ -23,6 +23,12 @@ Feature: Guest order custom cookie
     Given The guest order 4 cookies of the custom recipe with "Peanut Butter", "no flavor", "Reese's buttercup", "M&m's", "Milk Chocolate", "Mixed" and "Chewy"
     And The customer entered her "tada@tada.fr" to place her order and pay "online"
 
+  Scenario: A guest order a custom cookie and an existing cookie
+    Given The customer choose a store "store" to pickup "Monday" at 16:30
+    And The guest order 4 cookies of the custom recipe with "Peanut Butter", "no flavor", "Reese's buttercup", "M&m's", "Milk Chocolate", "Mixed" and "Chewy"
+    And The customer add 6 cookies "White Dog" from the "store"
+    And The customer entered her "tada@tada.fr" to place her order and pay "online"
+
   Scenario: A guest order a custom cookie with wrong dough
     Given The customer choose a store "store" to pickup "Monday" at 16:30
     When The guest try to order 4 cookies of the wrong custom recipe with "Strawberry", "no flavor", "Reese's buttercup", "M&m's", "Milk Chocolate", "Mixed" and "Chewy"

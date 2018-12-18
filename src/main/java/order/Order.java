@@ -100,6 +100,8 @@ public class Order {
         if (this.orderState == ORDERED) {
             this.orderState = WITHDRAWN;
 
+            applyUnFaithPassBonus();
+
             if (bankingData != null) {
                 double orderPrice = getPrice();
 
@@ -113,6 +115,32 @@ public class Order {
             }
         } else
             throw new IllegalStateException("Trying to withdraw an order that isn't in ORDERED state (maybe canceled, still in draft, or already withdrawn) !");
+    }
+
+    /**
+     * Withdraw an order using an UnFaithPass
+     *
+     * @param points number of points used at the withdrawal of the order
+     * @param freeCookie number of free cookies asked at the withdrawal of the order
+     */
+
+    public void withdraw(int points, int freeCookie) {
+        if (points==0 && freeCookie==0) {withdraw(); return;}
+        if (this.getGuest().getUnFaithPass().use(points,freeCookie)) {
+            if (this.getStore().getUnFaithPassProgram()!=null) {
+                double correspondingPrice = this.getStore().getUnFaithPassProgram().getCashFromRewardValue(points);
+                withdraw(correspondingPrice);
+            }
+        } else {
+            throw new IllegalArgumentException("The guest can't pay this amount with his actual unFaithPass");
+        }
+    }
+
+
+    public void applyUnFaithPassBonus() {
+        if (this.getGuest().getUnFaithPass()!=null) {
+            this.getStore().collectRewards(this,this.getGuest().getUnFaithPass());
+        }
     }
 
     /**

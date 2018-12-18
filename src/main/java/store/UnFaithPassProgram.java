@@ -4,15 +4,15 @@ import recipe.Recipe;
 
 import java.util.Map;
 
-public class UnFaithPass {
+public class UnFaithPassProgram {
     private Map<Recipe, Reward> rewards;
     private double rewardValueToCashRatio;
 
-    public UnFaithPass(Map<Recipe, Reward> rewards) {
+    public UnFaithPassProgram(Map<Recipe, Reward> rewards) {
         this(rewards, 1);
     }
 
-    public UnFaithPass(Map<Recipe, Reward> rewards, double rewardValueToCashRatio) {
+    public UnFaithPassProgram(Map<Recipe, Reward> rewards, double rewardValueToCashRatio) {
         this.rewards = rewards;
         this.rewardValueToCashRatio = rewardValueToCashRatio;
     }

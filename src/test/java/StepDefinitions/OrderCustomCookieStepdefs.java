@@ -12,22 +12,40 @@ public class OrderCustomCookieStepdefs {
     private Exception wrongRecipeException;
 
     @Given("^The guest order (\\d+) cookies of the custom recipe with \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\" and \"([^\"]*)\"$")
-    public void theGuestOrderCookiesOfTheCustomRecipeWithAnd(int quantity, String dough, String flavor,
-                                                             String topping, String topping2, String topping3,
-                                                             String mix, String cookin) {
-        context.getFacade().guestOrderCustomCookie(context.getCurrentId(), dough, flavor, topping, topping2,
+    public void theGuestOrderCookiesOfTheCustomRecipeWithAnd(int quantity,
+                                                             String dough,
+                                                             String flavor,
+                                                             String topping,
+                                                             String topping2,
+                                                             String topping3,
+                                                             String mix,
+                                                             String cooki) {
+        context.getFacade().guestOrderCustomCookie(context.getCurrentId(),
+                dough,
+                flavor,
+                topping,
+                topping2,
                 topping3,
                 mix,
-                cookin,
+                cooki,
                 quantity);
     }
 
     @When("^The guest try to order (\\d+) cookies of the wrong custom recipe with \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\" and \"([^\"]*)\"$")
-    public void theGuestTryToOrderCookiesOfTheWrongCustomRecipeWithAnd(int amount, String dough, String flavor,
-                                                                       String topping1, String topping2, String topping3,
-                                                                       String mix, String cooking) {
+    public void theGuestTryToOrderCookiesOfTheWrongCustomRecipeWithAnd(int amount,
+                                                                       String dough,
+                                                                       String flavor,
+                                                                       String topping1,
+                                                                       String topping2,
+                                                                       String topping3,
+                                                                       String mix,
+                                                                       String cooking) {
         try {
-            context.getFacade().guestOrderCustomCookie(context.getCurrentId(), dough, flavor, topping1, topping2,
+            context.getFacade().guestOrderCustomCookie(context.getCurrentId(),
+                    dough,
+                    flavor,
+                    topping1,
+                    topping2,
                     topping3,
                     mix,
                     cooking,

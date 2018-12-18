@@ -36,9 +36,4 @@ public class AnonymousOrderStepDefs {
             throw new IllegalStateException("There is no current client in the cookiefirm");
     }
 
-    @And("^The order is \"([^\"]*)\"$")
-    public void theOrderIs(String sEtat) {
-        assertEquals(currentOrder.getState(), context.utils.stateFromName(sEtat));
-    }
-
 }

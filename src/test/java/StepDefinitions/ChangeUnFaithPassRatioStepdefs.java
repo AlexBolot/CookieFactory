@@ -10,6 +10,7 @@ import utils.CucumberContext;
 import utils.TestUtils;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import static utils.TestUtils.getInfiniteMockKitchen;
 
@@ -25,7 +26,6 @@ public class ChangeUnFaithPassRatioStepdefs {
         store.setKitchen(getInfiniteMockKitchen());
         store.applyUnFaithPath(new UnFaithPass(new HashMap<>(), ratio));
 
-        context.stores.put(storeName, store);
     }
 
     @When("^\"([^\"]*)\" changes the UnFaithPass ratio to (\\d+)$")
@@ -35,9 +35,11 @@ public class ChangeUnFaithPassRatioStepdefs {
 
     @Then("^Converting (\\d+) reward-value points in \"([^\"]*)\" gives (\\d+) units of cash$")
     public void convertingRewardValuePointsGivesUnitsOfCash(int rewardValuePoints, String storeName, int expectedCash) {
-        Store store = context.getStore(storeName);
-        double actualCash = store.getUnFaithPass().getCashFromRewardValue(rewardValuePoints);
+        Optional<Store> store = context.cookieFirm().findStore(storeName);
+        if(store.isPresent()) {
+            double actualCash = store.get().getUnFaithPass().getCashFromRewardValue(rewardValuePoints);
 
-        Assert.assertEquals(expectedCash, actualCash, 0.0001);
+            Assert.assertEquals(expectedCash, actualCash, 0.0001);
+        }
     }
 }

@@ -17,8 +17,6 @@ public class ChangeScheduleStepDefs {
 
     private final CucumberContext context = CucumberContext.getContext();
 
-
-
     @When("^\"([^\"]*)\" changes opening time of \"([^\"]*)\" to (\\d+):(\\d+)$")
     public void theManagerChangesOpeningTime(String managerName, String dayName, int openingH, int openingM) {
        try {

@@ -20,46 +20,6 @@ public class OrderWithdrawalStepDefs {
 
     private Order currentOrder;
 
-    @Given("^An order \"([^\"]*)\"$")
-    public void anOrder(String name) {
-        context.orders.put(name, new Order(null, LocalDateTime.now()));
-    }
-
-    @Given("^the customer \"([^\"]*)\" has paid for \"([^\"]*)\"$")
-    public void theCustomerHasPaidFor(String customerName, String orderName) {
-        Order order = context.orders.get(orderName);
-        order.placeOrder();
-
-        context.cookieFirm().setBankAPI(context.cookieFirm().getBankAPI());
-    }
-
-    @When("^the employee of \"([^\"]*)\" scans \"([^\"]*)\"$")
-    public void theEmployeeScans(String storeName, String orderName) {
-        final Order targetOrder = context.orders.get(orderName);
-        final Store store = context.stores.get(storeName);
-        currentOrder = store
-                .findOrder(targetOrder.getPickUpTime(), targetOrder.getGuest().getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Not found the order"));
-    }
-
-    @Given("^\"([^\"]*)\" is passed in the store \"([^\"]*)\" by \"([^\"]*)\"$")
-    public void isPassedInTheStoreBy(String orderName, String storeName, String clientName) {
-        final Order order = context.orders.get(orderName);
-        final Guest guest = context.getGuest(clientName);
-        final Store store = context.stores.get(storeName);
-
-        order.setGuest(guest);
-        order.setStore(store);
-        store.getOrders().add(order);
-    }
-
-    @Given("^the customer \"([^\"]*)\" has the order \"([^\"]*)\"$")
-    public void theCustomerHasTheOrder(String customerName, String orderName) {
-        Order order = context.orders.get(orderName);
-        order.setGuest(context.getGuest(customerName));
-        order.placeOrder();
-    }
-
     @When("^the employee delivers the current order$")
     public void theEmployeeDeliversTheCurrentOrder() {
         try {

@@ -1,10 +1,11 @@
 @Ignore
 Feature: Order Withdrawal
   Background:
+    Given Now is "Monday" 14:30
     Given A store "store" with a tax 1 and margin on recipe 1
+    Given The kitchen for "store" is infinite
     Given A customer "Boby"
-    Given An order "order"
-    Given "order" is passed in the store "store" by "Boby"
+    Given The customer choose a store "store" to pickup "Monday" at 16:30
 
   Scenario: A customer withdraws a paid order
     Given the customer "Boby" has paid for "order"

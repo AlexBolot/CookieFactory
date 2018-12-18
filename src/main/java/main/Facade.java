@@ -284,12 +284,17 @@ public class Facade {
     public void addStockForTopping(String store, String type, String ingredient, int quantity){
         Optional<Store> opStore = this.cookieFirm.findStore(store);
         if(opStore.isPresent()){
-            if(type.equals("topping"))
-                opStore.get().getKitchen().refill(toppingFromName(ingredient), quantity);
-            else if(type.equals("dough"))
-                opStore.get().getKitchen().refill(doughFromName(ingredient), quantity);
-            else if(type.equals("flavor"))
-                opStore.get().getKitchen().refill(flavorFromName(ingredient), quantity);
+            switch (type) {
+                case "topping":
+                    opStore.get().getKitchen().refill(cookieFirm.getCatalog().toppingFromName(ingredient), quantity);
+                    break;
+                case "dough":
+                    opStore.get().getKitchen().refill(cookieFirm.getCatalog().doughFromName(ingredient), quantity);
+                    break;
+                case "flavor":
+                    opStore.get().getKitchen().refill(cookieFirm.getCatalog().flavorFromName(ingredient), quantity);
+                    break;
+            }
         }
     }
 

@@ -118,7 +118,7 @@ public class KitchenTest {
     public void vendingPriceOf() {
         Kitchen kitchen = new Kitchen();
 
-        Ingredient ingredient = utils.flavorFromName("Vanilla");
+        Ingredient ingredient = catalog.flavorFromName("Vanilla");
 
         kitchen.setMarginOf(ingredient, 10);
         kitchen.setSupplierPriceOf(ingredient, 2);
@@ -133,7 +133,7 @@ public class KitchenTest {
     public void vendingPriceOf_UnkownMargin() {
         Kitchen kitchen = new Kitchen();
 
-        Ingredient ingredient = utils.flavorFromName("Vanilla");
+        Ingredient ingredient = catalog.flavorFromName("Vanilla");
 
         kitchen.setSupplierPriceOf(ingredient, 2);
 
@@ -144,7 +144,7 @@ public class KitchenTest {
     public void vendingPriceOf_UnkownSupplierPrice() {
         Kitchen kitchen = new Kitchen();
 
-        Ingredient ingredient = utils.flavorFromName("Vanilla");
+        Ingredient ingredient = catalog.flavorFromName("Vanilla");
 
         kitchen.setMarginOf(ingredient, 2);
 

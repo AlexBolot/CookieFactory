@@ -17,16 +17,16 @@ public class CustomerOrderStepDefs {
     private final TestUtils utils = new TestUtils();
 
     @Then("^The customer with the email \"([^\"]*)\" has (\\d+) order in his history$")
-    public void theCustomerWithTheEmailHasOrderInHisHistory(String name, int amount) {
-        Optional<Customer> opCustomer = context.cookieFirm().findCustomer(utils.createEmail(name));
+    public void theCustomerWithTheEmailHasOrderInHisHistory(String email, int amount) {
+        Optional<Customer> opCustomer = context.cookieFirm().findCustomer(email);
         if (opCustomer.isPresent())
             assertEquals(amount, opCustomer.get().getOrderHistory().size());
         else throw new IllegalStateException("Could not find current Customer");
     }
 
     @And("^The customer with the email \"([^\"]*)\" has an empty temporary order$")
-    public void theCustomerWithTheEmailHasAnEmptyTemporaryOrder(String name) {
-        Optional<Customer> opCustomer = context.cookieFirm().findCustomer(utils.createEmail(name));
+    public void theCustomerWithTheEmailHasAnEmptyTemporaryOrder(String email) {
+        Optional<Customer> opCustomer = context.cookieFirm().findCustomer(email);
         if (opCustomer.isPresent())
             assertEquals(0, opCustomer.get().getTemporaryOrder().getOrderLines().size());
         else throw new IllegalStateException("Could not find current Customer");

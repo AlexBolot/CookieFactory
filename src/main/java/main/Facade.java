@@ -220,6 +220,7 @@ public class Facade {
         //opGuest.ifPresent(guest -> guest.getTemporaryOrder().setPickUpTime(generateTime(time, pickupDay)));
     }
 
+
     public void guestAddPickUpTimeAndStoreToOrder(int id, String storeName, int hours, int minutes, String pickupDay) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(storeName);
@@ -228,24 +229,6 @@ public class Facade {
             Order order = opGuest.get().getTemporaryOrder();
             order.setStore(opStore.get());
             order.setPickUpTime(generateTime(hours, minutes, pickupDay));
-        }
-    }
-
-    /**
-     * Guest add pickup time, day and store to his order
-     * @param id of the current guest
-     * @param sStore name of the store to link to order
-     * @param time pickup time of the order
-     * @param pickupDay of the order
-     */
-    public void guestAddPickUpTimeAndStoreToOrder(int id, String sStore, int time, String pickupDay){
-        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
-        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
-
-        if(opGuest.isPresent() && opStore.isPresent()){
-            Order order = opGuest.get().getTemporaryOrder();
-            order.setStore(opStore.get());
-            order.setPickUpTime(generateTime(time, pickupDay));
         }
     }
 
@@ -319,6 +302,7 @@ public class Facade {
 
     public void guestPlaceOrderWithCookies(int id, String sStore, int nbCookies, int
             pickupTime, String pickUpDay, Boolean payedOnline) {
+        /*
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(sStore);
 
@@ -329,7 +313,7 @@ public class Facade {
             order.setPickUpTime(generateTime(pickupTime, pickUpDay));
 
             opGuest.get().placeOrder(payedOnline);
-        }
+        }*/
     }
 
     /**
@@ -476,15 +460,6 @@ public class Facade {
     public void addStockForTopping(String store, String type, String ingredient, int quantity){
         Optional<Store> opStore = this.cookieFirm.findStore(store);
         opStore.ifPresent(store1 -> store1.getKitchen().refill(ingredientFromName(type, ingredient), quantity));
-    }
-
-    //TODO remove since unused
-    public LocalDateTime generateTime(int pickupTime, String pickUpDay) {
-        /*Clock clock = CookieFirm.instance().getClock();
-        LocalDateTime now = LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault()).withSecond(0).withNano(0);
-        DayOfWeek dayOfWeek = DayOfWeek.valueOf(pickUpDay.toUpperCase());
-        return now.plusHours(pickupTime).with(TemporalAdjusters.nextOrSame(dayOfWeek));*/
-        return null;
     }
 
     /**

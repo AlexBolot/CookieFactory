@@ -68,18 +68,6 @@ public class AddCookieOrderStepDefs {
         store.ifPresent(store1 -> store1.setKitchen(new Kitchen()));
     }
 
-    @And("^The guest is ordering at the store \"([^\"]*)\"$")
-    public void theGuestIsOrderingAtTheStore(String sStore) {
-        context.getFacade().guestAddStoreToOrder(context.getCurrentId(), sStore);
-    }
-
-    @Given("^The guest see the list of ingredients$")
-    public void theGuestSeeTheListOfIngredients() {
-        /*this.guest.getTemporaryOrder().setStore(new Store("", null, Collections.emptyList(), new
-                HashMap<>(), new HashMap<>(), 1.0, 1));
-        this.guest.getTemporaryOrder().getStore().setKitchen(getInfiniteMockKitchen());*/
-    }
-
     @And("^add (\\d+) cookie of the selected recipee in the \"([^\"]*)\"$")
     public void addCookieOfTheSelectedRecipee(int cookieAmount, String store) {
         context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(), store, cookieAmount, currentRecipe.getName(), false);

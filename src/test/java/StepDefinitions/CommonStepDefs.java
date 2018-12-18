@@ -49,12 +49,13 @@ public class CommonStepDefs {
         context.getFacade().addManagerToStore(managerName, storeName);
     }
 
-    @Given("^The store of \"([^\"]*)\" opens \"([^\"]*)\" (\\d+) hours ago and closes in (\\d+) hours$")
-    public void theStoreOpensHoursAgoAndClosesInHours(String mManager, String dayName, int behindHours, int aheadHours) {
-        //TODO remove since unused
-
-        //context.getFacade().addOpeningClosingTimeFromNow(mManager, dayName, behindHours, aheadHours);
+    @Given("^The store managed by \"([^\"]*)\" opens \"([^\"]*)\" at (\\d+):(\\d+) and closes at (\\d+):(\\d+)$")
+    public void theStoreManagedByOpensAtAndClosesAt(String mName, String sDay,
+                                                    int openingH, int openingM,
+                                                    int closingH, int closingM) {
+        context.getFacade().managerChangeOpeningClosingTime(mName, sDay, openingH, openingM, closingH, closingM);
     }
+
 
     @Given("^The customer add (\\d+) cookies \"([^\"]*)\" from the \"([^\"]*)\"$")
     public void theCustomerAddCookiesFromThe(int quantity, String recipeName, String sStore) {
@@ -64,13 +65,6 @@ public class CommonStepDefs {
     @When("^The customer remove (\\d+) cookie \"([^\"]*)\" from the \"([^\"]*)\"$")
     public void theCustomerRemoveCookieFromThe(int quantity, String recipeName, String sStore) {
         context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(), sStore, quantity, recipeName, true);
-    }
-
-    @Given("^The customer choose a store \"([^\"]*)\" to pickup \"([^\"]*)\" in (\\d+) hours$")
-    public void aCustomerChooseAStoreToPickupInHours(String sStore, String sDay, int time) {
-        //TODO remove since unused
-
-        //context.getFacade().guestAddPickUpTimeAndStoreToOrder(context.getCurrentId(), sStore, time, sDay);
     }
 
     @Given("^The customer choose a store \"([^\"]*)\" to pickup \"([^\"]*)\" at (\\d+):(\\d+)$")
@@ -85,13 +79,6 @@ public class CommonStepDefs {
         } catch (Exception e) {
             context.pushException(e);
         }
-    }
-
-    @Then("^The \"([^\"]*)\" purchase the order with (\\d+), \"([^\"]*)\", \"([^\"]*)\" and \"([^\"]*)\" it$")
-    public void thePurschaseTheOrderWithAndIt(String sStore, int time, String day, String email, String action) {
-        //TODO remove since unused
-
-        //context.getFacade().anEmployeeMakeAnActionOnOrder(sStore, time, day, email, action);
     }
 
     @Then("^The \"([^\"]*)\" purchase the order with (\\d+):(\\d+), \"([^\"]*)\", \"([^\"]*)\" and \"([^\"]*)\" it$")

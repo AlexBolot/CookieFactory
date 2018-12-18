@@ -5,7 +5,7 @@ Feature: Desk Payment
     Given A store "store" with a tax 1 and margin on recipe 1
     Given The kitchen for "store" is infinite
     Given "Francis" the manager of "store"
-    Given The store managed by "Francis" opens "Monday" at "8:00" and closes at "17:30"
+    Given The store managed by "Francis" opens "Monday" at 8:00 and closes at 17:30
 
   Scenario: Withdrawing an order not paid online
     Given A customer "Joelle"

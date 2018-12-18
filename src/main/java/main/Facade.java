@@ -74,27 +74,30 @@ public class Facade {
 
 
     //MANAGER
-    public void managerChangeOpeningClosingTime(String manager, String dayName, String beginHours,
-                                                String endHours) {
+    public void managerChangeOpeningClosingTime(String manager, String dayName,
+                                                int beginHours,
+                                                int beginMinute,
+                                                int endHours,
+                                                int endMinute) {
         DayOfWeek day = dayFromName(dayName);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
 
         if (manager1.isPresent()) {
-            manager1.get().changeOpeningTime(day, transformeStringToTime(beginHours));
-            manager1.get().changeClosingTime(day, transformeStringToTime(endHours));
+            manager1.get().changeOpeningTime(day, LocalTime.of(beginHours, beginMinute, 0,0));
+            manager1.get().changeClosingTime(day, LocalTime.of(endHours, endMinute, 0,0));
         }
     }
 
-    public void managerChangeOpeningTime(String manager, String dayName, String beginHours) {
+    public void managerChangeOpeningTime(String manager, String dayName, int beginHours, int beginMinute) {
         DayOfWeek day = dayFromName(dayName);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
-        manager1.ifPresent(manager2 -> manager2.changeOpeningTime(day, transformeStringToTime(beginHours)));
+        manager1.ifPresent(manager2 -> manager2.changeOpeningTime(day, LocalTime.of(beginHours, beginMinute, 0,0)));
     }
 
-    public void managerChangeClosingTime(String manager, String dayName, String endHours) {
+    public void managerChangeClosingTime(String manager, String dayName, int endHours, int endMinute) {
         DayOfWeek day = dayFromName(dayName);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
-        manager1.ifPresent(manager2 -> manager2.changeClosingTime(day, transformeStringToTime(endHours)));
+        manager1.ifPresent(manager2 -> manager2.changeClosingTime(day,LocalTime.of(endHours, endMinute, 0,0)));
     }
 
 
@@ -477,6 +480,7 @@ public class Facade {
         DayOfWeek dayOfWeek = DayOfWeek.valueOf(pickUpDay.toUpperCase());
         return now.withHour(hours).withMinute(minutes).with(TemporalAdjusters.nextOrSame(dayOfWeek));
     }
+
 
     private DayOfWeek dayFromName(String dayName) {
         for (DayOfWeek day : DayOfWeek.values()) {

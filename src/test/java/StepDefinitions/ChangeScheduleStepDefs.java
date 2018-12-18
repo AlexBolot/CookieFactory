@@ -17,15 +17,12 @@ public class ChangeScheduleStepDefs {
 
     private final CucumberContext context = CucumberContext.getContext();
 
-    @Given("^The store managed by \"([^\"]*)\" opens \"([^\"]*)\" at \"([^\"]*)\" and closes at \"([^\"]*)\"$")
-    public void theStoreManagedByOpensAtAndClosesAt(String mName, String sDay, String opening, String closing) {
-        context.getFacade().managerChangeOpeningClosingTime(mName, sDay, opening, closing);
-    }
 
-    @When("^\"([^\"]*)\" changes opening time of \"([^\"]*)\" to \"([^\"]*)\"$")
-    public void theManagerChangesOpeningTime(String managerName, String dayName, String openingTime) {
-        try {
-            context.getFacade().managerChangeOpeningTime(managerName, dayName, openingTime);
+
+    @When("^\"([^\"]*)\" changes opening time of \"([^\"]*)\" to (\\d+):(\\d+)$")
+    public void theManagerChangesOpeningTime(String managerName, String dayName, int openingH, int openingM) {
+       try {
+            context.getFacade().managerChangeOpeningTime(managerName, dayName, openingH, openingM);
         } catch (IllegalArgumentException iae) {
             context.pushException(iae);
         }
@@ -48,10 +45,10 @@ public class ChangeScheduleStepDefs {
         else throw new IllegalStateException("Store named " + storeName + " not found");
     }
 
-    @When("^\"([^\"]*)\" changes closing time of \"([^\"]*)\" to \"([^\"]*)\"$")
-    public void theManagerChangesClosingTime(String managerName, String dayName, String closingTime) {
+    @When("^\"([^\"]*)\" changes closing time of \"([^\"]*)\" to (\\d+):(\\d+)$")
+    public void theManagerChangesClosingTime(String managerName, String dayName, int closingH, int closingM) {
         try {
-            context.getFacade().managerChangeClosingTime(managerName, dayName, closingTime);
+            context.getFacade().managerChangeClosingTime(managerName, dayName, closingH, closingM);
         } catch (IllegalArgumentException iae) {
             context.pushException(iae);
         }

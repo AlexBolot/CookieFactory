@@ -18,25 +18,32 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static utils.TestUtils.getFixedClock;
 
 public class UnFaithPassTest {
-    private final TestUtils utils = new TestUtils();
     private Store store;
-    private CookieFirm cookieFirm = CookieFirm.instance();
+    private final CookieFirm cookieFirm = CookieFirm.instance();
+    private final LocalDateTime testingTime = LocalDateTime.now().withHour(13).withMinute(20);
 
     @Before
     public void setUp() {
+
+        CookieFirm.instance().setClock(getFixedClock(testingTime.getHour(), testingTime.getMinute()));
+
         this.store = new Store("", null, new ArrayList<>(), new HashMap<>(), new HashMap<>(), 0f, 1);
         this.store.setKitchen(TestUtils.getInfiniteMockKitchen());
         Manager manager = new Manager(store, "Bob");
-        manager.changeOpeningTime(DayOfWeek.MONDAY, LocalTime.now().minusHours(4));
-        manager.changeClosingTime(DayOfWeek.MONDAY, LocalTime.now().plusHours(4));
+
+        // Each day the store opens at 8h00 before now and closes at 19h00
+        for (DayOfWeek day : DayOfWeek.values()) {
+            manager.changeOpeningTime(day, LocalTime.of(8, 0));
+            manager.changeClosingTime(day, LocalTime.of(19, 0));
+        }
     }
 
     @Test(expected = IllegalStateException.class)
     public void getRewardsWithoutUnFaithPass() {
-        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
-                .MONDAY)));
+        Order order1 = new Order(this.store, testingTime.plusHours(3).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)));
         order1.setGuest(new Guest());
         order1.addCookie(cookieFirm.getGlobalRecipes().get(0), 1);
         store.getRewards(order1);
@@ -51,8 +58,7 @@ public class UnFaithPassTest {
         rewards.put(cookieFirm.getGlobalRecipes().get(2), reward2);
         this.store.applyUnFaithPath(new UnFaithPass(rewards));
 
-        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek
-                .MONDAY)));
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)));
         order1.setGuest(new Guest());
         order1.addCookie(cookieFirm.getGlobalRecipes().get(0), 3);
         order1.addCookie(cookieFirm.getGlobalRecipes().get(1), 5);

@@ -17,11 +17,8 @@ public class ChangeScheduleStepDefs {
 
     private final CucumberContext context = CucumberContext.getContext();
 
-    private Exception openingTimeException;
-    private Exception closingTimeException;
-
-    @Given("^The store manage by \"([^\"]*)\" opens \"([^\"]*)\" at \"([^\"]*)\" and closes at \"([^\"]*)\"$")
-    public void theStoreManageByOpensAtAndClosesAt(String mName, String sDay, String opening, String closing) throws Throwable {
+    @Given("^The store managed by \"([^\"]*)\" opens \"([^\"]*)\" at \"([^\"]*)\" and closes at \"([^\"]*)\"$")
+    public void theStoreManagedByOpensAtAndClosesAt(String mName, String sDay, String opening, String closing) {
         context.getFacade().managerChangeOpeningClosingTime(mName, sDay, opening, closing);
     }
 
@@ -30,7 +27,7 @@ public class ChangeScheduleStepDefs {
         try {
             context.getFacade().managerChangeOpeningTime(managerName, dayName, openingTime);
         } catch (IllegalArgumentException iae) {
-            this.openingTimeException = iae;
+            context.pushException(iae);
         }
     }
 
@@ -56,7 +53,7 @@ public class ChangeScheduleStepDefs {
         try {
             context.getFacade().managerChangeClosingTime(managerName, dayName, closingTime);
         } catch (IllegalArgumentException iae) {
-            this.closingTimeException = iae;
+            context.pushException(iae);
         }
     }
 
@@ -80,15 +77,21 @@ public class ChangeScheduleStepDefs {
     @Then("^Changing opening time of \"([^\"]*)\" fails$")
     public void changingOpeningTimeFails(String dayName) {
         String message = "Trying to set opening time after closing time for " + dayName;
-        assertTrue(openingTimeException.getMessage().equalsIgnoreCase(message));
-        openingTimeException = null;
+
+        Optional<Exception> optionalException = context.popException();
+
+        assertTrue(optionalException.isPresent());
+        assertTrue(optionalException.get().getMessage().equalsIgnoreCase(message));
     }
 
     @Then("^Changing closing time of \"([^\"]*)\" fails$")
     public void changingClosingTimeFails(String dayName) {
         String message = "Trying to set closing time before opening time for " + dayName;
-        assertTrue(closingTimeException.getMessage().equalsIgnoreCase(message));
-        closingTimeException = null;
+
+        Optional<Exception> optionalException = context.popException();
+
+        assertTrue(optionalException.isPresent());
+        assertTrue(optionalException.get().getMessage().equalsIgnoreCase(message));
     }
 
 

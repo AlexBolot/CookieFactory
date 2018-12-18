@@ -8,15 +8,17 @@ import store.Store;
 import utils.CucumberContext;
 import utils.TestUtils;
 
+import java.time.DayOfWeek;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static utils.TestUtils.getFixedClock;
 import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class CommonStepDefs {
 
     private final CucumberContext context = CucumberContext.getContext();
-    private TestUtils utils = new TestUtils();
+    private final TestUtils utils = new TestUtils();
 
     @Given("^A store \"([^\"]*)\" with a tax (\\d+) and margin on recipe (\\d+)$")
     public void aStoreWithATaxAndMarginOnRecipe(String storeName, int tax, int recipeMargin) {
@@ -49,7 +51,9 @@ public class CommonStepDefs {
 
     @Given("^The store of \"([^\"]*)\" opens \"([^\"]*)\" (\\d+) hours ago and closes in (\\d+) hours$")
     public void theStoreOpensHoursAgoAndClosesInHours(String mManager, String dayName, int behindHours, int aheadHours) {
-        context.getFacade().addOpeningClosingTimeFromNow(mManager, dayName, behindHours, aheadHours);
+        //TODO remove since unused
+
+        //context.getFacade().addOpeningClosingTimeFromNow(mManager, dayName, behindHours, aheadHours);
     }
 
     @Given("^The customer add (\\d+) cookies \"([^\"]*)\" from the \"([^\"]*)\"$")
@@ -62,26 +66,43 @@ public class CommonStepDefs {
         context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(), sStore, quantity, recipeName, true);
     }
 
-
     @Given("^The customer choose a store \"([^\"]*)\" to pickup \"([^\"]*)\" in (\\d+) hours$")
     public void aCustomerChooseAStoreToPickupInHours(String sStore, String sDay, int time) {
-        context.getFacade().guestAddPickUpTimeAndStoreToOrder(context.getCurrentId(), sStore, time, sDay);
+        //TODO remove since unused
+
+        //context.getFacade().guestAddPickUpTimeAndStoreToOrder(context.getCurrentId(), sStore, time, sDay);
+    }
+
+    @Given("^The customer choose a store \"([^\"]*)\" to pickup \"([^\"]*)\" at (\\d+):(\\d+)$")
+    public void theCustomerChooseAStoreToPickupAt(String storeName, String dayName, int hours, int minutes) {
+        context.getFacade().guestAddPickUpTimeAndStoreToOrder(context.getCurrentId(), storeName, hours, minutes, dayName);
     }
 
     @When("^The customer place his order and pay \"([^\"]*)\"$")
     public void placeHisOrderAndPay(String pay) {
-        context.getFacade().guestPlaceOrder(context.getCurrentId(), utils.payOnline(pay));
+        try {
+            context.getFacade().guestPlaceOrder(context.getCurrentId(), utils.payOnline(pay));
+        } catch (Exception e) {
+            context.pushException(e);
+        }
     }
-
 
     @Then("^The \"([^\"]*)\" purchase the order with (\\d+), \"([^\"]*)\", \"([^\"]*)\" and \"([^\"]*)\" it$")
     public void thePurschaseTheOrderWithAndIt(String sStore, int time, String day, String email, String action) {
-        context.getFacade().anEmployeeMakeAnActionOnOrder(sStore, time, day, email, action);
+        //TODO remove since unused
+
+        //context.getFacade().anEmployeeMakeAnActionOnOrder(sStore, time, day, email, action);
     }
 
-    @And("^The order in the \"([^\"]*)\" with (\\d+), \"([^\"]*)\" made by \"([^\"]*)\" is \"([^\"]*)\"$")
-    public void theOrderInTheWithMadeByIs(String sStore, int time, String day, String email, String etat) {
-        assertEquals(etat.toUpperCase(), context.getFacade().anEmployeeSearchAnOrderState(sStore, time, day, email));
+    @Then("^The \"([^\"]*)\" purchase the order with (\\d+):(\\d+), \"([^\"]*)\", \"([^\"]*)\" and \"([^\"]*)\" it$")
+    public void thePurschaseTheOrderWithAndIt(String sStore, int hours, int minutes, String day, String email, String action) {
+        context.getFacade().anEmployeeMakeAnActionOnOrder(sStore, hours, minutes, day, email, action);
+    }
+
+    @And("^The order in the \"([^\"]*)\" with (\\d+):(\\d+), \"([^\"]*)\" made by \"([^\"]*)\" is \"([^\"]*)\"$")
+    public void theOrderInTheWithMadeByIs(String sStore, int hours, int minutes, String day, String email, String etat) {
+        String actualState = context.getFacade().anEmployeeSearchAnOrderState(sStore, hours, minutes, day, email);
+        assertTrue(etat.equalsIgnoreCase(actualState));
     }
 
     @When("^The manager refill the stock of \"([^\"]*)\" \"([^\"]*)\" by (\\d+) in the kitchen of \"([^\"]*)\"$")
@@ -89,5 +110,10 @@ public class CommonStepDefs {
         context.getFacade().addStockForTopping(store, type, ingredient, quantity);
     }
 
+    @Given("^Now is \"([^\"]*)\" (\\d+):(\\d+)$")
+    public void nowIs(String dayName, int hours, int minutes) {
+        DayOfWeek dayOfWeek = DayOfWeek.valueOf(dayName.toUpperCase());
 
+        context.cookieFirm().setClock(getFixedClock(dayOfWeek, hours, minutes));
+    }
 }

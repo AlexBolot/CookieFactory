@@ -1,22 +1,13 @@
 package StepDefinitions;
 
-import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import main.Guest;
-import order.Order;
 import order.OrderLine;
-import recipe.Recipe;
-import recipe.ingredient.Catalog;
-import store.Store;
 import utils.CucumberContext;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class RemoveCookieStepDefs {
 

@@ -1,17 +1,11 @@
 package StepDefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
-import main.CookieFirm;
 import main.Customer;
 import order.Order;
-import recipe.Recipe;
 import utils.CucumberContext;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,7 +24,7 @@ public class LoyaltyProgramStepdefs {
     }
 
     @When("^\"([^\"]*)\" see the price of his order with (\\d+) cookies it have a discount$")
-    public void seeThePriceOfHisOrderWithCookiesItHaveADiscount(String sCustomer, int nbCookie) throws Throwable {
+    public void seeThePriceOfHisOrderWithCookiesItHaveADiscount(String sCustomer, int nbCookie) {
         Optional<Customer> customer = context.cookieFirm().findCustomer(sCustomer);
         double price;
         if(customer.isPresent()) {

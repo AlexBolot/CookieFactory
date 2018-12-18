@@ -10,6 +10,7 @@ import store.Store;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class CucumberContext {
 
@@ -19,7 +20,7 @@ public class CucumberContext {
     public final Map<String, Order> orders = new HashMap<>();
     public final TestUtils utils = new TestUtils();
     private Integer currentId;
-
+    private Exception exception;
 
     private final Facade facade = new Facade();
 
@@ -31,13 +32,14 @@ public class CucumberContext {
         return context;
     }
 
-    public Integer getCurrentId(){
+    public Integer getCurrentId() {
         return this.currentId;
     }
 
-    public void setCurrentId(Integer id){
+    public void setCurrentId(Integer id) {
         this.currentId = id;
     }
+
     public void addGuest(String name, Guest guest) {
         clients.put(name, guest);
     }
@@ -58,12 +60,22 @@ public class CucumberContext {
         return stores.get(storeName);
     }
 
-    public Facade getFacade(){
+    public Facade getFacade() {
         return facade;
     }
 
-    public CookieFirm cookieFirm(){
+    public CookieFirm cookieFirm() {
         return CookieFirm.instance();
     }
 
+    public void pushException(Exception e) {
+        this.exception = e;
+    }
+
+    public Optional<Exception> popException() {
+        Optional<Exception> res = Optional.ofNullable(exception);
+        exception = null;
+
+        return res;
+    }
 }

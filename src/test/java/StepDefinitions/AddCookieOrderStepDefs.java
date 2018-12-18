@@ -11,10 +11,9 @@ import store.Kitchen;
 import store.Store;
 import utils.CucumberContext;
 
-import java.util.*;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class AddCookieOrderStepDefs {
 
@@ -38,15 +37,15 @@ public class AddCookieOrderStepDefs {
 
     @When("^The guest order (\\d+) cookie \"([^\"]*)\" from the \"([^\"]*)\"$")
     public void theGuestOrderCookie(int amount, String recipeName, String store) {
-        context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(),store,amount, recipeName, false);
+        context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(), store, amount, recipeName, false);
     }
 
     @Then("^The order contains (\\d+) cookie \"([^\"]*)\"$")
     public void theOrderContainCookie(int amount, String recipeName) {
         Optional<Guest> guest = context.cookieFirm().findGuest(context.getCurrentId());
 
-        if(guest.isPresent()) {
-            for (OrderLine line : guest.get().getTemporaryOrder().getOrderLines()){
+        if (guest.isPresent()) {
+            for (OrderLine line : guest.get().getTemporaryOrder().getOrderLines()) {
                 if (line.getRecipe().getName().equals(recipeName)) {
                     assertEquals(amount, line.getAmount());
                 }
@@ -70,7 +69,7 @@ public class AddCookieOrderStepDefs {
     }
 
     @And("^The guest is ordering at the store \"([^\"]*)\"$")
-    public void theGuestIsOrderingAtTheStore(String sStore) throws Throwable {
+    public void theGuestIsOrderingAtTheStore(String sStore) {
         context.getFacade().guestAddStoreToOrder(context.getCurrentId(), sStore);
     }
 
@@ -83,8 +82,7 @@ public class AddCookieOrderStepDefs {
 
     @And("^add (\\d+) cookie of the selected recipee in the \"([^\"]*)\"$")
     public void addCookieOfTheSelectedRecipee(int cookieAmount, String store) {
-        context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(),store, cookieAmount,
-                currentRecipe.getName(), false);
+        context.getFacade().guestAddOrRemoveCookie(context.getCurrentId(), store, cookieAmount, currentRecipe.getName(), false);
     }
 
 }

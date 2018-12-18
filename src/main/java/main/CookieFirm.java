@@ -7,6 +7,7 @@ import recipe.ingredient.Catalog;
 import store.Manager;
 import store.Store;
 
+import java.time.Clock;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,6 +25,8 @@ public class CookieFirm {
     private List<Recipe> globalRecipes = new ArrayList<>();
     private BankAPI bankAPI = new BankAPI();
     private Catalog catalog;
+
+    private Clock clock = Clock.systemUTC();
 
     private static boolean inflated = false;
     private static CookieFirm cookieFirm = new CookieFirm();
@@ -200,14 +203,14 @@ public class CookieFirm {
             }
         }
         guests.removeIf((guest -> guest.getId() == customer.getId()));
-        guests =
-                guests.stream().filter(g -> !customer.getEmail().equals(g.getEmail())).collect(Collectors.toSet());
+        guests = guests.stream().filter(g -> !customer.getEmail().equals(g.getEmail())).collect(Collectors.toSet());
         accounts.add(customer);
         return true;
     }
 
     /**
      * Return a customer from an email
+     *
      * @param email {@link String} The target customer email. The optional will be empty if no customer with the email is found
      * @return {@link Optional<Customer>} Optional of the customer with the passed email, empty if not found.
      */
@@ -223,13 +226,14 @@ public class CookieFirm {
 
     /**
      * Return a guest from an id
+     *
      * @param id {@link Integer} The target guest id. The optional will be empty if no guest with the id is found
      * @return {@link Optional<Guest>} Optional of the customer with the passed id, empty if not found.
      */
-    public Optional<Guest> findGuest(int id){
+    public Optional<Guest> findGuest(int id) {
         Guest guest = null;
-        for(Guest account : this.guests){
-            if(account.getId() == id){
+        for (Guest account : this.guests) {
+            if (account.getId() == id) {
                 guest = account;
             }
         }
@@ -238,13 +242,14 @@ public class CookieFirm {
 
     /**
      * Return a manager from an email
+     *
      * @param name {@link String} The target customer name. The optional will be empty if no manager with the name is found
      * @return {@link Optional<Manager>} Optional of the manager with the passed name, empty if not found.
      */
-    public Optional<Manager> findManager(String name){
+    public Optional<Manager> findManager(String name) {
         Manager manager1 = null;
-        for(Manager manager : managers){
-            if(manager.getName().equals(name)){
+        for (Manager manager : managers) {
+            if (manager.getName().equals(name)) {
                 manager1 = manager;
             }
         }
@@ -253,14 +258,15 @@ public class CookieFirm {
 
     /**
      * Return a guest with the passed id considering the customers also.
+     *
      * @param id {@link Integer} The target guest id. The optional will be empty if no guest with the id is found
      * @return {@link Optional<Customer>} Optional of the customer with the passed email, empty if not found.
      */
-    public Optional<Guest> findGuestOrCustomer(int id){
+    public Optional<Guest> findGuestOrCustomer(int id) {
         Set<Guest> guests = getAllGuests();
         Guest guest = null;
-        for(Guest account : guests){
-            if(account.getId() == id){
+        for (Guest account : guests) {
+            if (account.getId() == id) {
                 guest = account;
             }
         }
@@ -269,6 +275,7 @@ public class CookieFirm {
 
     /**
      * Return a store from an name
+     *
      * @param name {@link String} The target store name. The optional will be empty if no store with the name is found
      * @return {@link Optional<Customer>} Optional of the store with the passed name, empty if not found.
      */
@@ -285,7 +292,7 @@ public class CookieFirm {
      * @deprecated was used once, not anymore, the mistery persists, should be erased.
      */
     @Deprecated
-    public void inflate(List<Store> stores, List<Manager> managers){
+    public void inflate(List<Store> stores, List<Manager> managers) {
         this.managers = managers;
         this.stores = stores;
 
@@ -312,12 +319,20 @@ public class CookieFirm {
         this.bankAPI = bankAPI;
     }
 
+    public Clock getClock() {
+        return clock;
+    }
+
+    public void setClock(Clock clock) {
+        this.clock = clock;
+    }
+
     Set<Guest> getGuests() {
         return guests;
     }
 
-    Set<Guest> getAllGuests(){
-        return Stream.concat(guests.stream(),accounts.stream()).collect(Collectors.toSet());
+    Set<Guest> getAllGuests() {
+        return Stream.concat(guests.stream(), accounts.stream()).collect(Collectors.toSet());
     }
 
     public Set<Customer> getAccounts() {

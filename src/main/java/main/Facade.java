@@ -74,18 +74,6 @@ public class Facade {
 
 
     //MANAGER
-
-    //TODO remove since unused
-    public void addOpeningClosingTimeFromNow(String manager, String dayName, int behindHours, int aheadHours) {
-        DayOfWeek day = dayFromName(dayName);
-        LocalTime opTime = LocalTime.now().minusHours(behindHours).plusSeconds(0).plusNanos(0);
-        LocalTime clTime = LocalTime.now().plusHours(aheadHours).plusSeconds(0).plusNanos(0);
-
-        Optional<Manager> manager1 = cookieFirm.findManager(manager);
-
-        manager1.ifPresent(manager2 -> managerChangeTime(manager2, day, opTime, clTime));
-    }
-
     public void managerChangeOpeningClosingTime(String manager, String dayName, String beginHours,
                                                 String endHours) {
         DayOfWeek day = dayFromName(dayName);
@@ -231,12 +219,7 @@ public class Facade {
         //Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         //opGuest.ifPresent(guest -> guest.getTemporaryOrder().setPickUpTime(generateTime(time, pickupDay)));
     }
-    /**
-     * Guest add a pickup time to his order
-     * @param id of the current guest
-     * @param time pickup time of the order
-     * @param pickupDay of the order
-     */
+
     public void guestAddPickUpTimeAndStoreToOrder(int id, String storeName, int hours, int minutes, String pickupDay) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(storeName);
@@ -385,7 +368,6 @@ public class Facade {
      * @param accountId of his banking data
      */
     public void setBankingDataCustomer(String sEmail, String accountId){
-    public void setBankingDataCustomer(String sEmail, String accountId) {
         Optional<Customer> opCustomer = this.cookieFirm.findCustomer(sEmail);
         if (opCustomer.isPresent()) {
             BankingData bankingData = new BankingData(opCustomer.get().getFirstName(), opCustomer.get().getLastName(), accountId);
@@ -428,52 +410,21 @@ public class Facade {
     //EMPLOYEE RELATED
     //TODO ajouter dans le bank id ajouter juste avec le accountID
 
-
-    //TODO remove since unused
-    /*Optional<Store> opStore = this.cookieFirm.findStore(sStore);
     /**
-     * An employee make an action on an order (CANCELED, WITHDRAWN)
-     * Search the order with datas
-     * Not case sensitive
-     * @param sStore name of the store where the employee work
-     * @param time pickup time of the searched order
-     * @param day pickup day of the searched order
-     * @param email of the searched order's customer
-     * @param action to make on the order
-     * @return if the action could be done
+     * Allows an Employee to know the current state of an order
+     *
+     * @param storeName Name of the store containing the order
+     * @param hours     Hours of the order's pickupTime (used to find the order)
+     * @param minutes   Minutes of the order's pickupTime (used to find the order)
+     * @param day       Day of the order's pickupTime (used to find the order)
+     * @param email     Email of the Guest (owner of the order, used to find the order)
+     * @return String value representing the state of the order
      */
-    public boolean anEmployeeMakeAnActionOnOrder(String sStore, int time, String day, String email, String action){
-        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
+    public String anEmployeeSearchAnOrderState(String storeName, int hours, int minutes, String day, String email) {
+        Optional<Store> opStore = this.cookieFirm.findStore(storeName);
 
         if (opStore.isPresent()) {
-            Optional<Order> opOrder = opStore.get().findOrder(generateTime(time, day), email);
-
-            if (opOrder.isPresent()) {
-                if (action.toUpperCase().equals("CANCELED")) {
-                    opOrder.get().cancel();
-                    return true;
-                } else if (action.toUpperCase().equals("WITHDRAWN")) {
-                    opOrder.get().withdraw();
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * An employee search and order to see its state
-     * @param sStore name of the store where the employee work
-     * @param time pickup time of the searched order
-     * @param day pickup day of the searched order
-     * @param email of the searched order's customer
-     * @return the state of the order
-     */
-    public String anEmployeeSearchAnOrderState(String sStore, int time, String day, String email){
-        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
-
-        if (opStore.isPresent()) {
-            Optional<Order> opOrder = opStore.get().findOrder(generateTime(time, day), email);
+            Optional<Order> opOrder = opStore.get().findOrder(generateTime(hours, minutes, day), email);
 
             if (opOrder.isPresent()) {
                 return opOrder.get().getState().toString();
@@ -482,38 +433,38 @@ public class Facade {
         return "none";
     }
 
-        /**
-         * Allows an Employee to interact with an order from a store
-         *
-         * @param storeName Name of the store containing the order
-         * @param hours     Hours of the order's pickupTime (used to find the order)
-         * @param minutes   Minutes of the order's pickupTime (used to find the order)
-         * @param day       Day of the order's pickupTime (used to find the order)
-         * @param email     Email of the Guest (owner of the order, used to find the order)
-         * @param action    String value of the Action to do. Values allowed : [CANCELED, WITHDRAWN]
-         * @return True if the action was successfully applyed of the order. False otherwise
-         */
-        public boolean anEmployeeMakeAnActionOnOrder(String storeName, int hours, int minutes, String day, String email, String action) {
-            Optional<Store> opStore = this.cookieFirm.findStore(storeName);
+    /**
+     * Allows an Employee to interact with an order from a store
+     *
+     * @param storeName Name of the store containing the order
+     * @param hours     Hours of the order's pickupTime (used to find the order)
+     * @param minutes   Minutes of the order's pickupTime (used to find the order)
+     * @param day       Day of the order's pickupTime (used to find the order)
+     * @param email     Email of the Guest (owner of the order, used to find the order)
+     * @param action    String value of the Action to do. Values allowed : [CANCELED, WITHDRAWN]
+     * @return True if the action was successfully applyed of the order. False otherwise
+     */
+    public boolean anEmployeeMakeAnActionOnOrder(String storeName, int hours, int minutes, String day, String email, String action) {
+        Optional<Store> opStore = this.cookieFirm.findStore(storeName);
 
-            if (opStore.isPresent()) {
-                Optional<Order> opOrder = opStore.get().findOrder(generateTime(hours, minutes, day), email);
+        if (opStore.isPresent()) {
+            Optional<Order> opOrder = opStore.get().findOrder(generateTime(hours, minutes, day), email);
 
-                if (opOrder.isPresent()) {
-                    switch (action.toUpperCase()) {
-                        case "CANCELED":
-                            opOrder.get().cancel();
-                            return true;
-                        case "WITHDRAWN":
-                            opOrder.get().withdraw();
-                            return true;
-                        default:
-                            throw new IllegalArgumentException("Unkown action on order : " + action);
-                    }
+            if (opOrder.isPresent()) {
+                switch (action.toUpperCase()) {
+                    case "CANCELED":
+                        opOrder.get().cancel();
+                        return true;
+                    case "WITHDRAWN":
+                        opOrder.get().withdraw();
+                        return true;
+                    default:
+                        throw new IllegalArgumentException("Unkown action on order : " + action);
                 }
             }
-            return false;
         }
+        return false;
+    }
 
     /**
      * Employee add stock for a topping

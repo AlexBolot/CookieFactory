@@ -120,13 +120,13 @@ public class Facade {
         Ingredient ingredient;
         switch (type) {
             case "dough":
-                ingredient = doughFromName(ingredientName);
+                ingredient = cookieFirm.getCatalog().doughFromName(ingredientName);
                 break;
             case "flavor":
-                ingredient = flavorFromName(ingredientName);
+                ingredient = cookieFirm.getCatalog().flavorFromName(ingredientName);
                 break;
             case "topping":
-                ingredient = toppingFromName(ingredientName);
+                ingredient = cookieFirm.getCatalog().toppingFromName(ingredientName);
                 break;
             default:
                 return;
@@ -401,19 +401,6 @@ public class Facade {
         return null;
     }
 
-    public Ingredient ingredientFromName(String type, String ingredientName) {
-        switch (type) {
-            case "dough":
-                return doughFromName(ingredientName);
-            case "flavor":
-                return flavorFromName(ingredientName);
-            case "topping":
-                return toppingFromName(ingredientName);
-        }
-        return null;
-    }
-
-
     private List<Topping> createToppingList(String topping, String topping2, String topping3){
         List<Topping> toppingList = new ArrayList<>();
         toppingList.add(toppingFromName(topping));
@@ -423,6 +410,5 @@ public class Facade {
             toppingList.add(toppingFromName(topping3));
         return toppingList;
     }
-
 
 }

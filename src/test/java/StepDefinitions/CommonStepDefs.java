@@ -94,7 +94,7 @@ public class CommonStepDefs {
 
     @When("^The manager refill the stock of \"([^\"]*)\" \"([^\"]*)\" by (\\d+) in the kitchen of \"([^\"]*)\"$")
     public void theManagerRefillTheStockOfByInTheKitchenOf(String type, String ingredient, int quantity, String store) {
-        context.getFacade().addStockForTopping(store, type, ingredient, quantity);
+        context.getFacade().anEmployeeAddsStockForTopping(store, type, ingredient, quantity);
     }
 
     @Given("^Now is \"([^\"]*)\" (\\d+):(\\d+)$")

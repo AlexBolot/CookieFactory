@@ -3,7 +3,8 @@ package main;
 import api.BankingData;
 import order.Order;
 import recipe.Recipe;
-import recipe.ingredient.*;
+import recipe.ingredient.Ingredient;
+import recipe.ingredient.Topping;
 import store.Manager;
 import store.Store;
 
@@ -360,14 +361,13 @@ public class Facade {
     }
 
     /**
-     * Guest place his order
-     * @param id of the current guest
+     * Customer place his order
+     * @param id of the current Customer
      * @param payedOnline boolean that indicate if the order is payed online or not
      */
-    public void guestPlaceOrder(int id , Boolean payedOnline){
-        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
-
-        opGuest.ifPresent(guest -> guest.placeOrder(payedOnline));
+    public void guestPlaceOrder(int id, boolean payedOnline) {
+        Optional<Customer> opCustomer = this.cookieFirm.findCustomer(id);
+        opCustomer.ifPresent(customer -> customer.placeOrder(payedOnline));
     }
 
 
@@ -500,7 +500,7 @@ public class Facade {
      * @param ingredient name of the ingredient
      * @param quantity add to stock
      */
-    public void addStockForTopping(String store, String type, String ingredient, int quantity) {
+    public void anEmployeeAddsStockForTopping(String store, String type, String ingredient, int quantity) {
         Optional<Store> opStore = this.cookieFirm.findStore(store);
         opStore.ifPresent(store1 -> store1.getKitchen().refill(ingredientFromName(type, ingredient), quantity));
     }

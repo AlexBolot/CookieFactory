@@ -225,6 +225,18 @@ public class CookieFirm {
     }
 
     /**
+     * Return a customer from an given id
+     *
+     * @param id The target customer ID. The optional will be empty if no customer with this ID is found
+     * @return {@link Optional<Customer>} Optional of the customer with the given id, empty if not found.
+     */
+    public Optional<Customer> findCustomer(int id) {
+        return this.accounts.stream()
+                .filter(account -> account.getId() == id)
+                .findFirst();
+    }
+
+    /**
      * Return a guest from an id
      *
      * @param id {@link Integer} The target guest id. The optional will be empty if no guest with the id is found
@@ -297,6 +309,7 @@ public class CookieFirm {
     public Optional<Recipe> findRecipee(String recipeeName) {
         return this.getGlobalRecipes().stream().filter(recipe -> recipe.getName().equalsIgnoreCase(recipeeName)).findFirst();
     }
+
     /**
      * @deprecated was used once, not anymore, the mistery persists, should be erased.
      */

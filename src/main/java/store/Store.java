@@ -1,14 +1,13 @@
 package store;
 
 
+import main.CookieFirm;
 import order.Order;
 import order.OrderLine;
 import recipe.Recipe;
 import recipe.ingredient.Ingredient;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.*;
 
 public class Store {
@@ -137,14 +136,13 @@ public class Store {
      */
     private boolean checkOrderDelay(Order order) {
 
-        LocalDateTime pickUpDate = order.getPickUpTime();
+        LocalDateTime pickUpDateTime = order.getPickUpTime();
 
-        // Selected time is in less than two hours -> forbidden
-        if (LocalDateTime.now().isAfter(pickUpDate.minusHours(2)))
-            throw new IllegalArgumentException("The pickup time is in less than 2h");
+        Clock clock = CookieFirm.instance().getClock();
+        LocalDateTime now = LocalDateTime.ofInstant(clock.instant(), ZoneId.systemDefault()).withSecond(0).withNano(0);
 
-        LocalTime pickupTime = LocalTime.from(pickUpDate);
-        DayOfWeek pickupDay = pickUpDate.getDayOfWeek();
+        LocalTime pickupTime = LocalTime.from(pickUpDateTime);
+        DayOfWeek pickupDay = pickUpDateTime.getDayOfWeek();
 
         // Selected time is earlier than opening time of selected day -> forbidden
         if (pickupTime.isBefore(LocalTime.from(this.openingTime(pickupDay))))
@@ -153,6 +151,11 @@ public class Store {
         // Selected time is later than closing time of selected day -> forbidden
         if (pickupTime.isAfter(LocalTime.from(this.closingTime(pickupDay))))
             throw new IllegalArgumentException("The pickup time is later than closing time of the store");
+
+        // Selected time is in less than two hours -> forbidden
+        if (pickUpDateTime.isBefore(now.plusHours(2)))
+            throw new IllegalArgumentException("The pickup time is in less than 2h");
+
 
         // Else -> no problem :)
         return true;
@@ -167,7 +170,7 @@ public class Store {
      */
     void setStatusPaymentOrder(DayOfWeek day, LocalDateTime pickUpTime, String email) {
 
-        //TODO : Remove
+        //TODO : Remove since no more payment
 
         //Optional<Order> order = findOrder(pickUpTime, email);
         //order.ifPresent(Order::setPayed);
@@ -182,9 +185,7 @@ public class Store {
      */
     public Optional<Order> findOrder(LocalDateTime pickUpTime, String email) {
         return orders.stream()
-                .filter(order -> pickUpTime.equals(order.getPickUpTime()) &&
-                        email.equals(order.getGuest().getEmail())
-                )
+                .filter(order -> pickUpTime.isEqual(order.getPickUpTime()) && email.equals(order.getGuest().getEmail()))
                 .findFirst();
     }
 
@@ -279,8 +280,7 @@ public class Store {
     }
 
     public double getRecipePrice(Recipe recipe) {
-        return recipe.getIngredients().stream().mapToDouble(kitchen::vendingPriceOf).sum()
-                + (recipe.isCustom() ? customRecipeeMargin : 0.0);
+        return recipe.getIngredients().stream().mapToDouble(kitchen::vendingPriceOf).sum() + (recipe.isCustom() ? customRecipeeMargin : 0.0);
     }
 
     public double getCustomRecipeeMargin() {

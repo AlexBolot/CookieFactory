@@ -32,6 +32,8 @@ public class OrderTest {
     private CookieFirm cookieFirm;
     private Guest guest;
 
+    private final LocalDateTime testingTime = LocalDateTime.now().withHour(13).withMinute(20);
+
     @Before
     public void setUp() {
         Catalog catalog = new Catalog();
@@ -49,14 +51,15 @@ public class OrderTest {
                 true);
 
         cookieFirm = CookieFirm.instance();
+        cookieFirm.setClock(getFixedClock(testingTime.getHour(), testingTime.getMinute()));
         cookieFirm.inflate(Collections.singletonList(store), Collections.emptyList());
         unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), catalog.getFlavorList().get(0), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
-        LocalDateTime pickUpTime = LocalDateTime.now().plusHours(3);
+        LocalDateTime pickUpTime = testingTime.plusHours(3);
 
         Manager manager = new Manager(store, "bob");
 
-        manager.changeOpeningTime(pickUpTime.getDayOfWeek(), LocalTime.now().minusHours(5));
-        manager.changeClosingTime(pickUpTime.getDayOfWeek(), LocalTime.now().plusHours(5));
+        manager.changeOpeningTime(pickUpTime.getDayOfWeek(), LocalTime.of(8, 0));
+        manager.changeClosingTime(pickUpTime.getDayOfWeek(), LocalTime.of(19, 0));
 
         guest = new Guest();
         guest.setBankingData(new BankingData("FirstName", "LastName", "04838229405"));
@@ -90,8 +93,7 @@ public class OrderTest {
     @Test
     public void pricesUseStoreTax() {
         order.addCookie(recipe1, 1);
-        Store store = new Store("", null, new ArrayList<>(), new HashMap<>(), new HashMap<>(),
-                1.25, 1.0);
+        Store store = new Store("", null, new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1.25, 1.0);
         Kitchen mockKitchen = getInfiniteMockKitchen();
         store.setKitchen(mockKitchen);
         when(mockKitchen.vendingPriceOf(any())).thenReturn(1.0);
@@ -231,7 +233,7 @@ public class OrderTest {
         guest.placeOrder(true);
 
         // No exception should throw
-        order.withdraw(- 1);
+        order.withdraw(-1);
     }
 
     @Test(expected = IllegalArgumentException.class)

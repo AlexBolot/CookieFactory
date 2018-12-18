@@ -9,7 +9,7 @@ public class CatalogTest {
     private Catalog basicCatalog;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         basicCatalog = new Catalog();
         basicCatalog.getToppingList().add(new Topping("StayATop"));
         basicCatalog.getDoughList().add(new Dough("doughYouBest"));

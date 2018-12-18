@@ -1,44 +1,65 @@
 package StepDefinitions;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import main.Customer;
-import order.Order;
-import store.Store;
 import utils.CucumberContext;
 import utils.TestUtils;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static utils.TestUtils.getInfiniteMockKitchen;
+import static org.junit.Assert.assertTrue;
 
 public class CustomerOrderStepDefs {
 
-    private final CucumberContext context= CucumberContext.getContext();
-    private TestUtils utils = new TestUtils();
-
+    private final CucumberContext context = CucumberContext.getContext();
+    private final TestUtils utils = new TestUtils();
 
     @Then("^The customer with the email \"([^\"]*)\" has (\\d+) order in his history$")
-    public void theCustomerWithTheEmailHasOrderInHisHistory(String name, int amount) throws Throwable {
+    public void theCustomerWithTheEmailHasOrderInHisHistory(String name, int amount) {
         Optional<Customer> opCustomer = context.cookieFirm().findCustomer(utils.createEmail(name));
-        if(opCustomer.isPresent())
+        if (opCustomer.isPresent())
             assertEquals(amount, opCustomer.get().getOrderHistory().size());
+        else throw new IllegalStateException("Could not find current Customer");
     }
 
     @And("^The customer with the email \"([^\"]*)\" has an empty temporary order$")
-    public void theCustomerWithTheEmailHasAnEmptyTemporaryOrder(String name) throws Throwable {
+    public void theCustomerWithTheEmailHasAnEmptyTemporaryOrder(String name) {
         Optional<Customer> opCustomer = context.cookieFirm().findCustomer(utils.createEmail(name));
-        if(opCustomer.isPresent())
-            assertEquals( 0, opCustomer.get().getTemporaryOrder().getOrderLines().size());
+        if (opCustomer.isPresent())
+            assertEquals(0, opCustomer.get().getTemporaryOrder().getOrderLines().size());
+        else throw new IllegalStateException("Could not find current Customer");
+    }
+
+    @Then("^It fails because it's a too short delay$")
+    public void itFailsBecauseItSATooShortDelay() {
+        String message = "The pickup time is in less than 2h";
+
+        Optional<Exception> optionalException = context.popException();
+
+        assertTrue(optionalException.isPresent());
+        assertEquals(message, optionalException.get().getMessage());
+    }
+
+    @Then("^It fails because it's before opening$")
+    public void itFailsBecauseItSBeforeOpening() {
+        String message = "The pickup time is earlier than opening time of the store";
+
+        Optional<Exception> optionalException = context.popException();
+
+        assertTrue(optionalException.isPresent());
+        assertEquals(message, optionalException.get().getMessage());
+    }
+
+    @Then("^It fails because it's after closing$")
+    public void itFailsBecauseItSAfterClosing() {
+        String message = "The pickup time is later than closing time of the store";
+
+        Optional<Exception> optionalException = context.popException();
+
+        assertTrue(optionalException.isPresent());
+        assertEquals(message, optionalException.get().getMessage());
     }
 }
 

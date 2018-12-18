@@ -1,5 +1,6 @@
 package store;
 
+import main.CookieFirm;
 import main.Guest;
 import order.Order;
 import order.OrderState;
@@ -11,6 +12,7 @@ import recipe.ingredient.Catalog;
 import utils.TestUtils;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+import static utils.TestUtils.getFixedClock;
 import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class StoreTest {
@@ -37,10 +40,12 @@ public class StoreTest {
     private final HashMap<DayOfWeek, LocalTime> closingTimes = new HashMap<>();
 
     private final ArrayList<Recipe> globalRecipes = new ArrayList<>();
-    private final LocalDateTime now = LocalDateTime.now();
+    private final LocalDateTime testingTime = LocalDateTime.now().withHour(13).withMinute(20);
 
     @Before
-    public void before() {
+    public void setUp() {
+
+        CookieFirm.instance().setClock(getFixedClock(testingTime.getHour(), testingTime.getMinute()));
 
         oldRecipe = utils.randomRecipe();
         newRecipe = utils.randomRecipe();
@@ -49,11 +54,12 @@ public class StoreTest {
             globalRecipes.add(utils.randomRecipe());
         }
 
-        // Each day the store opens 5h before now and closes 5h after now (for easier testing purposes)
+        // Each day the store opens at 8h00 before now and closes at 19h00
         for (DayOfWeek day : DayOfWeek.values()) {
-            openingTimes.put(day, LocalTime.now().minusHours(5));
-            closingTimes.put(day, LocalTime.now().plusHours(5));
+            openingTimes.put(day, LocalTime.of(8, 0));
+            closingTimes.put(day, LocalTime.of(19, 0));
         }
+
         guestAlice.setEmail("Alice");
         guestBob.setEmail("Bob");
 
@@ -62,12 +68,12 @@ public class StoreTest {
 
         store.setKitchen(getInfiniteMockKitchen());
 
-        Order order = new Order(store, LocalDateTime.now());
+        Order order = new Order(store, testingTime);
         order.setGuest(guestBob);
         orders.add(order);
 
 
-        order = new Order(store, LocalDateTime.now().plusHours(1));
+        order = new Order(store, testingTime.plusHours(1));
         order.addCookie(globalRecipes.get(0), 1);
         order.addCookie(globalRecipes.get(2), 3);
         order.setGuest(guestAlice);
@@ -111,34 +117,42 @@ public class StoreTest {
 
     @Test
     public void checkOrderValidity() {
-        Order normalOrder = new Order(store, now.plusHours(3));
+        Order normalOrder = new Order(store, testingTime.plusHours(3));
         IntStream.range(1, 4).forEach(i -> normalOrder.addCookie(utils.randomRecipe(), i));
         assertTrue(store.checkOrderValidity(normalOrder));
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void checkOrderValidityEmpty(){
-        Order emptyOrder = new Order(store, now.plusHours(3));
+    @Test(expected = IllegalArgumentException.class)
+    public void checkOrderValidityEmpty() {
+        Order emptyOrder = new Order(store, testingTime.plusHours(3));
         store.checkOrderValidity(emptyOrder);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void checkOrderValidityTooEarly(){
-        Order tooEarlyOrder = new Order(store, now.minusHours(6));
+    public void checkOrderValidityTooEarly() {
+
+        //this is tomorrow but 1h before the store's opening
+        LocalDateTime dateTime = LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(7, 0));
+
+        Order tooEarlyOrder = new Order(store, dateTime);
         IntStream.range(1, 4).forEach(i -> tooEarlyOrder.addCookie(utils.randomRecipe(), i));
         store.checkOrderValidity(tooEarlyOrder);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void checkOrderValidityTooLate(){
-        Order tooLateOrder = new Order(store, now.plusHours(6));
+    public void checkOrderValidityTooLate() {
+
+        //this 1h after the store's closing
+        LocalDateTime dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(20, 0));
+
+        Order tooLateOrder = new Order(store, dateTime);
         IntStream.range(1, 4).forEach(i -> tooLateOrder.addCookie(utils.randomRecipe(), i));
         store.checkOrderValidity(tooLateOrder);
     }
 
     @Test
     public void placeOrder() {
-        Order normalOrder = new Order(store, now.plusHours(3));
+        Order normalOrder = new Order(store, testingTime.plusHours(3));
         normalOrder.setGuest(new Guest());
         for (int i = 1; i < 4; i++) {
             normalOrder.addCookie(utils.randomRecipe(), i);
@@ -149,7 +163,7 @@ public class StoreTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void placeOrderEmpty() {
-        Order emptyOrder = new Order(store, now.plusHours(3));
+        Order emptyOrder = new Order(store, testingTime.plusHours(3));
 
         store.placeOrder(emptyOrder);
     }
@@ -157,18 +171,17 @@ public class StoreTest {
     @Ignore
     @Test
     public void payingAnOrder() {
-        Order normalOrder = new Order(store, now.plusHours(3));
+        Order normalOrder = new Order(store, testingTime.plusHours(3));
         normalOrder.addCookie(utils.randomRecipe(), 10);
         normalOrder.setGuest(guestAlice);
         store.placeOrder(normalOrder);
         //assertFalse(normalOrder.isPayed());
-        store.setStatusPaymentOrder(DayOfWeek.TUESDAY, now.plusHours(3), "Alice");
+        store.setStatusPaymentOrder(DayOfWeek.TUESDAY, testingTime.plusHours(3), "Alice");
         //assertTrue(normalOrder.isPayed());
     }
 
     @Test
     public void findOrderFromDayTimeAndEmail() {
-        DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
         LocalDateTime pickUpTime = LocalDateTime.now();
         Guest guest = new Guest();
         guest.setEmail("email");
@@ -180,8 +193,7 @@ public class StoreTest {
 
     @Test
     public void findOrderWithDuplicateCriterias() {
-        DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
-        LocalDateTime pickUpTime = LocalDateTime.now();
+        LocalDateTime pickUpTime = testingTime;
         final Order order = new Order(store, pickUpTime);
         store.getOrders().add(order);
         order.setGuest(guestAlice);
@@ -190,27 +202,21 @@ public class StoreTest {
 
     @Test
     public void returnsEmptyOptionalOnEmptyOrderList() {
-        DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
-        LocalDateTime pickUpTime = LocalDateTime.now();
-        store = new Store("", utils.randomRecipe(), new ArrayList<>(), new HashMap<>(), new HashMap<>
-                (), 1.0, 1);
-        assertFalse(store.findOrder(pickUpTime, guestAlice.getEmail()).isPresent());
+        store = new Store("", utils.randomRecipe(), new ArrayList<>(), new HashMap<>(), new HashMap<>(), 1.0, 1);
+        assertFalse(store.findOrder(testingTime, guestAlice.getEmail()).isPresent());
     }
 
     @Test
     public void emptyWhenOrderNotFound() {
-        DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
-        LocalDateTime pickUpTime = LocalDateTime.now();
-        assertFalse(store.findOrder(pickUpTime, guestAlice.getEmail()).isPresent());
+        assertFalse(store.findOrder(testingTime, guestAlice.getEmail()).isPresent());
     }
 
 
     @Test
     public void cancelOrder() {
-        DayOfWeek pickUpDay = DayOfWeek.TUESDAY;
-        LocalDateTime pickUpTime = LocalDateTime.now().plusHours(3);
+        LocalDateTime pickUpTime = testingTime.plusHours(3);
         Guest guest = new Guest();
-        Order order  = guest.getTemporaryOrder();
+        Order order = guest.getTemporaryOrder();
         order.setPickUpTime(pickUpTime);
         order.setStore(store);
         order.addCookie(utils.randomRecipe(), 2);

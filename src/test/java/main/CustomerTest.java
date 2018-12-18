@@ -12,12 +12,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
+import static utils.TestUtils.getFixedClock;
 import static utils.TestUtils.getInfiniteMockKitchen;
-
 
 public class CustomerTest {
 
@@ -30,33 +29,33 @@ public class CustomerTest {
     private final HashMap<DayOfWeek, LocalTime> openingTimes = new HashMap<>();
     private final HashMap<DayOfWeek, LocalTime> closingTimes = new HashMap<>();
 
+    private final LocalDateTime testingTime = LocalDateTime.now().withHour(13).withMinute(20);
+    
     @Before
     public void before() {
 
-        Collection<Order> orders = new ArrayList<>();
-        customer = new Customer("", "", "", "", "");
+        CookieFirm.instance().setClock(getFixedClock(testingTime.getHour(), testingTime.getMinute()));
 
+        customer = new Customer("", "", "", "", "");
 
         for (int i = 0; i < 12; i++) {
             globalRecipes.add(utils.randomRecipe());
         }
 
-        // Each day the store opens 5h before now and closes 5h after now (for easier testing purposes)
+        // Each day the store opens at 8h00 before now and closes at 19h00
         for (DayOfWeek day : DayOfWeek.values()) {
-            openingTimes.put(day, LocalTime.now().minusHours(8));
-            closingTimes.put(day, LocalTime.now().plusHours(8));
+            openingTimes.put(day, LocalTime.of(8, 0));
+            closingTimes.put(day, LocalTime.of(19, 0));
         }
 
         store = new Store("", utils.randomRecipe(), globalRecipes, openingTimes, closingTimes, 15.5, 1);
-
         store.setKitchen(getInfiniteMockKitchen());
-
     }
 
 
     @Test
     public void cannotHaveDiscountfideltyP() {
-        Order order = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order = new Order(store, testingTime.plusHours(3));
 
         order.addCookie(globalRecipes.get(1), 10);
         customer.addToLoyaltyProgram();
@@ -67,7 +66,7 @@ public class CustomerTest {
 
     @Test
     public void cannotHaveDiscountNotInfideltyP() {
-        Order order = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order = new Order(store, testingTime.plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.addToOrderHistory(order);
 
@@ -76,7 +75,7 @@ public class CustomerTest {
 
     @Test
     public void canHaveDiscountfideltyP() {
-        Order order = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order = new Order(store, testingTime.plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.addToLoyaltyProgram();
         customer.addToOrderHistory(order);
@@ -87,7 +86,7 @@ public class CustomerTest {
     @Test
     public void notHaveALowerPriceFirstPurchase() {
         customer.addToLoyaltyProgram();
-        Order order = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order = new Order(store, testingTime.plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
 
@@ -99,12 +98,12 @@ public class CustomerTest {
     @Test
     public void haveALowerPriceSecondPurchase() {
         customer.addToLoyaltyProgram();
-        Order order = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order = new Order(store, testingTime.plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
         customer.placeOrder(true);
 
-        Order order2 = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order2 = new Order(store, testingTime.plusHours(3));
         order2.addCookie(globalRecipes.get(2), 2);
 
         customer.setTemporaryOrder(order2);
@@ -117,14 +116,12 @@ public class CustomerTest {
     @Test
     public void loseDiscountAfterSecondPurchase() {
         customer.addToLoyaltyProgram();
-        Order order = new Order(store, LocalDateTime.now().plusHours(3));
-//        fillKitchenForRecipe(store.getKitchen(),globalRecipes.get(1),30);
-//        fillKitchenForRecipe(store.getKitchen(),globalRecipes.get(2),3);
+        Order order = new Order(store, testingTime.plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
         customer.placeOrder(true);
 
-        Order order2 = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order2 = new Order(store, testingTime.plusHours(3));
         order2.addCookie(globalRecipes.get(2), 2);
         customer.setTemporaryOrder(order2);
         customer.placeOrder(true);
@@ -137,25 +134,25 @@ public class CustomerTest {
         customer.addToLoyaltyProgram();
 
         //First order, no discount
-        Order order = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order = new Order(store, testingTime.plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
         assertEquals(this.store.getRecipePrice(globalRecipes.get(1)) * 30 * this.store.getTax(), customer.placeOrder(true), delta);
 
         //Second order, first Discount :
-        Order order2 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        Order order2 = new Order(this.store, testingTime.plusHours(3));
         order2.addCookie(globalRecipes.get(2), 2);
         customer.setTemporaryOrder(order2);
         assertEquals(this.store.getRecipePrice(globalRecipes.get(2)) * 2 * this.store.getTax() * 0.9, customer.placeOrder(true), delta);
 
         //Third order, no discount
-        Order order3 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        Order order3 = new Order(this.store, testingTime.plusHours(3));
         order3.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order3);
         assertEquals(this.store.getRecipePrice(globalRecipes.get(1)) * 30 * this.store.getTax(), customer.placeOrder(true), delta);
 
         //Forth order,second discount :
-        Order order4 = new Order(this.store, LocalDateTime.now().plusHours(3));
+        Order order4 = new Order(this.store, testingTime.plusHours(3));
         order4.addCookie(globalRecipes.get(2), 2);
         customer.setTemporaryOrder(order4);
         assertEquals(this.store.getRecipePrice(globalRecipes.get(2)) * 2 * this.store.getTax() * 0.9, customer.placeOrder(true), delta);
@@ -164,7 +161,7 @@ public class CustomerTest {
 
     @Test
     public void doNothaveALowerPrice() {
-        Order order = new Order(store, LocalDateTime.now().plusHours(3));
+        Order order = new Order(store, testingTime.plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);
         customer.setTemporaryOrder(order);
 
@@ -195,7 +192,7 @@ public class CustomerTest {
         guest.setBankingData(bankingData);
         guest.setEmail("bob.rasovski@gmail.com");
 
-        Customer customer = Customer.from(guest, "Bob", "Rasovski", "0648593823","bob.rasovski@gmail.com", "password");
+        Customer customer = Customer.from(guest, "Bob", "Rasovski", "0648593823", "bob.rasovski@gmail.com", "password");
 
         assertEquals(guest.getId(), customer.getId());
         assertEquals(guest.getBankingData(), customer.getBankingData());

@@ -10,16 +10,15 @@ import store.Store;
 import utils.CucumberContext;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 public class OrderWithdrawalStepDefs {
 
     private final CucumberContext context = CucumberContext.getContext();
 
     private Order currentOrder;
-    private Exception illegalWithdraw;
 
     @Given("^An order \"([^\"]*)\"$")
     public void anOrder(String name) {
@@ -66,7 +65,7 @@ public class OrderWithdrawalStepDefs {
         try {
             currentOrder.withdraw();
         } catch (Exception e) {
-            illegalWithdraw = e;
+            context.pushException(e);
         }
     }
 
@@ -80,6 +79,10 @@ public class OrderWithdrawalStepDefs {
     public void theCurrentOrderStateIsnot(String targetStateName) {
         OrderState targetState = context.utils.stateFromName(targetStateName);
         assertNotEquals(currentOrder.getState(), targetState);
-        assertEquals(illegalWithdraw.getMessage(), "Trying to withdraw an unpayed order !");
+
+        Optional<Exception> optionalException = context.popException();
+
+        assertTrue(optionalException.isPresent());
+        assertEquals(optionalException.get().getMessage(), "Trying to withdraw an unpayed order !");
     }
 }

@@ -15,8 +15,7 @@ public class AnonymousOrderStepDefs {
 
     private final CucumberContext context = CucumberContext.getContext();
     private Order currentOrder;
-    private TestUtils utils = new TestUtils();
-
+    private final TestUtils utils = new TestUtils();
 
     @And("^The customer entered her \"([^\"]*)\" to place her order and pay \"([^\"]*)\"$")
     public void theCustomerEnteredHerToPlaceHerOrderAndPay(String sEmail, String online) {

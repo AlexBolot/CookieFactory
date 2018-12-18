@@ -16,8 +16,8 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static java.time.DayOfWeek.MONDAY;
 import static org.junit.Assert.*;
+import static utils.TestUtils.getFixedClock;
 import static utils.TestUtils.getInfiniteMockKitchen;
 
 public class GuestTest {
@@ -27,8 +27,12 @@ public class GuestTest {
     private final ArrayList<Recipe> globalRecipes = new ArrayList<>();
     private final TestUtils utils = new TestUtils();
 
+    private final LocalDateTime testingTime = LocalDateTime.now().withHour(13).withMinute(20);
+
     @Before
     public void before() {
+
+        CookieFirm.instance().setClock(getFixedClock(testingTime.getHour(), testingTime.getMinute()));
 
         for (int i = 0; i < 12; i++) {
             globalRecipes.add(utils.randomRecipe());
@@ -38,10 +42,13 @@ public class GuestTest {
 
         Manager manager = new Manager(store, "Bob");
 
-        manager.changeOpeningTime(MONDAY, LocalTime.now().minusHours(6));
-        manager.changeClosingTime(MONDAY, LocalTime.now().plusHours(6));
+        // Each day the store opens at 8h00 before now and closes at 19h00
+        for (DayOfWeek day : DayOfWeek.values()) {
+            manager.changeOpeningTime(day, LocalTime.of(8, 0));
+            manager.changeClosingTime(day, LocalTime.of(19, 0));
+        }
 
-        order = new Order(store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.next(DayOfWeek.MONDAY)));
+        order = new Order(store, testingTime.plusHours(3).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)));
         order.getStore().setKitchen(getInfiniteMockKitchen());
 
         order.addCookie(globalRecipes.get(0), 5);

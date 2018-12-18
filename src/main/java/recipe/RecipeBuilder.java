@@ -35,7 +35,6 @@ public class RecipeBuilder {
         if (!this.catalog.getCookingList().contains(cooking)) {
             throw new IllegalArgumentException("This cooking does not exist in the catalog");
         }
-        //TODO gérer le prix de la recette custom correctement
         return new Recipe("My Recipe", dough, flavor, toppings, mix, cooking, true);
     }
 }

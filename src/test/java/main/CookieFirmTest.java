@@ -15,7 +15,7 @@ import static org.junit.Assert.assertFalse;
 
 public class CookieFirmTest {
 
-    private CookieFirm cookieFirm =CookieFirm.instance();
+    private final CookieFirm cookieFirm = CookieFirm.instance();
     private final String guestEmail = new TestUtils().randomString();
     private final Guest guest = new Guest();
     private final Customer customer = new Customer("", "", "", "email@email.fr", "");
@@ -28,7 +28,7 @@ public class CookieFirmTest {
     }
 
     @After
-    public void after(){
+    public void after() {
         cookieFirm.getGuests().clear();
         cookieFirm.getAccounts().clear();
     }
@@ -62,7 +62,9 @@ public class CookieFirmTest {
         cookieFirm.addGuest(guest3);
 
         assertEquals("Guests incorrectly initialzed", 3, cookieFirm.getGuests().size());
-        Customer createdAccount = cookieFirm.createAccount("", "", "", guestEmail, "");
+
+        cookieFirm.createAccount("", "", "", guestEmail, "");
+
         assertEquals("Guest badly deleted", 2, cookieFirm.getGuests().size());
     }
 

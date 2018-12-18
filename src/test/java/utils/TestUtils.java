@@ -7,6 +7,11 @@ import recipe.Recipe;
 import recipe.ingredient.*;
 import store.Kitchen;
 
+import java.time.Clock;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
@@ -133,6 +138,37 @@ public class TestUtils {
         when(kitchen.recipeCapacity(any())).thenReturn(Integer.MAX_VALUE);
         when(kitchen.vendingPriceOf(any())).thenReturn((double) 1);
         return kitchen;
+    }
+
+    /**
+     * Obtains a clock that always returns the same instant.
+     * <p>
+     * This clock simply returns the specified instant.
+     * The main use case for this is in testing, where the fixed clock ensures
+     * tests are not dependent on the current clock.
+     *
+     * @param dayOfWeek Day of the week to adjust clock
+     * @param hour    Hours set to the clock
+     * @param minutes Minutes set to the clock
+     * @return A clock that always returns the defined instant
+     */
+    public static Clock getFixedClock(DayOfWeek dayOfWeek, int hour, int minutes) {
+        LocalDateTime localTime = LocalDateTime.now().withHour(hour).withMinute(minutes).with(TemporalAdjusters.nextOrSame(dayOfWeek));
+        return Clock.fixed(localTime.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+    }
+    /**
+     * Obtains a clock that always returns the same instant.
+     * <p>
+     * This clock simply returns the specified instant.
+     * The main use case for this is in testing, where the fixed clock ensures
+     * tests are not dependent on the current clock.
+     *
+     * @param hour    Hours set to the clock
+     * @param minutes Minutes set to the clock
+     * @return A clock that always returns the defined instant
+     */
+    public static Clock getFixedClock(int hour, int minutes) {
+        return getFixedClock(LocalDateTime.now().getDayOfWeek(), hour, minutes);
     }
 
     public static BankAPI lenientBankAPI() {

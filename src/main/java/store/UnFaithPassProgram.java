@@ -17,7 +17,7 @@ public class UnFaithPassProgram {
         this.rewardValueToCashRatio = rewardValueToCashRatio;
     }
 
-    public Reward getRewardFromRecipe(Recipe recipe) {
+    Reward getRewardFromRecipe(Recipe recipe) {
         return this.rewards.getOrDefault(recipe, null);
     }
 

@@ -16,6 +16,9 @@ public class Catalog {
     private List<Mix> mixList = new ArrayList<>();
     private List<Cooking> cookingList = new ArrayList<>();
 
+    /**
+     * Initialise the catalog with the dough, flavor, topping, mix and cooking existing
+     */
     public Catalog() {
 
         this.doughList.addAll(Arrays.asList(
@@ -119,7 +122,11 @@ public class Catalog {
     }
 
 
-
+    /**
+     *
+     * @param mixName name to check
+     * @return the corresponding mix or null
+     */
     public Mix mixFromName(String mixName) {
         for (Mix mix : getMixList()) {
             if (mix.getName().equalsIgnoreCase(mixName)) return mix;
@@ -127,6 +134,11 @@ public class Catalog {
         return null;
     }
 
+    /**
+     *
+     * @param cookingName name to check
+     * @return the corresponding cooking or null
+     */
     public Cooking cookingFromName(String cookingName) {
         for (Cooking cooking : getCookingList()) {
             if (cooking.getName().equalsIgnoreCase(cookingName)) return cooking;
@@ -134,6 +146,11 @@ public class Catalog {
         return null;
     }
 
+    /**
+     *
+     * @param doughName name to check
+     * @return the corresponding dough or null
+     */
     public Dough doughFromName(String doughName) {
         for (Dough dough : getDoughList()) {
             if (dough.getName().equalsIgnoreCase(doughName)) return dough;
@@ -141,6 +158,11 @@ public class Catalog {
         return null;
     }
 
+    /**
+     *
+     * @param toppingName name to check
+     * @return the corresponding topping or null
+     */
     public Topping toppingFromName(String toppingName) {
         for (Topping topping : getToppingList()) {
             if (topping.getName().equalsIgnoreCase(toppingName)) return topping;
@@ -148,6 +170,11 @@ public class Catalog {
         return null;
     }
 
+    /**
+     *
+     * @param flavorName name to check
+     * @return the corresponding flavor or null
+     */
     public Flavor flavorFromName(String flavorName) {
         for (Flavor flavor : getFlavorList()) {
             if (flavor.getName().equalsIgnoreCase(flavorName)) return flavor;

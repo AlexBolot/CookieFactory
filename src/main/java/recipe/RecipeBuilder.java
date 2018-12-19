@@ -10,12 +10,12 @@ public class RecipeBuilder {
     /**
      * Create a recipe from ingredients and types of preparation with the certification that they all exists in the catalog
      *
-     * @param dough
-     * @param flavor
-     * @param toppings
-     * @param mix
-     * @param cooking
-     * @return
+     * @param dough of the recipe
+     * @param flavor of the recipe (optional)
+     * @param toppings of the recipe
+     * @param mix of the recipe
+     * @param cooking of the recipe
+     * @return the created recipe
      */
     public Recipe createRecipe(Dough dough, Flavor flavor, List<Topping> toppings, Mix mix, Cooking cooking) {
         for (Topping topping : toppings) {

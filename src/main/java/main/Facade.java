@@ -75,6 +75,16 @@ public class Facade {
 
 
     //MANAGER
+
+    /**
+     * Manager change the opening and closing time of one day for his store
+     * @param manager name of the manager
+     * @param dayName day to modify schedule
+     * @param beginHours hour of opening
+     * @param beginMinute minute of opening
+     * @param endHours hour of closing
+     * @param endMinute minute of closing
+     */
     public void managerChangeOpeningClosingTime(String manager, String dayName,
                                                 int beginHours,
                                                 int beginMinute,
@@ -89,12 +99,26 @@ public class Facade {
         }
     }
 
+    /**
+     * Manager change the opening time for one day
+     * @param manager name of the manager
+     * @param dayName day to modify schedule
+     * @param beginHours hour of opening
+     * @param beginMinute minute of opening
+     */
     public void managerChangeOpeningTime(String manager, String dayName, int beginHours, int beginMinute) {
         DayOfWeek day = dayFromName(dayName);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
         manager1.ifPresent(manager2 -> manager2.changeOpeningTime(day, LocalTime.of(beginHours, beginMinute, 0,0)));
     }
 
+    /**
+     * Manager change the closing time for one day
+     * @param manager name of the manager
+     * @param dayName day to modify schedule
+     * @param endHours hour of closing
+     * @param endMinute minute of closing
+     */
     public void managerChangeClosingTime(String manager, String dayName, int endHours, int endMinute) {
         DayOfWeek day = dayFromName(dayName);
         Optional<Manager> manager1 = cookieFirm.findManager(manager);
@@ -194,12 +218,25 @@ public class Facade {
     }
 
     //UTILS MANAGER
+
+    /**
+     * Given a sting parse it to transform it in localtime
+     * @param time string of time
+     * @return a local time corresponding to the string
+     */
     private LocalTime transformeStringToTime(String time) {
         int opHour = Integer.parseInt(time.split(":")[0]);
         int opMinutes = Integer.parseInt(time.split(":")[1]);
         return LocalTime.of(opHour, opMinutes);
     }
 
+    /**
+     * Manager change the closing and opening time of one day for his store
+     * @param m object manager
+     * @param day object representing the day
+     * @param opTime local time representing the opening time
+     * @param clTime local time representing the closing time
+     */
     private void managerChangeTime(Manager m, DayOfWeek day, LocalTime opTime, LocalTime clTime) {
         m.changeOpeningTime(day, opTime);
         m.changeClosingTime(day, clTime);
@@ -258,13 +295,14 @@ public class Facade {
 
     //GUEST ADD PICKUPTIME
 
-    //TODO remove since unused
-    public void guestAddPickTimeToOrder(int id, int time, String pickupDay) {
-        //Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
-        //opGuest.ifPresent(guest -> guest.getTemporaryOrder().setPickUpTime(generateTime(time, pickupDay)));
-    }
-
-
+    /**
+     * Guest add a pick time,day and store to his order
+     * @param id of the current guest
+     * @param storeName name of the store where to place this order
+     * @param hours when to pick up the order
+     * @param minutes when to pick up the order
+     * @param pickupDay when to pick up the order
+     */
     public void guestAddPickUpTimeAndStoreToOrder(int id, String storeName, int hours, int minutes, String pickupDay) {
         Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
         Optional<Store> opStore = this.cookieFirm.findStore(storeName);
@@ -333,33 +371,6 @@ public class Facade {
     }
 
     // GUEST PLACE ORDER
-    /**
-     * Guest add cookie to his order and place his order at the same time
-     * @param id of the current guest
-     * @param sStore name of the store to link to the order
-     * @param nbCookies to order
-     * @param pickupTime pickup time of the order
-     * @param pickUpDay pickup day of the order
-     * @param payedOnline boolean that indicate if the order is payed online or not
-     */
-    //TODO remove since unused
-
-    public void guestPlaceOrderWithCookies(int id, String sStore, int nbCookies, int
-            pickupTime, String pickUpDay, Boolean payedOnline) {
-        /*
-        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
-        Optional<Store> opStore = this.cookieFirm.findStore(sStore);
-
-        if (opGuest.isPresent() && opStore.isPresent()) {
-            Order order = opGuest.get().getTemporaryOrder();
-            order.addCookie(opStore.get().getMonthlyRecipe(), nbCookies);
-            order.setStore(opStore.get());
-            order.setPickUpTime(generateTime(pickupTime, pickUpDay));
-
-            opGuest.get().placeOrder(payedOnline);
-        }*/
-    }
-
     /**
      * Customer place his order
      * @param id of the current Customer
@@ -502,6 +513,16 @@ public class Facade {
         return false;
     }
 
+    /**
+     * Allows an Employee to interact with an order from a store (WITHDRAW)
+     * @param storeName Name of the store containing the order
+     * @param hours     Hours of the order's pickupTime (used to find the order)
+     * @param minutes   Minutes of the order's pickupTime (used to find the order)
+     * @param day       Day of the order's pickupTime (used to find the order)
+     * @param email     Email of the Guest (owner of the order, used to find the order)
+     * @param action    String value of the Action to do. Values allowed : [CANCELED, WITHDRAWN]
+     * @return True if the action was successfully applyed of the order. False otherwise
+     */
     public boolean anEmployeeMakeAnActionOnOrder(String storeName, int hours, int minutes, String day, String email, String action) {
         return anEmployeeMakeAnActionOnOrder(storeName,hours,minutes,day,email,action,0,0);
     }
@@ -535,6 +556,11 @@ public class Facade {
     }
 
 
+    /**
+     *
+     * @param dayName name of the day
+     * @return an object Day of Week
+     */
     private DayOfWeek dayFromName(String dayName) {
         for (DayOfWeek day : DayOfWeek.values()) {
             if (day.name().equalsIgnoreCase(dayName)) return day;
@@ -542,7 +568,12 @@ public class Facade {
         return null;
     }
 
-
+    /**
+     *
+     * @param type of the ingredient
+     * @param ingredientName name of the ingredient
+     * @return the corresponding ingredient
+     */
     public Ingredient ingredientFromName(String type, String ingredientName) {
         switch (type) {
             case "dough":
@@ -555,6 +586,13 @@ public class Facade {
         return null;
     }
 
+    /**
+     * Create a topping list given name of toppings
+     * @param topping name of a topping
+     * @param topping2 name of the second topping (optional)
+     * @param topping3 name of the third topping (optional)
+     * @return list of topping
+     */
     private List<Topping> createToppingList(String topping, String topping2, String topping3) {
         List<Topping> toppingList = new ArrayList<>();
         toppingList.add(cookieFirm.getCatalog().toppingFromName(topping));

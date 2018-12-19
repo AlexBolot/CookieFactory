@@ -37,7 +37,6 @@ public class CommonStepDefs {
     @Given("^A customer \"([^\"]*)\"$")
     public void aCustomer(String name) {
         context.setCurrentId(context.getFacade().createACustomer(name, name, "07475674", utils.createEmail(name), name + "1234"));
-        context.getFacade().setBankingDataCustomer(utils.createEmail(name), "02833777");
     }
 
     @Given("^A guest$")

@@ -10,6 +10,7 @@ Feature: Loyalty Program
 
   Scenario: An customer have discount at his second order
     Given A customer "Frank"
+    Given The customer set banking data with "Frank", "Franko" and "B375848H4AAG"
     Given "Frank@Frank.fr" is in the loyaltyProgram
     Given The customer choose a store "store" to pickup "Monday" at 16:30
     Given The customer add 40 cookies "White Dog" from the "store"

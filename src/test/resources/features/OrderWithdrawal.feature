@@ -8,6 +8,7 @@ Feature: Order Withdrawal
 
   Scenario: A customer withdraws a paid order
     Given A customer "Jacko"
+    Given The customer set banking data with "Jacko", "Jackoko" and "B375848H4AAG"
     Given The customer choose a store "store" to pickup "Monday" at 16:30
     Given The customer add 6 cookies "White Dog" from the "store"
     Given The customer place his order and pay "online"

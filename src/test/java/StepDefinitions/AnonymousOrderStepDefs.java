@@ -28,12 +28,7 @@ public class AnonymousOrderStepDefs {
 
     @And("^\"([^\"]*)\" pay her cookies$")
     public void payHerCookies(String customerName) {
-        Optional<Guest> opClient = context.cookieFirm().findGuestOrCustomer(context.getCurrentId());
-
-        if (opClient.isPresent())
-            currentOrder.setBankingData(opClient.get().getBankingData());
-        else
-            throw new IllegalStateException("There is no current client in the cookiefirm");
+        //
     }
 
 }

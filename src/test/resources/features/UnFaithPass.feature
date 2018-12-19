@@ -12,6 +12,7 @@ Feature: Change the unfaithPass ratio of a store
     Given The store "store" applies an UnFaithPass which gives 5 point for the recipe "White Dog"
     Given The store "store" applies an UnFaithPass which gives 2 free Cookies for the recipe "Simple Cookie"
     And A customer "Eustache"
+    And The customer set banking data with "Eustache", "Eustacheo" and "B375848H4AAG"
     And The customer "Eustache" has an empty UnFaithPass
     And The customer choose a store "store" to pickup "Monday" at 16:30
     And The customer add 1 cookies "White Dog" from the "store"
@@ -31,6 +32,7 @@ Feature: Change the unfaithPass ratio of a store
 
   Scenario: A customer withdraw his order and claim free cookies
     Given A customer "Robert"
+    Given The customer set banking data with "Robert", "Roberto" and "B375848H4AAG"
     And The customer "Robert" has an UnFaithPass with 1 points and 2 free Cookies
     And The customer choose a store "store" to pickup "Monday" at 16:30
     And The customer add 2 cookies "Simple Cookie" from the "store"

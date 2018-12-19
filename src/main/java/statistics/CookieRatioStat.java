@@ -39,5 +39,12 @@ public class CookieRatioStat extends Statistic<Map<String, Double>>{
             value.put(r, value.get(r) /  total);
         }
     }
+    public String serialize() {
+        StringBuilder output= new StringBuilder("{");
+        for (String s : value.keySet()) {
+            output.append("\"").append(s).append("\":\"").append(value.get(s)).append("\",");
+        }
+        return output.substring(0,output.length()-1)+"}";
+    }
 
 }

@@ -88,4 +88,8 @@ public class IngredientRatio {
     public Map<Cooking, Double> getCookingRatio() {
         return cookingRatio;
     }
+
+    public String serialize() {
+        return null;
+    }
 }

@@ -32,4 +32,8 @@ public class UnweightedIngredientCustomStat extends Statistic<IngredientRatio> {
     public void cleanUp() {
         this.value.normalizeAll();
     }
+
+    public String serialize() {
+        return value.serialize();
+    }
 }

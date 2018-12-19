@@ -13,5 +13,7 @@ public abstract class Statistic<T> {
 
     abstract void cleanUp();
 
+    abstract String serialize();
+
     public T getStat() {return value;}
 }

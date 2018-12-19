@@ -90,6 +90,26 @@ public class IngredientRatio {
     }
 
     public String serialize() {
-        return null;
+        String output ="{\"dough\": {";
+        for (Dough dough : doughRatio.keySet()) {
+            output+="\""+dough.getName()+"\":\""+doughRatio.get(dough)+"\",";
+        }
+        output = output.substring(0,output.length()-1)+"},\"flavor\": {";
+        for (Flavor flavor : flavorRatio.keySet()) {
+            output+="\""+flavor.getName()+"\":\""+flavorRatio.get(flavor)+"\",";
+        }
+        output = output.substring(0,output.length()-1)+"},\"topping\": {";
+        for (Topping topping : toppingRatio.keySet()) {
+            output+="\""+topping.getName()+"\":\""+toppingRatio.get(topping)+"\",";
+        }
+        output = output.substring(0,output.length()-1)+"},\"mix\": {";
+        for (Mix mix : mixRatio.keySet()) {
+            output+="\""+mix.getName()+"\":\""+mixRatio.get(mix)+"\",";
+        }
+        output = output.substring(0,output.length()-1)+"},\"cooking\": {";
+        for (Cooking cooking : cookingRatio.keySet()) {
+            output+="\""+cooking.getName()+"\":\""+cookingRatio.get(cooking)+"\",";
+        }
+        return output.substring(0,output.length()-1)+"}}";
     }
 }

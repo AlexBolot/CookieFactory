@@ -18,5 +18,23 @@ Feature: Change the unfaithPass ratio of a store
     And The customer add 2 cookies "Simple Cookie" from the "store"
     And The customer place his order and pay "online"
     When The "store" purchase the order with 16:30, "Monday", "Eustache@Eustache.fr" and "WITHDRAWN" it
-    Then the employee delivers the current order
-    And The customer "Eustache" has 5 point and 4 free Cookies on his UnFaithPass
+    And The customer "Eustache" has 5 points and 4 free Cookies on his UnFaithPass
+
+  Scenario: A customer pay with point of his UnFaithPass at the withdrawal of his order
+    Given A customer "Andrée"
+    And The customer "Andrée" has an UnFaithPass with 2 points and 0 free Cookies
+    And The customer choose a store "store" to pickup "Monday" at 16:30
+    And The customer add 2 cookies "Simple Cookie" from the "store"
+    And The customer place his order and pay "not online"
+    When The "store" purchase the order with 16:30, "Monday", "Andrée@Andrée.fr" and "WITHDRAWN" it paying it with 2 UnFaithPass's points and claiming 0 free Cookies
+    And The customer "Andrée" has 0 points and 0 free Cookies on his UnFaithPass
+
+  Scenario: A customer withdraw his order and claim free cookies
+    Given A customer "Robert"
+    And The customer "Robert" has an UnFaithPass with 1 points and 2 free Cookies
+    And The customer choose a store "store" to pickup "Monday" at 16:30
+    And The customer add 2 cookies "Simple Cookie" from the "store"
+    And The customer place his order and pay "online"
+    When The "store" purchase the order with 16:30, "Monday", "Robert@Robert.fr" and "WITHDRAWN" it paying it with 0 UnFaithPass's points and claiming 2 free Cookies
+    And The customer "Robert" has 1 points and 0 free Cookies on his UnFaithPass
+

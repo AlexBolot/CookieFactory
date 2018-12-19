@@ -33,7 +33,7 @@ public class UnFaithPassAPI {
      * @param usedFreeCookies , number of free cookies asked
      */
     public boolean use(int usedPoints, int usedFreeCookies) {
-        if (usedPoints < points || usedFreeCookies < freeCookies) {
+        if (usedPoints > points || usedFreeCookies > freeCookies) {
             return false;
         }
         this.points -= usedPoints;
@@ -47,6 +47,14 @@ public class UnFaithPassAPI {
 
     public int getFreeCookies() {
         return freeCookies;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setFreeCookies(int freeCookies) {
+        this.freeCookies = freeCookies;
     }
 
     @Override

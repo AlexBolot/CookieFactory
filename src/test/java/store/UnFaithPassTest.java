@@ -1,8 +1,10 @@
 package store;
 
+import api.UnFaithPassAPI;
 import main.CookieFirm;
 import main.Guest;
 import order.Order;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -42,36 +44,26 @@ public class UnFaithPassTest {
         }
     }
 
-    @Ignore
-    @Test(expected = IllegalStateException.class)
-    public void getRewardsWithoutUnFaithPass() {
-//        Order order1 = new Order(this.store, testingTime.plusHours(3).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)));
-//        order1.setGuest(new Guest());
-//        order1.addCookie(cookieFirm.getGlobalRecipes().get(0), 1);
-//        store.getRewards(order1);
-    }
-
-    @Ignore
     @Test
     public void basicRewardCount() {
-//        Map<Recipe, Reward> rewards = new HashMap<>();
-//        Reward reward1 = new Reward(false, 5);
-//        Reward reward2 = new Reward(true, 0);
-//        rewards.put(cookieFirm.getGlobalRecipes().get(0), reward1);
-//        rewards.put(cookieFirm.getGlobalRecipes().get(2), reward2);
-//        this.store.applyUnFaithPathProgram(new UnFaithPassProgram(rewards));
-//
-//        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)));
-//        order1.setGuest(new Guest());
-//        order1.addCookie(cookieFirm.getGlobalRecipes().get(0), 3);
-//        order1.addCookie(cookieFirm.getGlobalRecipes().get(1), 5);
-//        order1.addCookie(cookieFirm.getGlobalRecipes().get(2), 1);
-//
-//        List<Reward> aquiredRewards = this.store.collectRewards(order1);
-//
-//        assertEquals(4, aquiredRewards.size());
-//        assertEquals(reward1, aquiredRewards.get(2));
-//        assertEquals(reward2, aquiredRewards.get(3));
+        Map<Recipe, Reward> rewards = new HashMap<>();
+        Reward reward1 = new Reward(false, 5);
+        Reward reward2 = new Reward(true, 1);
+        rewards.put(cookieFirm.getGlobalRecipes().get(0), reward1);
+        rewards.put(cookieFirm.getGlobalRecipes().get(2), reward2);
+        this.store.applyUnFaithPathProgram(new UnFaithPassProgram(rewards));
+
+        Order order1 = new Order(this.store, LocalDateTime.now().plusHours(3).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)));
+        order1.setGuest(new Guest());
+        order1.addCookie(cookieFirm.getGlobalRecipes().get(0), 3);
+        order1.addCookie(cookieFirm.getGlobalRecipes().get(1), 5);
+        order1.addCookie(cookieFirm.getGlobalRecipes().get(2), 2);
+
+        UnFaithPassAPI unFaithPassAPI = new UnFaithPassAPI("","");
+        this.store.collectRewards(order1,unFaithPassAPI);
+
+        Assert.assertEquals(15,unFaithPassAPI.getPoints());
+        Assert.assertEquals(2,unFaithPassAPI.getFreeCookies());
 
     }
 

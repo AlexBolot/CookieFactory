@@ -1,6 +1,7 @@
 package store;
 
 
+import api.UnFaithPassAPI;
 import main.CookieFirm;
 import order.Order;
 import order.OrderLine;
@@ -21,7 +22,7 @@ public class Store {
     private double tax;
     private double customRecipeeMargin;
     private Kitchen kitchen;
-    private UnFaithPass unFaithPass;
+    private UnFaithPassProgram unFaithPassProgram;
 
     public Store(String name,
                  Recipe monthlyRecipe,
@@ -63,23 +64,24 @@ public class Store {
     }
 
     /**
-     * Provides a stack of all the rewards corresponding to a given order and the unFaithPath applied to the store
+     * Update a client unFaithPass according to all the rewards corresponding to a given order and the unFaithPass applied to the store
      *
      * @param order scanned for rewards
      * @return a list of reward for all cookies in the order
      */
-    public List<Reward> getRewards(Order order) {
-        if (this.unFaithPass == null) {
-            throw new IllegalStateException("Trying to check for rewards without unFaithPass applied");
-        }
-        List<Reward> rewards = new ArrayList<>();
-        for (OrderLine orderline : order.getOrderLines()) {
-            Reward reward = unFaithPass.getRewardFromRecipe(orderline.getRecipe());
-            if (reward != null) {
-                rewards.addAll(Collections.nCopies(orderline.getAmount(), reward));
+    public void collectRewards(Order order, UnFaithPassAPI unFaithPassAPI) {
+        if (this.unFaithPassProgram != null) {
+            for (OrderLine orderline : order.getOrderLines()) {
+                Reward reward = unFaithPassProgram.getRewardFromRecipe(orderline.getRecipe());
+                if (reward != null) {
+                    if (reward.hasFreeCookie()) {
+                        unFaithPassAPI.win(0, orderline.getAmount() * reward.getValue());
+                    } else {
+                        unFaithPassAPI.win(orderline.getAmount() * reward.getValue(), 0);
+                    }
+                }
             }
         }
-        return rewards;
     }
 
     /**
@@ -189,6 +191,23 @@ public class Store {
                 .findFirst();
     }
 
+    /**
+     * Update the stock of the kitchen after the cooking of free cookies
+     *
+      * @param amount number of free cookie cooked
+     */
+    public void cookFreeCookie(int amount) {
+        double price=Double.MAX_VALUE;
+        Recipe cheapestRecipe=null;
+        for (Recipe recipe : this.globalRecipes) {
+            if (this.getRecipePrice(recipe)<price) {
+                price = this.getRecipePrice(recipe);
+                cheapestRecipe=recipe;
+            }
+        }
+        kitchen.cook(cheapestRecipe,amount);
+    }
+
     // region --------------- Getters and Setters ---------------
 
     /**
@@ -243,8 +262,8 @@ public class Store {
         return name;
     }
 
-    public UnFaithPass getUnFaithPass() {
-        return this.unFaithPass;
+    public UnFaithPassProgram getUnFaithPassProgram() {
+        return this.unFaithPassProgram;
     }
 
     /**
@@ -276,8 +295,8 @@ public class Store {
         closingTimes.put(day, localTime);
     }
 
-    public void applyUnFaithPath(UnFaithPass unFaithPass) {
-        this.unFaithPass = unFaithPass;
+    public void applyUnFaithPathProgram(UnFaithPassProgram unFaithPass) {
+        this.unFaithPassProgram = unFaithPass;
     }
 
     public double getRecipePrice(Recipe recipe) {

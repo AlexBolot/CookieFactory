@@ -5,7 +5,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.junit.Assert;
 import store.Store;
-import store.UnFaithPass;
+import store.UnFaithPassProgram;
 import utils.CucumberContext;
 import utils.TestUtils;
 
@@ -24,7 +24,7 @@ public class ChangeUnFaithPassRatioStepdefs {
         Store store = context.getFacade().addAStoreToFirm(storeName, 10, 1);
         store.setMonthlyRecipe(utils.randomRecipe());
         store.setKitchen(getInfiniteMockKitchen());
-        store.applyUnFaithPath(new UnFaithPass(new HashMap<>(), ratio));
+        store.applyUnFaithPathProgram(new UnFaithPassProgram(new HashMap<>(), ratio));
 
     }
 
@@ -37,7 +37,7 @@ public class ChangeUnFaithPassRatioStepdefs {
     public void convertingRewardValuePointsGivesUnitsOfCash(int rewardValuePoints, String storeName, int expectedCash) {
         Optional<Store> store = context.cookieFirm().findStore(storeName);
         if(store.isPresent()) {
-            double actualCash = store.get().getUnFaithPass().getCashFromRewardValue(rewardValuePoints);
+            double actualCash = store.get().getUnFaithPassProgram().getCashFromRewardValue(rewardValuePoints);
 
             Assert.assertEquals(expectedCash, actualCash, 0.0001);
         }

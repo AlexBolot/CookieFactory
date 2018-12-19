@@ -471,19 +471,17 @@ public class Facade {
      * @param action    String value of the Action to do. Values allowed : [CANCELED, WITHDRAWN]
      * @return True if the action was successfully applyed of the order. False otherwise
      */
-    public boolean anEmployeeMakeAnActionOnOrder(String storeName, int hours, int minutes, String day, String email, String action) {
+    public boolean anEmployeeMakeAnActionOnOrder(String storeName, int hours, int minutes, String day, String email, String action, int points, int freeCookie) {
         Optional<Store> opStore = this.cookieFirm.findStore(storeName);
-
         if (opStore.isPresent()) {
             Optional<Order> opOrder = opStore.get().findOrder(generateTime(hours, minutes, day), email);
-
             if (opOrder.isPresent()) {
                 switch (action.toUpperCase()) {
                     case "CANCELED":
                         opOrder.get().cancel();
                         return true;
                     case "WITHDRAWN":
-                        opOrder.get().withdraw();
+                        opOrder.get().withdraw(points,freeCookie);
                         return true;
                     default:
                         throw new IllegalArgumentException("Unkown action on order : " + action);
@@ -491,6 +489,10 @@ public class Facade {
             }
         }
         return false;
+    }
+
+    public boolean anEmployeeMakeAnActionOnOrder(String storeName, int hours, int minutes, String day, String email, String action) {
+        return anEmployeeMakeAnActionOnOrder(storeName,hours,minutes,day,email,action,0,0);
     }
 
     /**

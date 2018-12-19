@@ -1,6 +1,7 @@
 package main;
 
 import api.BankingData;
+import api.UnFaithPassAPI;
 import order.Order;
 import recipe.Recipe;
 import recipe.RecipeBuilder;
@@ -15,6 +16,7 @@ public class Guest {
     private Order temporaryOrder;
     private String email;
     private BankingData bankingData;
+    private UnFaithPassAPI unFaithPass;
 
     private static int IdCount = 0;
 
@@ -91,6 +93,10 @@ public class Guest {
     public void setBankingData(BankingData bankingData) {
         this.bankingData = bankingData;
     }
+
+    public UnFaithPassAPI getUnFaithPass() {return unFaithPass;}
+
+    public void setUnFaithPass (UnFaithPassAPI unFaithPassAPI) {this.unFaithPass = unFaithPassAPI;}
 
     public boolean isInLoyaltyProgram() {
         return false;

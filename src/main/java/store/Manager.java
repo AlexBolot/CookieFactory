@@ -33,7 +33,7 @@ public class Manager {
     }
 
     public void changeRewardPointsToValueRatio(double ratio){
-        this.store.getUnFaithPass().setRewardValueToCashRatio(ratio);
+        this.store.getUnFaithPassProgram().setRewardValueToCashRatio(ratio);
     }
 
     /**

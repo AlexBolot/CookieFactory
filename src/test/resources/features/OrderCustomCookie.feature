@@ -7,6 +7,7 @@ Feature: Guest order custom cookie
     Given "Francis" the manager of "store"
     Given The store managed by "Francis" opens "Monday" at 8:00 and closes at 17:30
     Given A guest
+    And The customer set banking data with "Jack", "Jacko" and "A275848H474"
 
   Scenario: A guest order a custom cookie with one topping
     Given The customer choose a store "store" to pickup "Monday" at 16:30

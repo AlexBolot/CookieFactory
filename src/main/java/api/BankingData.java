@@ -2,6 +2,7 @@ package api;
 
 import java.util.Objects;
 
+
 public class BankingData {
 
     private final String firstName;
@@ -24,6 +25,22 @@ public class BankingData {
 
     String getAccountIdentifier() {
         return accountIdentifier;
+    }
+
+
+    /**
+     * Check validity of a banking data account
+     */
+    public void checkValidity() {
+
+        if (getFirstName().isEmpty())
+            throw new IllegalArgumentException("First name is empty");
+
+        if (getLastName().isEmpty())
+            throw new IllegalArgumentException("Last name is empty");
+
+        if (getAccountIdentifier().isEmpty())
+            throw new IllegalArgumentException("Account identifier is empty");
     }
 
     @Override

@@ -11,6 +11,7 @@ Feature: Cancel order
   Scenario: An employee cancel an order
     Given The customer choose a store "store" to pickup "Monday" at 16:35
     Given The customer add 6 cookies "White Dog" from the "store"
+    Given The customer set banking data with "Jack", "Jacko" and "A275848H474"
     And An employee see the "store"'s orders
     When The customer place his order and pay "online"
     Then The "store" purchase the order with 16:35, "Monday", "Jack@Jack.fr" and "Canceled" it

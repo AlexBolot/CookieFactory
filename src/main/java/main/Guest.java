@@ -30,11 +30,11 @@ public class Guest {
     }
 
     public double placeOrder(boolean onlinePayment) {
+        if (onlinePayment) {
+            temporaryOrder.setBankingData(bankingData);
+        }
 
         double price = temporaryOrder.getStore().placeOrder(temporaryOrder);
-
-        if (onlinePayment)
-            temporaryOrder.setBankingData(bankingData);
 
         setTemporaryOrder(initOrder());
 

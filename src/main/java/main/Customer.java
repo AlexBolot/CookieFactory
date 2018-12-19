@@ -54,11 +54,11 @@ public class Customer extends Guest {
         if (order.getBankingData() != null)
             throw new IllegalStateException("The order you are trying to place has already been paid");
 
-        double price = order.getStore().placeOrder(order);
 
-        if (onlinePayment) {
+        if (onlinePayment)
             order.setBankingData(this.getBankingData());
-        }
+
+        double price = order.getStore().placeOrder(order);
 
         if (loyaltyProgram && haveDiscount) {
             useDiscount();

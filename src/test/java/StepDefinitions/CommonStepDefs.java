@@ -1,5 +1,6 @@
 package StepDefinitions;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -102,5 +103,10 @@ public class CommonStepDefs {
         DayOfWeek dayOfWeek = DayOfWeek.valueOf(dayName.toUpperCase());
 
         context.cookieFirm().setClock(getFixedClock(dayOfWeek, hours, minutes));
+    }
+
+    @Given("^The customer set banking data with \"([^\"]*)\", \"([^\"]*)\" and \"([^\"]*)\"$")
+    public void theCustomerSetBankingDataWithAnd(String name, String lastName, String accountNumber) throws Throwable {
+        context.getFacade().guestAddBankingData(context.getCurrentId(), name, lastName, accountNumber);
     }
 }

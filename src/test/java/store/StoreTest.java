@@ -1,5 +1,6 @@
 package store;
 
+import api.BankingData;
 import main.CookieFirm;
 import main.Guest;
 import order.Order;
@@ -216,6 +217,7 @@ public class StoreTest {
     public void cancelOrder() {
         LocalDateTime pickUpTime = testingTime.plusHours(3);
         Guest guest = new Guest();
+        guest.setBankingData(new BankingData("John","Doe","A3535NG"));
         Order order = guest.getTemporaryOrder();
         order.setPickUpTime(pickUpTime);
         order.setStore(store);

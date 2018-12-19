@@ -386,6 +386,18 @@ public class Facade {
     }
 
 
+    /**
+     * Guest add banking data to pay his order online
+     * @param id of the current customer
+     * @param name related to the banking account
+     * @param lastName related to the banking account
+     * @param accountID id of the banking account
+     */
+    public void guestAddBankingData(int id, String name, String lastName, String accountID){
+        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
+        opGuest.ifPresent(guest -> guest.setBankingData(new BankingData(name, lastName, accountID)));
+    }
+
 
     //CUSTOMER RELATED
 
@@ -434,9 +446,8 @@ public class Facade {
 
 
 
-    //EMPLOYEE RELATED
-    //TODO ajouter dans le bank id ajouter juste avec le accountID
 
+    //EMPLOYEE RELATED
     /**
      * Allows an Employee to know the current state of an order
      *

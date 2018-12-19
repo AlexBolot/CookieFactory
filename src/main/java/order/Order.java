@@ -156,6 +156,17 @@ public class Order {
         return price;
     }
 
+    /**
+     * Add a banking data to an order if its payed online
+     * Check the validity of the account
+     * @param bankingData of the guest
+     */
+    public void setBankingData(BankingData bankingData) {
+        bankingData.checkValidity();
+        this.bankingData = bankingData;
+    }
+
+
     public Store getStore() {
         return this.store;
     }
@@ -172,9 +183,7 @@ public class Order {
         return bankingData;
     }
 
-    public void setBankingData(BankingData bankingData) {
-        this.bankingData = bankingData;
-    }
+
 
     public void setStore(Store store) {
         this.store = store;

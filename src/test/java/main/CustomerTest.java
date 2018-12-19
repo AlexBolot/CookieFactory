@@ -38,6 +38,8 @@ public class CustomerTest {
 
         customer = new Customer("", "", "", "", "");
 
+
+        customer.setBankingData(new BankingData("John", "Doe","A234H430JH"));
         for (int i = 0; i < 12; i++) {
             globalRecipes.add(utils.randomRecipe());
         }
@@ -132,7 +134,6 @@ public class CustomerTest {
     @Test
     public void recoverDiscountAfter4Purchase() {
         customer.addToLoyaltyProgram();
-
         //First order, no discount
         Order order = new Order(store, testingTime.plusHours(3));
         order.addCookie(globalRecipes.get(1), 30);

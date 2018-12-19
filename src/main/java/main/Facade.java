@@ -365,9 +365,9 @@ public class Facade {
      * @param id of the current Customer
      * @param payedOnline boolean that indicate if the order is payed online or not
      */
-    public void guestPlaceOrder(int id, boolean payedOnline) {
-        Optional<Customer> opCustomer = this.cookieFirm.findCustomer(id);
-        opCustomer.ifPresent(customer -> customer.placeOrder(payedOnline));
+    public void guestPlaceOrder(int id , Boolean payedOnline){
+        Optional<Guest> opGuest = this.cookieFirm.findGuestOrCustomer(id);
+        opGuest.ifPresent(guest -> guest.placeOrder(payedOnline));
     }
 
 

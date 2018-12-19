@@ -18,7 +18,7 @@ public class CancelOrderStepDefs {
         }
     }
 
-    @And("^\"([^\"]*)\" receveid a \"([^\"]*)\"$")
+    @And("^\"([^\"]*)\" receveid an email at \"([^\"]*)\"$")
     public void receveidA(String arg0, String arg1) {
         // Write code here that turns the phrase above into concrete actions
     }

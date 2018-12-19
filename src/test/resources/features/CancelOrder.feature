@@ -15,4 +15,4 @@ Feature: Cancel order
     When The customer place his order and pay "online"
     Then The "store" purchase the order with 16:35, "Monday", "Jack@Jack.fr" and "Canceled" it
     And The order in the "store" with 16:35, "Monday" made by "Jack@Jack.fr" is "Canceled"
-    And "Jack" receveid a "jack@jack.com"
+    And "Jack" receveid an email at "jack@jack.com"

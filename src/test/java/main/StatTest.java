@@ -6,20 +6,21 @@ import org.junit.Before;
 import org.junit.Test;
 import recipe.Recipe;
 import recipe.ingredient.Catalog;
-import recipe.ingredient.Ingredient;
 import statistics.*;
 import store.Manager;
 import store.Store;
 import utils.TestUtils;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static utils.TestUtils.getFixedClock;
 
 public class StatTest {
@@ -223,5 +224,35 @@ public class StatTest {
         Assert.assertEquals(1.0, value.getMixRatio().get(catalog.getMixList().get(1)), 0.0);
         Assert.assertEquals(0.75, value.getCookingRatio().get(catalog.getCookingList().get(0)), 0.0);
         Assert.assertEquals(0.25, value.getCookingRatio().get(catalog.getCookingList().get(1)), 0.0);
+    }
+
+    @Test
+    public void pickUpTimeCountStatSimple() {
+        Store mockStore = mock(Store.class);
+        // list with 2 16:00, 1 6:00, 1 23:00, 2 10:30, 1 14:30
+        List<LocalTime> times = Arrays.asList(
+                LocalTime.of(16, 10),
+                LocalTime.of(16, 15),
+                LocalTime.of(6, 15),
+                LocalTime.of(23, 0),
+                LocalTime.of(10, 34),
+                LocalTime.of(10, 55),
+                LocalTime.of(14, 46)
+        );
+        // map matching the list
+        HashMap<LocalTime, Integer> expectedtimeCounts = new HashMap<>();
+        expectedtimeCounts.put(LocalTime.of(16, 0), 2);
+        expectedtimeCounts.put(LocalTime.of(6, 0), 1);
+        expectedtimeCounts.put(LocalTime.of(23, 0), 1);
+        expectedtimeCounts.put(LocalTime.of(10, 30), 2);
+        expectedtimeCounts.put(LocalTime.of(14, 30), 1);
+        LocalDate date = LocalDate.now();
+        List<Order> orders = times.stream().map(time -> new Order(mockStore, LocalDateTime.of(date, time))).collect(Collectors.toList());
+        when(mockStore.getOrders()).thenReturn(orders);
+
+        PickUpTimeCountStat stat = new PickUpTimeCountStat(mockStore);
+        stat.computeValue();
+        Map<LocalTime, Integer> result = stat.getStat();
+        Assert.assertEquals(expectedtimeCounts, result);
     }
 }

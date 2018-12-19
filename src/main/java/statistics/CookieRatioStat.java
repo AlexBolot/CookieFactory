@@ -7,18 +7,16 @@ import store.Store;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CookieRatioStat {
+public class CookieRatioStat extends Statistic<Map<String, Double>>{
     private Store store;
-    private Map<String, Double> value;
 
     public CookieRatioStat(Store store) {
         this.store = store;
     }
 
-    public Map<String, Double> computeValue() {
+    public void calculate() {
         Map<String, Double> ratios = new HashMap<>();
         String recipe;
-        int total = 0;
         for (Order order : store.getOrders()) {
             for (OrderLine orderline : order.getOrderLines()) {
                 if (orderline.getRecipe().isCustom()) {
@@ -27,17 +25,19 @@ public class CookieRatioStat {
                     recipe = orderline.getRecipe().getName();
                     ratios.put(recipe, ratios.containsKey(recipe) ? ratios.get(recipe) + orderline.getAmount() : orderline.getAmount());
                 }
-                    total += orderline.getAmount();
             }
         }
-        for (String r : ratios.keySet()) {
-            ratios.put(r, ratios.get(r) / ((double) total));
-        }
-        this.value = ratios;
-        return ratios;
+        value=ratios;
     }
 
-    public Map<String, Double> getStat() {
-        return this.value;
+    public void cleanUp() {
+        double total=0;
+        for (String r : value.keySet()) {
+            total+=value.get(r);
+        }
+        for (String r : value.keySet()) {
+            value.put(r, value.get(r) /  total);
+        }
     }
+
 }

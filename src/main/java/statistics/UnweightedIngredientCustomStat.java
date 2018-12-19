@@ -5,16 +5,15 @@ import order.OrderLine;
 import recipe.Recipe;
 import store.Store;
 
-public class UnweightedIngredientCustomStat {
+public class UnweightedIngredientCustomStat extends Statistic<IngredientRatio> {
     private Store store;
-    private IngredientRatio value;
 
     public UnweightedIngredientCustomStat(Store store) {
         this.store = store;
         this.value = new IngredientRatio();
     }
 
-    public IngredientRatio computeValue() {
+    public void calculate() {
         Recipe recipe;
         for(Order order : store.getOrders()) {
             for(OrderLine orderline : order.getOrderLines()) {
@@ -28,11 +27,9 @@ public class UnweightedIngredientCustomStat {
                 }
             }
         }
-        this.value.normalizeAll();
-        return value;
     }
 
-    public IngredientRatio getValue() {
-        return value;
+    public void cleanUp() {
+        this.value.normalizeAll();
     }
 }

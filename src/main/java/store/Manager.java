@@ -16,10 +16,21 @@ public class Manager {
         this.name = name;
     }
 
+    /**
+     * Change the opening time of his store
+     * @param day type DayOfWeek
+     * @param time localTime corresponding to the opening time
+     */
     public void changeOpeningTime(DayOfWeek day, LocalTime time) {
         store.setOpeningTime(day, time);
     }
 
+
+    /**
+     * Change the closing time of his store
+     * @param day type DayOfWeek
+     * @param time localTime corresponding to the closing time
+     */
     public void changeClosingTime(DayOfWeek day, LocalTime time) {
         store.setClosingTime(day, time);
     }

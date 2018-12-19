@@ -1,6 +1,6 @@
 Feature: Change the unfaithPass ratio of a store
 
-  Scenario:
+  Scenario: Change ratio
     Given A store "UnFaithStore" with an UnFaithPass ratio of 1
     And "Bob" the manager of "UnFaithStore"
     When "Bob" changes the UnFaithPass ratio to 2

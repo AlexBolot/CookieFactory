@@ -24,7 +24,7 @@ public class Kitchen {
         this(new HashMap<>(), new HashMap<>(), new HashMap<>());
     }
 
-    public Kitchen(Map<Ingredient, Integer> stock, Map<Ingredient, Double> supplierPrices, Map<Ingredient, Double> margins) {
+    Kitchen(Map<Ingredient, Integer> stock, Map<Ingredient, Double> supplierPrices, Map<Ingredient, Double> margins) {
         stock.forEach((key, value) -> {
             if (value <= 0)
                 throw new IllegalArgumentException("Amount of " + key.getName() + " must be strictly positive. Given is " + value);
@@ -74,7 +74,7 @@ public class Kitchen {
      * @param recipe Recipe to cook with getIngredients from the Kitchen
      * @param amount How many times do we cook [recipe] (must be stricly positive)
      */
-    public void cook(Recipe recipe, int amount) {
+    void cook(Recipe recipe, int amount) {
         if (amount <= 0) throw new IllegalArgumentException("Amount must be strictly positive. Given is " + amount);
 
         if (!canDo(recipe, amount))

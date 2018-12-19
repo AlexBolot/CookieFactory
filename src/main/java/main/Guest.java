@@ -25,12 +25,22 @@ public class Guest {
         this.id = IdCount++;
     }
 
+    /**
+     * Create a new order an put it in temporaryOrder
+     * @return the created order
+     */
     Order initOrder() {
         this.temporaryOrder = new Order();
         this.temporaryOrder.setGuest(this);
         return this.temporaryOrder;
     }
 
+    /**
+     * Place the order in the de correct store
+     * Reinitialise the temporary order
+     * @param onlinePayment boolean that indicates if the order is payed online or not
+     * @return the price of the order
+     */
     public double placeOrder(boolean onlinePayment) {
         if (onlinePayment) {
             temporaryOrder.setBankingData(bankingData);
@@ -45,23 +55,20 @@ public class Guest {
 
     /**
      * Order a custom recipe by giving the ingredients to a recipe Factory
-     *
      * @param quantity of cookie ordered
-     * @param dough
-     * @param flavor
-     * @param topping
-     * @param mix
-     * @param cooking
-     * @return
+     * @param dough of the custom cookie
+     * @param flavor of the custom cookie
+     * @param topping custom cookie's list of topping
+     * @param mix of the custom cookie
+     * @param cooking of the custom cookie
      */
-    public Recipe orderCustomRecipe(int quantity, Dough dough, Flavor flavor, List<Topping> topping, Mix mix, Cooking cooking) {
+    void orderCustomRecipe(int quantity, Dough dough, Flavor flavor, List<Topping> topping, Mix mix, Cooking cooking) {
         RecipeBuilder rBuilder = new RecipeBuilder();
         Recipe customRecipe = rBuilder.createRecipe(dough, flavor, topping, mix, cooking);
         this.temporaryOrder.addCookie(customRecipe, quantity);
-        return customRecipe;
     }
 
-    protected void setTemporaryOrder(Order order) {
+    void setTemporaryOrder(Order order) {
         this.temporaryOrder = order;
         this.temporaryOrder.setGuest(this);
     }
@@ -78,7 +85,7 @@ public class Guest {
         return id;
     }
 
-    protected void setId(int id) {
+    void setId(int id) {
         this.id = id;
     }
 

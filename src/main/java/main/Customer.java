@@ -43,7 +43,10 @@ public class Customer extends Guest {
 
     /**
      * Check if the order has been place and return the price
-     *
+     * If everything is fine the order is put in the history
+     * The temporary order is reset
+     * If the customer is in loyalty program and have a discount, reset the discount
+     * for the next order
      * @param onlinePayment boolean if the client payed online or not
      * @return price of the order, or 0.0 if the order is not taken
      */

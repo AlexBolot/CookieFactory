@@ -15,7 +15,7 @@ public class Recipe {
     private List<Topping> toppings;
     private Mix mix;
     private Cooking cooking;
-    public boolean isCustom;
+    private boolean isCustom;
 
     public Recipe(String name, Dough dough, Flavor flavor, List<Topping> toppings, Mix mix, Cooking cooking, boolean custom) {
         this.name = name;
@@ -27,7 +27,12 @@ public class Recipe {
         this.isCustom = custom;
     }
 
-    public void setToppings(List<Topping> toppings) {
+    /**
+     * Set toppings for a recipe
+     * Check if the list of toppings contains less than 3 topping
+     * @param toppings list of topping
+     */
+    private void setToppings(List<Topping> toppings) {
         if (toppings.size() > 3)
             throw new IllegalArgumentException("To much toppings!!!");
         else

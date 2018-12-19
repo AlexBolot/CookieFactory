@@ -8,7 +8,7 @@ public class OrderLine {
     private Recipe recipe;
     private int amount;
 
-    public OrderLine(Recipe recipe, int amount) {
+    OrderLine(Recipe recipe, int amount) {
         this.recipe = recipe;
         this.amount = amount;
     }
@@ -17,10 +17,14 @@ public class OrderLine {
         return amount;
     }
 
-    public void reduceAmount(int amount) {
+    void reduceAmount(int amount) {
         this.amount-= amount;
     }
 
+    /**
+     * Set amount to a recipe
+     * @param amount quantity of cookies
+     */
     public void setAmount(int amount) {
         if (amount < 0) throw new IllegalArgumentException("Amount should be positive");
         this.amount = amount;

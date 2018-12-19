@@ -49,6 +49,12 @@ public class Store {
         this.customRecipeeMargin = customeRecipeeMargin;
     }
 
+    /**
+     * Place an order in the store
+     * Check the validity of the order
+     * @param order to be placed
+     * @return the price of the order
+     */
     public double placeOrder(Order order) {
 
         // Throws exception if order not valid
@@ -67,7 +73,6 @@ public class Store {
      * Update a client unFaithPass according to all the rewards corresponding to a given order and the unFaithPass applied to the store
      *
      * @param order scanned for rewards
-     * @return a list of reward for all cookies in the order
      */
     public void collectRewards(Order order, UnFaithPassAPI unFaithPassAPI) {
         if (this.unFaithPassProgram != null) {
@@ -90,7 +95,7 @@ public class Store {
      *
      * @param order Order to cancel
      */
-    public void cancelOrder(Order order) {
+    void cancelOrder(Order order) {
 
         order.cancel();
 
@@ -107,7 +112,7 @@ public class Store {
      * @param order Customer's order to check before sending the order
      * @return True if the order is valid, false otherwise
      */
-    public boolean checkOrderValidity(Order order) {
+    boolean checkOrderValidity(Order order) {
         return checkOrderContent(order) && checkOrderDelay(order);
     }
 
@@ -307,7 +312,7 @@ public class Store {
         return customRecipeeMargin;
     }
 
-    public void setCustomRecipeeMargin(double customRecipeeMargin) {
+    void setCustomRecipeeMargin(double customRecipeeMargin) {
         this.customRecipeeMargin = customRecipeeMargin;
     }
 

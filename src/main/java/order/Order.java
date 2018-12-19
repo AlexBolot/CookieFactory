@@ -96,7 +96,7 @@ public class Order {
      *
      * @param discount Amount of money to reduce from the order's price
      */
-    public void withdraw(double discount) {
+    void withdraw(double discount) {
         if (this.orderState == ORDERED) {
             this.orderState = WITHDRAWN;
 
@@ -137,7 +137,7 @@ public class Order {
     }
 
 
-    public void applyUnFaithPassBonus() {
+    private void applyUnFaithPassBonus() {
         if (this.getGuest().getUnFaithPass()!=null) {
             this.getStore().collectRewards(this,this.getGuest().getUnFaithPass());
         }
@@ -190,6 +190,9 @@ public class Order {
      * @param bankingData of the guest
      */
     public void setBankingData(BankingData bankingData) {
+        if(bankingData == null)
+            throw new IllegalArgumentException("Banking Data does not exist");
+
         bankingData.checkValidity();
         this.bankingData = bankingData;
     }

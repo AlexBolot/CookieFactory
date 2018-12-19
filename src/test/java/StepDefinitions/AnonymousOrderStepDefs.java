@@ -22,7 +22,11 @@ public class AnonymousOrderStepDefs {
         Optional<Guest> guest = context.cookieFirm().findGuestOrCustomer(context.getCurrentId());
         if (guest.isPresent()) {
             currentOrder = guest.get().getTemporaryOrder();
-            context.getFacade().guestValidateHisOrder(context.getCurrentId(), sEmail, utils.payOnline(online));
+            try {
+                context.getFacade().guestValidateHisOrder(context.getCurrentId(), sEmail, utils.payOnline(online));
+            } catch (Exception e) {
+                context.pushException(e);
+            }
         }
     }
 

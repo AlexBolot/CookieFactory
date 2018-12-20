@@ -52,7 +52,6 @@ public class OrderTest {
 
         cookieFirm = CookieFirm.instance();
         cookieFirm.setClock(getFixedClock(testingTime.getHour(), testingTime.getMinute()));
-        cookieFirm.inflate(Collections.singletonList(store), Collections.emptyList());
         unavailableRecep = new Recipe("unreal", catalog.getDoughList().get(1), catalog.getFlavorList().get(0), new ArrayList<>(), catalog.getMixList().get(0), catalog.getCookingList().get(0), true);
         LocalDateTime pickUpTime = testingTime.plusHours(3);
 

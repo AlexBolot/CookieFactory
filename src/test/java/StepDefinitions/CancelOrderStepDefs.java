@@ -12,10 +12,6 @@ public class CancelOrderStepDefs {
 
     @And("^An employee see the \"([^\"]*)\"'s orders$")
     public void anEmployeeSeeTheSOrders(String sStore) {
-        Optional<Store> store = context.cookieFirm().findStore(sStore);
-        if (store.isPresent()) {
-            //TODO permettre de voir les recettes d'un store.get().
-        }
     }
 
     @And("^\"([^\"]*)\" receveid an email at \"([^\"]*)\"$")

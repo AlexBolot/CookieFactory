@@ -5,6 +5,7 @@ import order.Order;
 import recipe.Recipe;
 import recipe.ingredient.Ingredient;
 import recipe.ingredient.Topping;
+import statistics.CookieRatioStat;
 import store.Manager;
 import store.Store;
 
@@ -215,6 +216,23 @@ public class Facade {
             recipee = opRecipee.orElse(store.getMonthlyRecipe());
 
         return store.getRecipePrice(recipee);
+    }
+
+    /**
+     * The json representation of the cookie recipe ratio for a manager store.
+     * The custom recipees are regrouped under one statistics
+     *
+     * @param managerName {@link String} manager's name
+     * @return {@link String} JSON representation {"recipee name":"Ratio"....}
+     */
+    public String managerQueriesCookieRatio(String managerName) {
+        Optional<Manager> opManager = cookieFirm.findManager(managerName);
+        if (!opManager.isPresent())
+            throw new IllegalArgumentException("Unknown manager");
+        Manager manager = opManager.get();
+        CookieRatioStat stat = new CookieRatioStat(manager.getStore());
+        stat.computeValue();
+        return stat.serialize();
     }
 
     //UTILS MANAGER

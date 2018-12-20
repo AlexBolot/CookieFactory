@@ -227,6 +227,7 @@ public class Store {
         return recipes;
     }
 
+
     public Map<DayOfWeek, LocalTime> openingTimes() {
         return openingTimes;
     }
@@ -245,6 +246,10 @@ public class Store {
 
     public double getTax() {
         return tax;
+    }
+
+    public void setTax(double tax){
+        this.tax = tax;
     }
 
     public Recipe getMonthlyRecipe() {
@@ -312,7 +317,7 @@ public class Store {
         return customRecipeeMargin;
     }
 
-    void setCustomRecipeeMargin(double customRecipeeMargin) {
+    public void setCustomRecipeeMargin(double customRecipeeMargin) {
         this.customRecipeeMargin = customRecipeeMargin;
     }
 

@@ -33,4 +33,8 @@ public class RecipeStepDefs {
         store1.ifPresent(store2 -> assertEquals(store2.getMonthlyRecipe().getName(), cookie));
     }
 
+    @Then("null")
+    public void storeHaveAMarginForCustomCookiesOf(String arg0, int arg1, int arg2) {
+
+    }
 }

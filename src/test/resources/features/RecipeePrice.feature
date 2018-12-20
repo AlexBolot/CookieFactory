@@ -13,6 +13,10 @@ Feature: RecipeePrice
     When "Bob" checks the price of "Pathway to hell"
     Then The price of "Pathway to hell" for "Bob" is 20.3
 
+  Scenario: A manager change the custom recipe margin
+    When "Bob" change the margin of custom cookies to 10.0
+    Then "Bob" store have a margin for custom cookies of 10.0
+
   Scenario: A manager check the montly recipee
     Given "Bob" add the recipe named "CustomMay" have "Plain", flavor "Oyster", topping "White Chocolate" and "Black Chocolate" and "no topping", mix "Mixed", cooking "Chewy"
     And "Bob" change the margin of the "flavor" "Oyster" to 30

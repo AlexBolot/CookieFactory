@@ -1,6 +1,6 @@
 package statistics;
 
-public abstract class Statistic<T> {
+public abstract class Statistic<T> implements IStat<T>{
     T value;
 
     public T computeValue() {
@@ -8,12 +8,6 @@ public abstract class Statistic<T> {
         cleanUp();
         return value;
     }
-
-    abstract void calculate();
-
-    abstract void cleanUp();
-
-    abstract String serialize();
 
     public T getStat() {return value;}
 }

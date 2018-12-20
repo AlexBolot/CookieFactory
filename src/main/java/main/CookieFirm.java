@@ -1,9 +1,11 @@
 package main;
 
 import api.BankAPI;
+import com.sun.org.glassfish.external.statistics.Statistic;
 import order.Order;
 import recipe.Recipe;
 import recipe.ingredient.Catalog;
+import statistics.IStoreStat;
 import store.Manager;
 import store.Store;
 
@@ -375,6 +377,16 @@ public class CookieFirm {
 
     public void addCustomerToLoyaltyProgram(Customer customer) {
         customer.addToLoyaltyProgram();
+    }
+
+    public String aggregateStats (IStoreStat statistic) {
+        StringBuilder output = new StringBuilder("{");
+        for (Store store : stores) {
+            statistic.setStore(store);
+            statistic.computeValue();
+            output.append("\"").append(store.getName()).append("\":").append(statistic.serialize());
+        }
+        return output+"}";
     }
 
 

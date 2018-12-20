@@ -13,8 +13,13 @@ import java.util.stream.Collectors;
 /**
  * Compute the average order withdrawal time, to the half hour floored.
  */
-public class PickUpTimeCountStat extends Statistic<Map<LocalTime, Integer>> {
-    Store store;
+public class PickUpTimeCountStat extends Statistic<Map<LocalTime, Integer>> implements IStoreStat<Map<LocalTime, Integer>> {
+    private Store store;
+
+    public PickUpTimeCountStat() {
+        this.store = null;
+        this.value = new HashMap<>();
+    }
 
     public PickUpTimeCountStat(Store store) {
         this.store = store;
@@ -23,7 +28,7 @@ public class PickUpTimeCountStat extends Statistic<Map<LocalTime, Integer>> {
 
 
     @Override
-    void calculate() {
+    public void calculate() {
         Collection<Order> orders = this.store.getOrders();
         //Maping order to time equivalend and collecting the common timing in a map
         Map<LocalTime, List<LocalTime>> grouped =
@@ -44,12 +49,12 @@ public class PickUpTimeCountStat extends Statistic<Map<LocalTime, Integer>> {
     }
 
     @Override
-    void cleanUp() {
+    public void cleanUp() {
         //No cleanup needed for this stat.
     }
 
     @Override
-    String serialize() {
+    public String serialize() {
 
         StringBuilder sb = new StringBuilder("{");
         for (Map.Entry<LocalTime, Integer> entry : value.entrySet()) {
@@ -62,5 +67,10 @@ public class PickUpTimeCountStat extends Statistic<Map<LocalTime, Integer>> {
         }
         sb.append("}");
         return sb.toString();
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+        this.value = new HashMap<>();
     }
 }

@@ -65,6 +65,11 @@ public class Facade {
         cookieFirm.getCatalog().addFlavor(flavorName);
     }
 
+    /**
+     * Add manager to a store
+     * @param manager name of the manager
+     * @param store name of the store
+     */
     public void addManagerToStore(String manager, String store) {
         Optional<Store> store1 = cookieFirm.findStore(store);
         if (store1.isPresent()) {

@@ -128,6 +128,7 @@ public class Order {
         if (points==0 && freeCookie==0) {withdraw(); return;}
         if (this.getGuest().getUnFaithPass().use(points,freeCookie)) {
             if (this.getStore().getUnFaithPassProgram()!=null) {
+                this.getStore().cookFreeCookie(freeCookie);
                 double correspondingPrice = this.getStore().getUnFaithPassProgram().getCashFromRewardValue(points);
                 withdraw(correspondingPrice);
             }

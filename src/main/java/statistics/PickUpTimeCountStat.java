@@ -67,8 +67,7 @@ public class PickUpTimeCountStat extends Statistic<Map<LocalTime, Integer>> impl
             sb.append(ammount);
             sb.append(",");
         }
-        sb.append("}");
-        return sb.toString();
+        return sb.substring(0,sb.length()-1)+"}";
     }
 
     public void setStore(Store store) {

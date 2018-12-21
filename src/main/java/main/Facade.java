@@ -242,9 +242,10 @@ public class Facade {
     public String managerQueriesPickUpTimeCount(String managerName) {
         return managerQueriesStoreStatistics(managerName, "PickUpTimeCount");
     }
+
     /**
      * Build and return the json representation of a queried statistics for a manager
-     * Can be used directly or through helper function that ommit the statistics name
+     * Can be used directly or through helper function that commit the statistics name
      * @param managerName {@link String} manager's name
      * @param statisticsName {@link String} The desired statistics, possible names are :
      *                                     CookieRatio : the recipe ordering ratio list
@@ -277,6 +278,37 @@ public class Facade {
         }
         stat.computeValue();
         return stat.serialize();
+    }
+
+    /**
+     * Build and return the json representation of a queried statistics applied to all the store of the CookieFirm
+     * @param statisticsName {@link String} The desired statistics, possible names are :
+     *                                     CookieRatio : the recipe ordering ratio list
+     *                                     UnweightedCustomIngredientRatio : the ingredients usage ratio for the custom recipees
+     *                                     WeigthedCustomIngredientRatio  : the ingredients usage ratio weighted per the recipee amount
+     *                                     PickUpTimeCount : Count of the pick up times rounded to the half hour
+     * @return {@link String} JSON representation {"store1": {statistic}....}
+     */
+    public String queryGlobalStatistics(String statisticsName) {
+        IStoreStat stat;
+        switch (statisticsName) {
+            case "CookieRatio":
+                stat = new CookieRatioStat();
+                break;
+            case "UnweightedCustomIngredientRatio":
+                stat = new UnweightedIngredientCustomStat();
+                break;
+            case "WeigthedCustomIngredientRatio":
+                stat = new WeightedIngredientCustomStat();
+                break;
+            case "PickUpTimeCount":
+                stat = new PickUpTimeCountStat();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown statistics");
+        }
+        String output= this.cookieFirm.aggregateStats(stat);
+        return output;
     }
 
 

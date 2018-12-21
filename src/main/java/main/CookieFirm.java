@@ -373,9 +373,9 @@ public class CookieFirm {
         for (Store store : stores) {
             statistic.setStore(store);
             statistic.computeValue();
-            output.append("\"").append(store.getName()).append("\":").append(statistic.serialize());
+            output.append("\"").append(store.getName()).append("\":").append(statistic.serialize()).append(",");
         }
-        return output+"}";
+        return output.substring(0,output.length()-1)+"}";
     }
 
 

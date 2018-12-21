@@ -1,6 +1,8 @@
 package StepDefinitions;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import main.Guest;
@@ -24,6 +26,7 @@ import static org.junit.Assert.assertThat;
 public class CookieStatisticsStepDefs {
     private final TestUtils utils = new TestUtils();
     CucumberContext context = CucumberContext.getContext();
+    String jsonOutput;
 
     @And("^The store \"([^\"]*)\" has the command set \"([^\"]*)\"$")
     public void theStoreHasTheCommandSet(String storeName, String setName) throws Throwable {
@@ -98,7 +101,7 @@ public class CookieStatisticsStepDefs {
 
     @When("^\"([^\"]*)\" compute the cookie ratio$")
     public void computeTheCookieRatio(String managerName) throws Throwable {
-        System.out.println(context.getFacade().managerQueriesCookieRatio(managerName));
+        jsonOutput = context.getFacade().managerQueriesCookieRatio(managerName);
     }
 
     @Then("^The cookie ratio seen by \"([^\"]*)\" is for the set \"([^\"]*)\"$")
@@ -118,7 +121,7 @@ public class CookieStatisticsStepDefs {
             default:
                 expected = "{}";
         }
-        assertEquals(expected, context.getFacade().managerQueriesCookieRatio(managerName));
+        assertEquals(expected, jsonOutput);
     }
 
     @When("^\"([^\"]*)\" compute the unweighted custom ingredient ratio$")
@@ -169,23 +172,73 @@ public class CookieStatisticsStepDefs {
 
     @When("^\"([^\"]*)\" compute the pick up time count$")
     public void computeThePickUpTimeCount(String managerName) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        System.out.println(context.getFacade().managerQueriesPickUpTimeCount(managerName));
+        jsonOutput = context.getFacade().managerQueriesPickUpTimeCount(managerName);
     }
 
-    @Then("^The compute pick up time count seend by \"([^\"]*)\" is for the set \"([^\"]*)\"$")
+    @Then("^The compute pick up time count seen by \"([^\"]*)\" is for the set \"([^\"]*)\"$")
     public void theComputePickUpTimeCountSeendByIsForTheSet(String managerName, String setName) throws Throwable {
         String expected;
         switch (setName) {
             case "One cookie at multiple times":
                 // Chaine literal comming from the sample output, our goal is not to check it's validity but that it matches
-                expected = "{\"10:30\":4,\"06:00\":3,\"23:00\":2,\"16:00\":4,\"14:30\":3,}";
+                expected = "{\"10:30\":4,\"06:00\":3,\"23:00\":2,\"16:00\":4,\"14:30\":3}";
                 break;
             default:
                 expected = "{}";
         }
-        assertEquals(expected, context.getFacade().managerQueriesPickUpTimeCount(managerName));
+        assertEquals(expected, jsonOutput);
     }
 
 
+    @When("^The cookie Firm queries the global statistics \"([^\"]*)\"$")
+    public void theCookieFirmQueriesTheGlobalStatistics(String statType) throws Throwable {
+        jsonOutput = context.getFacade().queryGlobalStatistics(statType);
+    }
+
+    @Then("^The computed CookieRatioStat for the Store \"([^\"]*)\" is for the set \"([^\"]*)\"$")
+    public void theComputedStatForTheStoreIsForTheSet(String storeName, String orderSet) throws Throwable {
+        String statSet;
+        switch (orderSet) {
+            case "White Dog Favorite":
+                statSet = "{" +
+                        '"' + "Cookie for nothing" + '"' +
+                        ':' + '"' + (double) 4 / (double) 43 + '"' + ',' +
+                        '"' + "Custom" + '"' +
+                        ':' + '"' + (double) 25 / (double) 43 + '"' + ',' +
+                        '"' + "White Dog" + '"' +
+                        ':' + '"' + (double) 14 / (double) 43 + '"' +
+                        "}";
+                break;
+            case "One cookie at multiple times":
+                statSet = "{" +
+                        '"' + "White Dog" + '"' +
+                        ':' + '"' + (double) 1 + '"' +
+                        "}";
+                break;
+            default:
+                statSet="{}";
+        }
+        assertThat(jsonOutput,containsString(storeName+"\":"+statSet));
+    }
+
+    @Given("^An cookieFirm with no Store$")
+    public void anCookieFirmWithNoStore() throws Throwable {
+        context.cookieFirm().getStores().clear();
+    }
+
+    @Then("^The computed PickUpTimeCountStat for the Store \"([^\"]*)\" is for the set \"([^\"]*)\"$")
+    public void theComputedPickUpTimeCountStatForTheStoreIsForTheSet(String storeName, String orderSet) throws Throwable {
+        String statSet;
+        switch (orderSet) {
+            case "White Dog Favorite":
+                statSet = "{\"12:00\":2}";
+                break;
+            case "One cookie at multiple times":
+                statSet = "{\"10:30\":4,\"06:00\":3,\"23:00\":2,\"16:00\":4,\"14:30\":3}";
+                break;
+            default:
+                statSet="{}";
+        }
+        assertThat(jsonOutput,containsString(storeName+"\":"+statSet));
+    }
 }

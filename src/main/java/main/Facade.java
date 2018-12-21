@@ -5,7 +5,7 @@ import order.Order;
 import recipe.Recipe;
 import recipe.ingredient.Ingredient;
 import recipe.ingredient.Topping;
-import statistics.CookieRatioStat;
+import statistics.*;
 import store.Manager;
 import store.Store;
 
@@ -227,22 +227,58 @@ public class Facade {
         return store.getRecipePrice(recipee);
     }
 
+    public String managerQueriesCookieRatio(String managerName) {
+        return managerQueriesStoreStatistics(managerName, "CookieRatio");
+    }
+
+    public String managerQueriesUnwieghtedCustomIngredientRatio(String managerName) {
+        return managerQueriesStoreStatistics(managerName, "UnweightedCustomIngredientRatio");
+    }
+
+    public String managerQueriesWeigthedCustomIngredientRatio(String managerName) {
+        return managerQueriesStoreStatistics(managerName, "WeigthedCustomIngredientRatio");
+    }
+
+    public String managerQueriesPickUpTimeCount(String managerName) {
+        return managerQueriesStoreStatistics(managerName, "PickUpTimeCount");
+    }
     /**
-     * The json representation of the cookie recipe ratio for a manager store.
-     * The custom recipees are regrouped under one statistics
-     *
+     * Build and return the json representation of a queried statistics for a manager
+     * Can be used directly or through helper function that ommit the statistics name
      * @param managerName {@link String} manager's name
+     * @param statisticsName {@link String} The desired statistics, possible names are :
+     *                                     CookieRatio : the recipe ordering ratio list
+     *                                     UnweightedCustomIngredientRatio : the ingredients usage ratio for the custom recipees
+     *                                     WeigthedCustomIngredientRatio  : the ingredients usage ratio weighted per the recipee amount
+     *                                     PickUpTimeCount : Count of the pick up times rounded to the half hour
      * @return {@link String} JSON representation {"recipee name":"Ratio"....}
      */
-    public String managerQueriesCookieRatio(String managerName) {
+    public String managerQueriesStoreStatistics(String managerName, String statisticsName) {
         Optional<Manager> opManager = cookieFirm.findManager(managerName);
         if (!opManager.isPresent())
             throw new IllegalArgumentException("Unknown manager");
         Manager manager = opManager.get();
-        CookieRatioStat stat = new CookieRatioStat(manager.getStore());
+        Statistic stat;
+        switch (statisticsName) {
+            case "CookieRatio":
+                stat = new CookieRatioStat(manager.getStore());
+                break;
+            case "UnweightedCustomIngredientRatio":
+                stat = new UnweightedIngredientCustomStat(manager.getStore());
+                break;
+            case "WeigthedCustomIngredientRatio":
+                stat = new WeightedIngredientCustomStat(manager.getStore());
+                break;
+            case "PickUpTimeCount":
+                stat = new PickUpTimeCountStat(manager.getStore());
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown statistics");
+        }
         stat.computeValue();
         return stat.serialize();
     }
+
 
     /**
      * The manager can change the custom cookie margin

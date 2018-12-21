@@ -49,13 +49,15 @@ public class PickUpTimeCountStat extends Statistic<Map<LocalTime, Integer>> {
     }
 
     @Override
-    String serialize() {
+    public String serialize() {
 
         StringBuilder sb = new StringBuilder("{");
         for (Map.Entry<LocalTime, Integer> entry : value.entrySet()) {
             LocalTime key = entry.getKey();
             Integer ammount = entry.getValue();
+            sb.append('"');
             sb.append(key);
+            sb.append('"');
             sb.append(":");
             sb.append(ammount);
             sb.append(",");

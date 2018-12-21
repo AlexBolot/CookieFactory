@@ -11,11 +11,11 @@ import store.Store;
 import utils.CucumberContext;
 import utils.TestUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -61,6 +61,30 @@ public class CookieStatisticsStepDefs {
                 orders.add(order1);
                 orders.add(order2);
                 break;
+            case "One cookie at multiple times":
+                List<LocalTime> times = Arrays.asList(
+                        LocalTime.of(16, 10),
+                        LocalTime.of(16, 11),
+                        LocalTime.of(16, 12),
+                        LocalTime.of(16, 13),
+                        LocalTime.of(6, 15),
+                        LocalTime.of(6, 14),
+                        LocalTime.of(6, 13),
+                        LocalTime.of(23, 0),
+                        LocalTime.of(23, 0),
+                        LocalTime.of(10, 34),
+                        LocalTime.of(10, 44),
+                        LocalTime.of(10, 54),
+                        LocalTime.of(10, 55),
+                        LocalTime.of(14, 46),
+                        LocalTime.of(14, 47),
+                        LocalTime.of(14, 48)
+                );
+                LocalDate date = LocalDate.now();
+                List<Order> ordersList = times.parallelStream().map(time -> new Order(store, LocalDateTime.of(date, time))).collect(Collectors.toList());
+                ordersList.forEach(order -> order.addCookie(utils.recipeFromName("White Dog"), 1));
+                orders.addAll(ordersList);
+                break;
             default:
                 orders = new ArrayList<>();
                 break;
@@ -97,7 +121,7 @@ public class CookieStatisticsStepDefs {
 
     @When("^\"([^\"]*)\" compute the unweighted custom ingredient ratio$")
     public void computeTheUnwieightCustomIngredientRatio(String managerName) throws Throwable {
-        System.out.println(context.getFacade().managerQueriesUnwieghtedCustomIngredientRatio(managerName));
+        context.getFacade().managerQueriesUnweightedCustomIngredientRatio(managerName);
     }
 
 
@@ -121,8 +145,57 @@ public class CookieStatisticsStepDefs {
             default:
                 expected = "{}";
         }
-        assertEquals(expected, context.getFacade().managerQueriesUnwieghtedCustomIngredientRatio(managerName));
+        assertEquals(expected, context.getFacade().managerQueriesUnweightedCustomIngredientRatio(managerName));
         ;
     }
+
+    @When("^\"([^\"]*)\" compute the weighted custom ingredient ratio$")
+    public void computeTheWeightedCustomIngredientRatio(String managerName) throws Throwable {
+        context.getFacade().managerQueriesWeigthedCustomIngredientRatio(managerName);
+    }
+
+    @Then("^The weighted custom ingredient ratio seen by \"([^\"]*)\" is for the set \"([^\"]*)\"$")
+    public void theWeightedCustomIngredientRatioSeenByIsForTheSet(String managerName, String setName) throws Throwable {
+        String expected;
+        switch (setName) {
+            case ("White Dog Favorite"):
+                // Chaine literal comming from the sample output, our goal is not to check it's validity but that it matches
+                expected = "{\"dough\": " +
+                        "{\"Plain\":\"0.72\",\"Chocolate\":\"0.28\"}," +
+                        "\"flavor\": " +
+                        "{\"Vanilla\":\"0.24\",\"Cinnamon\":\"0.28\",\"Chili\":\"0.48\"}," +
+                        "\"topping\":" +
+                        " {\"Reese's buttercup\":\"0.46153846153846156\",\"Milk Chocolate\":\"0.5384615384615384\"}," +
+                        "\"mix\": " +
+                        "{\"Topped\":\"0.52\",\"Mixed\":\"0.48\"}," +
+                        "\"cooking\":" +
+                        " {\"Crunchy\":\"0.52\",\"Chewy\":\"0.48\"}}";
+                break;
+            default:
+                expected = "{}";
+        }
+        assertEquals(expected, context.getFacade().managerQueriesWeigthedCustomIngredientRatio(managerName));
+    }
+
+    @When("^\"([^\"]*)\" compute the pick up time count$")
+    public void computeThePickUpTimeCount(String managerName) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        System.out.println(context.getFacade().managerQueriesPickUpTimeCount(managerName));
+    }
+
+    @Then("^The compute pick up time count seend by \"([^\"]*)\" is for the set \"([^\"]*)\"$")
+    public void theComputePickUpTimeCountSeendByIsForTheSet(String managerName, String setName) throws Throwable {
+        String expected;
+        switch (setName) {
+            case "One cookie at multiple times":
+                // Chaine literal comming from the sample output, our goal is not to check it's validity but that it matches
+                expected = "{\"10:30\":4,\"06:00\":3,\"23:00\":2,\"16:00\":4,\"14:30\":3,}";
+                break;
+            default:
+                expected = "{}";
+        }
+        assertEquals(expected, context.getFacade().managerQueriesPickUpTimeCount(managerName));
+    }
+
 
 }

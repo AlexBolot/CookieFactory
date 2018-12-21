@@ -231,7 +231,7 @@ public class Facade {
         return managerQueriesStoreStatistics(managerName, "CookieRatio");
     }
 
-    public String managerQueriesUnwieghtedCustomIngredientRatio(String managerName) {
+    public String managerQueriesUnweightedCustomIngredientRatio(String managerName) {
         return managerQueriesStoreStatistics(managerName, "UnweightedCustomIngredientRatio");
     }
 

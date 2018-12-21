@@ -14,3 +14,13 @@ Feature: Cookie statistics
     Given The store "Nice" has the command set "White Dog Favorite"
     When "Bob" compute the unweighted custom ingredient ratio
     Then The unweighted custom ingredient ratio seen by "Bob" is for the set "White Dog Favorite"
+
+  Scenario: A manager queries the weigthed ingredient ratio
+    Given The store "Nice" has the command set "White Dog Favorite"
+    When "Bob" compute the weighted custom ingredient ratio
+    Then The weighted custom ingredient ratio seen by "Bob" is for the set "White Dog Favorite"
+
+  Scenario: A manager queries the pickUpTimeCount
+    Given The store "Nice" has the command set "One cookie at multiple times"
+    When "Bob" compute the pick up time count
+    Then The compute pick up time count seend by "Bob" is for the set "One cookie at multiple times"

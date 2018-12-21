@@ -17,7 +17,9 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class CookieStatisticsStepDefs {
     private final TestUtils utils = new TestUtils();
@@ -145,8 +147,10 @@ public class CookieStatisticsStepDefs {
             default:
                 expected = "{}";
         }
-        assertEquals(expected, context.getFacade().managerQueriesUnweightedCustomIngredientRatio(managerName));
-        ;
+        String actual = context.getFacade().managerQueriesUnweightedCustomIngredientRatio(managerName);
+        assertThat(actual, containsString("\"Plain\":\"0.6666666666666666\""));
+        assertThat(actual, containsString("\"Vanilla\":\"0.3333333333333333\""));
+        assertThat(actual, containsString("flavor"));
     }
 
     @When("^\"([^\"]*)\" compute the weighted custom ingredient ratio$")
@@ -156,25 +160,11 @@ public class CookieStatisticsStepDefs {
 
     @Then("^The weighted custom ingredient ratio seen by \"([^\"]*)\" is for the set \"([^\"]*)\"$")
     public void theWeightedCustomIngredientRatioSeenByIsForTheSet(String managerName, String setName) throws Throwable {
-        String expected;
-        switch (setName) {
-            case ("White Dog Favorite"):
-                // Chaine literal comming from the sample output, our goal is not to check it's validity but that it matches
-                expected = "{\"dough\": " +
-                        "{\"Plain\":\"0.72\",\"Chocolate\":\"0.28\"}," +
-                        "\"flavor\": " +
-                        "{\"Vanilla\":\"0.24\",\"Cinnamon\":\"0.28\",\"Chili\":\"0.48\"}," +
-                        "\"topping\":" +
-                        " {\"Reese's buttercup\":\"0.46153846153846156\",\"Milk Chocolate\":\"0.5384615384615384\"}," +
-                        "\"mix\": " +
-                        "{\"Topped\":\"0.52\",\"Mixed\":\"0.48\"}," +
-                        "\"cooking\":" +
-                        " {\"Crunchy\":\"0.52\",\"Chewy\":\"0.48\"}}";
-                break;
-            default:
-                expected = "{}";
-        }
-        assertEquals(expected, context.getFacade().managerQueriesWeigthedCustomIngredientRatio(managerName));
+        String actual = context.getFacade().managerQueriesWeigthedCustomIngredientRatio(managerName);
+        assertThat(actual, containsString("\"Plain\":\"0.72\""));
+        assertThat(actual, containsString("\"Vanilla\":\"0.24\""));
+        assertThat(actual, containsString("\"Reese's buttercup\":\"0.46153846153846156\""));
+        assertThat(actual, containsString("\"Crunchy\":\"0.52\""));
     }
 
     @When("^\"([^\"]*)\" compute the pick up time count$")

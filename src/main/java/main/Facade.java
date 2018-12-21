@@ -66,6 +66,11 @@ public class Facade {
         cookieFirm.getCatalog().addFlavor(flavorName);
     }
 
+    /**
+     * Add manager to a store
+     * @param manager name of the manager
+     * @param store name of the store
+     */
     public void addManagerToStore(String manager, String store) {
         Optional<Store> store1 = cookieFirm.findStore(store);
         if (store1.isPresent()) {
@@ -76,6 +81,10 @@ public class Facade {
 
 
     //MANAGER
+
+    public void managerChangeTaxeOfStore(String nameManager, double tax){
+        cookieFirm.findManager(nameManager).ifPresent(manager1 -> manager1.getStore().setTax(tax));
+    }
 
     /**
      * Manager change the opening and closing time of one day for his store
@@ -233,6 +242,16 @@ public class Facade {
         CookieRatioStat stat = new CookieRatioStat(manager.getStore());
         stat.computeValue();
         return stat.serialize();
+    }
+
+    /**
+     * The manager can change the custom cookie margin
+     * @param managerName name of the margin
+     * @param margin the new margin for the custom cookies
+     */
+    public void managerSetCustomCookieMargin(String managerName, double margin){
+        Optional<Manager> optionalManager = cookieFirm.findManager(managerName);
+        optionalManager.ifPresent(manager -> manager.getStore().setCustomRecipeeMargin(margin));
     }
 
     //UTILS MANAGER

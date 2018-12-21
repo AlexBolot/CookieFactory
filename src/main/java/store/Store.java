@@ -169,21 +169,6 @@ public class Store {
     }
 
     /**
-     * Set the order to payed
-     *
-     * @param day        to pick up the order
-     * @param pickUpTime time to pick up the order
-     * @param email      the current customer
-     */
-    void setStatusPaymentOrder(DayOfWeek day, LocalDateTime pickUpTime, String email) {
-
-        //TODO : Remove since no more payment
-
-        //Optional<Order> order = findOrder(pickUpTime, email);
-        //order.ifPresent(Order::setPayed);
-    }
-
-    /**
      * Tries to find an order matching the passed values
      *
      * @param pickUpTime {@link LocalDateTime } the required pick up time
@@ -215,18 +200,6 @@ public class Store {
 
     // region --------------- Getters and Setters ---------------
 
-    /**
-     * @return The list of all available Recipes at this Store
-     * @deprecated Not usable anymore, the global recipe used is not accurate in our current stores.
-     * Builds a list of Recipe containing the Global ones and the monthly of this store
-     */
-    @Deprecated
-    Collection<Recipe> getRecipes() {
-        Collection<Recipe> recipes = globalRecipes;
-        recipes.add(monthlyRecipe);
-        return recipes;
-    }
-
     public Map<DayOfWeek, LocalTime> openingTimes() {
         return openingTimes;
     }
@@ -245,6 +218,10 @@ public class Store {
 
     public double getTax() {
         return tax;
+    }
+
+    public void setTax(double tax){
+        this.tax = tax;
     }
 
     public Recipe getMonthlyRecipe() {
@@ -312,7 +289,7 @@ public class Store {
         return customRecipeeMargin;
     }
 
-    void setCustomRecipeeMargin(double customRecipeeMargin) {
+    public void setCustomRecipeeMargin(double customRecipeeMargin) {
         this.customRecipeeMargin = customRecipeeMargin;
     }
 

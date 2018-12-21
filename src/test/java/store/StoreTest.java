@@ -83,14 +83,6 @@ public class StoreTest {
     }
 
     @Test
-    public void getRecipes() {
-        ArrayList<Recipe> expected = new ArrayList<>(globalRecipes);
-        expected.add(oldRecipe);
-
-        assertEquals(expected, store.getRecipes());
-    }
-
-    @Test
     public void openingTime() {
         for (DayOfWeek day : DayOfWeek.values()) {
             assertEquals(openingTimes.get(day), store.openingTime(day));
@@ -167,18 +159,6 @@ public class StoreTest {
         Order emptyOrder = new Order(store, testingTime.plusHours(3));
 
         store.placeOrder(emptyOrder);
-    }
-
-    @Ignore
-    @Test
-    public void payingAnOrder() {
-        Order normalOrder = new Order(store, testingTime.plusHours(3));
-        normalOrder.addCookie(utils.randomRecipe(), 10);
-        normalOrder.setGuest(guestAlice);
-        store.placeOrder(normalOrder);
-        //assertFalse(normalOrder.isPayed());
-        store.setStatusPaymentOrder(DayOfWeek.TUESDAY, testingTime.plusHours(3), "Alice");
-        //assertTrue(normalOrder.isPayed());
     }
 
     @Test

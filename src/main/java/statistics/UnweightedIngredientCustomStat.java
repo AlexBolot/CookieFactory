@@ -5,8 +5,13 @@ import order.OrderLine;
 import recipe.Recipe;
 import store.Store;
 
-public class UnweightedIngredientCustomStat extends Statistic<IngredientRatio> {
+public class UnweightedIngredientCustomStat extends Statistic<IngredientRatio> implements IStoreStat<IngredientRatio>{
     private Store store;
+
+    public UnweightedIngredientCustomStat() {
+        this.store = null;
+        this.value = new IngredientRatio();
+    }
 
     public UnweightedIngredientCustomStat(Store store) {
         this.store = store;
@@ -35,5 +40,10 @@ public class UnweightedIngredientCustomStat extends Statistic<IngredientRatio> {
 
     public String serialize() {
         return value.serialize();
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+        this.value = new IngredientRatio();
     }
 }

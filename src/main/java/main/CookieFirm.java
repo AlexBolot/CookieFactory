@@ -308,19 +308,8 @@ public class CookieFirm {
      * @param recipeeName {@link String} recipee name
      * @return {@link Optional<Recipe>} The search result, empty if no recipee were found.
      */
-    public Optional<Recipe> findRecipee(String recipeeName) {
+    Optional<Recipe> findRecipee(String recipeeName) {
         return this.getGlobalRecipes().stream().filter(recipe -> recipe.getName().equalsIgnoreCase(recipeeName)).findFirst();
-    }
-
-    /**
-     * @deprecated was used once, not anymore, the mistery persists, should be erased.
-     */
-    @Deprecated
-    public void inflate(List<Store> stores, List<Manager> managers) {
-        this.managers = managers;
-        this.stores = stores;
-
-        CookieFirm.inflated = true;
     }
 
     void addGuest(Guest guest) {
@@ -331,11 +320,11 @@ public class CookieFirm {
         return stores;
     }
 
-    public void addStore(Store s) {
+    void addStore(Store s) {
         stores.add(s);
     }
 
-    public void addManager(Manager manager) {
+    void addManager(Manager manager) {
         managers.add(manager);
     }
 
@@ -355,11 +344,11 @@ public class CookieFirm {
         return guests;
     }
 
-    Set<Guest> getAllGuests() {
+    private Set<Guest> getAllGuests() {
         return Stream.concat(guests.stream(), accounts.stream()).collect(Collectors.toSet());
     }
 
-    public Set<Customer> getAccounts() {
+    Set<Customer> getAccounts() {
         return accounts;
     }
 
@@ -375,7 +364,7 @@ public class CookieFirm {
         return catalog;
     }
 
-    public void addCustomerToLoyaltyProgram(Customer customer) {
+    void addCustomerToLoyaltyProgram(Customer customer) {
         customer.addToLoyaltyProgram();
     }
 
